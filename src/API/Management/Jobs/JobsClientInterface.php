@@ -13,6 +13,13 @@ interface JobsClientInterface
     /**
      * Retrieves a job. Useful to check its status.
      *
+     * Example:
+     * ```php
+     * $client->jobs->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the job.
      * @param ?array{
      *   baseUrl?: string,

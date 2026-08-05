@@ -54,6 +54,18 @@ class OrganizationsClient implements OrganizationsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->clientGrants->organizations->list(
+     *     'id',
+     *     new ListClientGrantOrganizationsRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the client grant
      * @param ListClientGrantOrganizationsRequestParameters $request
      * @param ?array{
@@ -100,6 +112,9 @@ class OrganizationsClient implements OrganizationsClientInterface
     {
         $options = array_merge($this->options, $options ?? []);
         $query = [];
+        if ($request->getIncludeTotals() != null) {
+            $query['include_totals'] = $request->getIncludeTotals();
+        }
         if ($request->getFrom() != null) {
             $query['from'] = $request->getFrom();
         }
@@ -110,7 +125,7 @@ class OrganizationsClient implements OrganizationsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "client-grants/{$id}/organizations",
+                    path: "client-grants/" . RawClient::encodePathParam($id) . "/organizations",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

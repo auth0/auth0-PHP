@@ -74,6 +74,16 @@ class ModulesClient implements ModulesClientInterface
     /**
      * Retrieve a paginated list of all Actions Modules with optional filtering and totals.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->list(
+     *     new GetActionModulesRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param GetActionModulesRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -105,6 +115,16 @@ class ModulesClient implements ModulesClientInterface
 
     /**
      * Create a new Actions Module for reusable code across actions.
+     *
+     * Example:
+     * ```php
+     * $client->actions->modules->create(
+     *     new CreateActionModuleRequestContent([
+     *         'name' => 'name',
+     *         'code' => 'code',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateActionModuleRequestContent $request
      * @param ?array{
@@ -155,6 +175,13 @@ class ModulesClient implements ModulesClientInterface
     /**
      * Retrieve details of a specific Actions Module by its unique identifier.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the action module to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -175,7 +202,7 @@ class ModulesClient implements ModulesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/modules/{$id}",
+                    path: "actions/modules/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -203,6 +230,13 @@ class ModulesClient implements ModulesClientInterface
     /**
      * Permanently delete an Actions Module. This will fail if the module is still in use by any actions.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the Actions Module to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -222,7 +256,7 @@ class ModulesClient implements ModulesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/modules/{$id}",
+                    path: "actions/modules/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -243,6 +277,14 @@ class ModulesClient implements ModulesClientInterface
 
     /**
      * Update properties of an existing Actions Module, such as code, dependencies, or secrets.
+     *
+     * Example:
+     * ```php
+     * $client->actions->modules->update(
+     *     'id',
+     *     new UpdateActionModuleRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id The ID of the action module to update.
      * @param UpdateActionModuleRequestContent $request
@@ -265,7 +307,7 @@ class ModulesClient implements ModulesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/modules/{$id}",
+                    path: "actions/modules/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -293,6 +335,17 @@ class ModulesClient implements ModulesClientInterface
 
     /**
      * Lists all actions that are using a specific Actions Module, showing which deployed action versions reference this Actions Module.
+     *
+     * Example:
+     * ```php
+     * $client->actions->modules->listActions(
+     *     'id',
+     *     new GetActionModuleActionsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id The unique ID of the module.
      * @param GetActionModuleActionsRequestParameters $request
@@ -327,6 +380,16 @@ class ModulesClient implements ModulesClientInterface
     /**
      * Rolls back an Actions Module's draft to a previously created version. This action copies the code, dependencies, and secrets from the specified version into the current draft.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->rollback(
+     *     'id',
+     *     new RollbackActionModuleRequestParameters([
+     *         'moduleVersionId' => 'module_version_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The unique ID of the module to roll back.
      * @param RollbackActionModuleRequestParameters $request
      * @param ?array{
@@ -348,7 +411,7 @@ class ModulesClient implements ModulesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/modules/{$id}/rollback",
+                    path: "actions/modules/" . RawClient::encodePathParam($id) . "/rollback",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -469,7 +532,7 @@ class ModulesClient implements ModulesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/modules/{$id}/actions",
+                    path: "actions/modules/" . RawClient::encodePathParam($id) . "/actions",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

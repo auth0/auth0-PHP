@@ -58,6 +58,18 @@ class RolesClient implements RolesClientInterface
     /**
      * Lists the roles assigned to the specified group in the context of an organization.
      *
+     * Example:
+     * ```php
+     * $client->organizations->groups->roles->list(
+     *     'organization_id',
+     *     'group_id',
+     *     new ListOrganizationGroupRolesRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $organizationId ID of the organization
      * @param string $groupId ID of the group
      * @param ListOrganizationGroupRolesRequestParameters $request
@@ -89,6 +101,19 @@ class RolesClient implements RolesClientInterface
     /**
      * Assign one or more roles to a specified group in the context of an organization.
      *
+     * Example:
+     * ```php
+     * $client->organizations->groups->roles->create(
+     *     'organization_id',
+     *     'group_id',
+     *     new CreateOrganizationGroupRolesRequestContent([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $organizationId ID of the organization
      * @param string $groupId ID of the group
      * @param CreateOrganizationGroupRolesRequestContent $request
@@ -110,7 +135,7 @@ class RolesClient implements RolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$organizationId}/groups/{$groupId}/roles",
+                    path: "organizations/" . RawClient::encodePathParam($organizationId) . "/groups/" . RawClient::encodePathParam($groupId) . "/roles",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -133,6 +158,19 @@ class RolesClient implements RolesClientInterface
     /**
      * Unassign one or more roles from a specified group in the context of an organization.
      *
+     * Example:
+     * ```php
+     * $client->organizations->groups->roles->delete(
+     *     'organization_id',
+     *     'group_id',
+     *     new DeleteOrganizationGroupRolesRequestContent([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $organizationId ID of the organization
      * @param string $groupId ID of the group
      * @param DeleteOrganizationGroupRolesRequestContent $request
@@ -154,7 +192,7 @@ class RolesClient implements RolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$organizationId}/groups/{$groupId}/roles",
+                    path: "organizations/" . RawClient::encodePathParam($organizationId) . "/groups/" . RawClient::encodePathParam($groupId) . "/roles",
                     method: HttpMethod::DELETE,
                     body: $request,
                 ),
@@ -206,7 +244,7 @@ class RolesClient implements RolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$organizationId}/groups/{$groupId}/roles",
+                    path: "organizations/" . RawClient::encodePathParam($organizationId) . "/groups/" . RawClient::encodePathParam($groupId) . "/roles",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

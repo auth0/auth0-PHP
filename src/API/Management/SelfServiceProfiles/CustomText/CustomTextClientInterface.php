@@ -10,6 +10,15 @@ interface CustomTextClientInterface
     /**
      * Retrieves text customizations for a given self-service profile, language and Self-Service Enterprise Configuration flow page.
      *
+     * Example:
+     * ```php
+     * $client->selfServiceProfiles->customText->list(
+     *     'id',
+     *     SelfServiceProfileCustomTextLanguageEnum::En->value,
+     *     SelfServiceProfileCustomTextPageEnum::GetStarted->value,
+     * );
+     * ```
+     *
      * @param string $id The id of the self-service profile.
      * @param value-of<SelfServiceProfileCustomTextLanguageEnum> $language The language of the custom text.
      * @param value-of<SelfServiceProfileCustomTextPageEnum> $page The page where the custom text is shown.
@@ -27,6 +36,18 @@ interface CustomTextClientInterface
 
     /**
      * Updates text customizations for a given self-service profile, language and Self-Service Enterprise Configuration flow page.
+     *
+     * Example:
+     * ```php
+     * $client->selfServiceProfiles->customText->set(
+     *     'id',
+     *     SelfServiceProfileCustomTextLanguageEnum::En->value,
+     *     SelfServiceProfileCustomTextPageEnum::GetStarted->value,
+     *     [
+     *         'key' => 'value',
+     *     ],
+     * );
+     * ```
      *
      * @param string $id The id of the self-service profile.
      * @param value-of<SelfServiceProfileCustomTextLanguageEnum> $language The language of the custom text.

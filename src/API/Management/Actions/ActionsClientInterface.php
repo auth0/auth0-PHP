@@ -24,6 +24,20 @@ interface ActionsClientInterface
     /**
      * Retrieve all actions.
      *
+     * Example:
+     * ```php
+     * $client->actions->list(
+     *     new ListActionsRequestParameters([
+     *         'triggerId' => ActionTriggerTypeEnum::PostLogin->value,
+     *         'actionName' => 'actionName',
+     *         'deployed' => true,
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'installed' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListActionsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -39,6 +53,20 @@ interface ActionsClientInterface
 
     /**
      * Create an action. Once an action is created, it must be deployed, and then bound to a trigger before it will be executed as part of a flow.
+     *
+     * Example:
+     * ```php
+     * $client->actions->create(
+     *     new CreateActionRequestContent([
+     *         'name' => 'name',
+     *         'supportedTriggers' => [
+     *             new ActionTrigger([
+     *                 'id' => ActionTriggerTypeEnum::PostLogin->value,
+     *             ]),
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateActionRequestContent $request
      * @param ?array{
@@ -56,6 +84,13 @@ interface ActionsClientInterface
     /**
      * Retrieve an action by its ID.
      *
+     * Example:
+     * ```php
+     * $client->actions->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the action to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -72,6 +107,16 @@ interface ActionsClientInterface
     /**
      * Deletes an action and all of its associated versions. An action must be unbound from all triggers before it can be deleted.
      *
+     * Example:
+     * ```php
+     * $client->actions->delete(
+     *     'id',
+     *     new DeleteActionRequestParameters([
+     *         'force' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The ID of the action to delete.
      * @param DeleteActionRequestParameters $request
      * @param ?array{
@@ -87,6 +132,14 @@ interface ActionsClientInterface
 
     /**
      * Update an existing action. If this action is currently bound to a trigger, updating it will **not** affect any user flows until the action is deployed.
+     *
+     * Example:
+     * ```php
+     * $client->actions->update(
+     *     'id',
+     *     new UpdateActionRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id The id of the action to update.
      * @param UpdateActionRequestContent $request
@@ -105,6 +158,13 @@ interface ActionsClientInterface
     /**
      * Deploy an action. Deploying an action will create a new immutable version of the action. If the action is currently bound to a trigger, then the system will begin executing the newly deployed version of the action immediately. Otherwise, the action will only be executed as a part of a flow once it is bound to that flow.
      *
+     * Example:
+     * ```php
+     * $client->actions->deploy(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of an action.
      * @param ?array{
      *   baseUrl?: string,
@@ -120,6 +180,18 @@ interface ActionsClientInterface
 
     /**
      * Test an action. After updating an action, it can be tested prior to being deployed to ensure it behaves as expected.
+     *
+     * Example:
+     * ```php
+     * $client->actions->test(
+     *     'id',
+     *     new TestActionRequestContent([
+     *         'payload' => [
+     *             'key' => "value",
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id The id of the action to test.
      * @param TestActionRequestContent $request

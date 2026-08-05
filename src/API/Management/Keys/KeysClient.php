@@ -4,11 +4,13 @@ namespace Auth0\SDK\API\Management\Keys;
 
 use Auth0\SDK\API\Management\Keys\CustomSigning\CustomSigningClient;
 use Auth0\SDK\API\Management\Keys\Encryption\EncryptionClient;
+use Auth0\SDK\API\Management\Keys\NetworkAcls\NetworkAclsClient;
 use Auth0\SDK\API\Management\Keys\Signing\SigningClient;
 use Psr\Http\Client\ClientInterface;
 use Auth0\SDK\API\Management\Core\Client\RawClient;
 use Auth0\SDK\API\Management\Keys\CustomSigning\CustomSigningClientInterface;
 use Auth0\SDK\API\Management\Keys\Encryption\EncryptionClientInterface;
+use Auth0\SDK\API\Management\Keys\NetworkAcls\NetworkAclsClientInterface;
 use Auth0\SDK\API\Management\Keys\Signing\SigningClientInterface;
 
 class KeysClient implements KeysClientInterface
@@ -22,6 +24,11 @@ class KeysClient implements KeysClientInterface
      * @var EncryptionClient $encryption
      */
     public EncryptionClient $encryption;
+
+    /**
+     * @var NetworkAclsClient $networkAcls
+     */
+    public NetworkAclsClient $networkAcls;
 
     /**
      * @var SigningClient $signing
@@ -62,6 +69,7 @@ class KeysClient implements KeysClientInterface
         $this->options = $options ?? [];
         $this->customSigning = new CustomSigningClient($this->client, $this->options);
         $this->encryption = new EncryptionClient($this->client, $this->options);
+        $this->networkAcls = new NetworkAclsClient($this->client, $this->options);
         $this->signing = new SigningClient($this->client, $this->options);
     }
 
@@ -79,6 +87,14 @@ class KeysClient implements KeysClientInterface
     public function getEncryption(): EncryptionClientInterface
     {
         return $this->encryption;
+    }
+
+    /**
+     * @return NetworkAclsClientInterface
+     */
+    public function getNetworkAcls(): NetworkAclsClientInterface
+    {
+        return $this->networkAcls;
     }
 
     /**

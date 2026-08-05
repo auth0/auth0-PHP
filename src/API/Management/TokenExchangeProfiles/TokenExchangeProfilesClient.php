@@ -69,6 +69,16 @@ class TokenExchangeProfilesClient implements TokenExchangeProfilesClientInterfac
      *
      * **Note**: The first time you call this endpoint using checkpoint pagination, omit the `from` parameter. If there are more results, a `next` value is included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, no pages are remaining.
      *
+     * Example:
+     * ```php
+     * $client->tokenExchangeProfiles->list(
+     *     new TokenExchangeProfilesListRequest([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param TokenExchangeProfilesListRequest $request
      * @param ?array{
      *   baseUrl?: string,
@@ -99,6 +109,18 @@ class TokenExchangeProfilesClient implements TokenExchangeProfilesClientInterfac
      * Create a new Token Exchange Profile within your tenant.
      *
      * By using this feature, you agree to the applicable Free Trial terms in [Okta’s Master Subscription Agreement](https://www.okta.com/legal/). It is your responsibility to securely validate the user’s subject_token. See [User Guide](https://auth0.com/docs/authenticate/custom-token-exchange) for more details.
+     *
+     * Example:
+     * ```php
+     * $client->tokenExchangeProfiles->create(
+     *     new CreateTokenExchangeProfileRequestContent([
+     *         'name' => 'name',
+     *         'subjectTokenType' => 'subject_token_type',
+     *         'actionId' => 'action_id',
+     *         'type' => TokenExchangeProfileTypeEnum::CustomAuthentication->value,
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateTokenExchangeProfileRequestContent $request
      * @param ?array{
@@ -151,6 +173,13 @@ class TokenExchangeProfilesClient implements TokenExchangeProfilesClientInterfac
      *
      * By using this feature, you agree to the applicable Free Trial terms in [Okta’s Master Subscription Agreement](https://www.okta.com/legal/). It is your responsibility to securely validate the user’s subject_token. See [User Guide](https://auth0.com/docs/authenticate/custom-token-exchange) for more details.
      *
+     * Example:
+     * ```php
+     * $client->tokenExchangeProfiles->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the Token Exchange Profile to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -171,7 +200,7 @@ class TokenExchangeProfilesClient implements TokenExchangeProfilesClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "token-exchange-profiles/{$id}",
+                    path: "token-exchange-profiles/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -201,6 +230,13 @@ class TokenExchangeProfilesClient implements TokenExchangeProfilesClientInterfac
      *
      * By using this feature, you agree to the applicable Free Trial terms in [Okta's Master Subscription Agreement](https://www.okta.com/legal/). It is your responsibility to securely validate the user's subject_token. See [User Guide](https://auth0.com/docs/authenticate/custom-token-exchange) for more details.
      *
+     * Example:
+     * ```php
+     * $client->tokenExchangeProfiles->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the Token Exchange Profile to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -220,7 +256,7 @@ class TokenExchangeProfilesClient implements TokenExchangeProfilesClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "token-exchange-profiles/{$id}",
+                    path: "token-exchange-profiles/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -244,6 +280,14 @@ class TokenExchangeProfilesClient implements TokenExchangeProfilesClientInterfac
      *
      * By using this feature, you agree to the applicable Free Trial terms in [Okta's Master Subscription Agreement](https://www.okta.com/legal/). It is your responsibility to securely validate the user's subject_token. See [User Guide](https://auth0.com/docs/authenticate/custom-token-exchange) for more details.
      *
+     * Example:
+     * ```php
+     * $client->tokenExchangeProfiles->update(
+     *     'id',
+     *     new UpdateTokenExchangeProfileRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id ID of the Token Exchange Profile to update.
      * @param UpdateTokenExchangeProfileRequestContent $request
      * @param ?array{
@@ -264,7 +308,7 @@ class TokenExchangeProfilesClient implements TokenExchangeProfilesClientInterfac
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "token-exchange-profiles/{$id}",
+                    path: "token-exchange-profiles/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

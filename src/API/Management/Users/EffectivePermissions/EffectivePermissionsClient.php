@@ -64,6 +64,18 @@ class EffectivePermissionsClient implements EffectivePermissionsClientInterface
     /**
      * Returns the list of effective permissions for a user, taking into account permissions granted directly to the user, as well as those inherited through roles and group memberships.
      *
+     * Example:
+     * ```php
+     * $client->users->effectivePermissions->list(
+     *     'id',
+     *     new ListUserEffectivePermissionsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'resourceServerIdentifier' => 'resource_server_identifier',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to retrieve the permissions for.
      * @param ListUserEffectivePermissionsRequestParameters $request
      * @param ?array{
@@ -131,7 +143,7 @@ class EffectivePermissionsClient implements EffectivePermissionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/effective-permissions",
+                    path: "users/" . RawClient::encodePathParam($id) . "/effective-permissions",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

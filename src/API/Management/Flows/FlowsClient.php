@@ -76,6 +76,21 @@ class FlowsClient implements FlowsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->list(
+     *     new ListFlowsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'hydrate' => [
+     *             ListFlowsRequestParametersHydrateEnum::FormCount->value,
+     *         ],
+     *         'synchronous' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListFlowsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -106,6 +121,15 @@ class FlowsClient implements FlowsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->create(
+     *     new CreateFlowRequestContent([
+     *         'name' => 'name',
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateFlowRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -153,6 +177,18 @@ class FlowsClient implements FlowsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->get(
+     *     'id',
+     *     new GetFlowRequestParameters([
+     *         'hydrate' => [
+     *             GetFlowRequestParametersHydrateEnum::FormCount->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Flow identifier
      * @param GetFlowRequestParameters $request
      * @param ?array{
@@ -178,7 +214,7 @@ class FlowsClient implements FlowsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "flows/{$id}",
+                    path: "flows/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                     query: $query,
                 ),
@@ -205,6 +241,13 @@ class FlowsClient implements FlowsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Flow id
      * @param ?array{
      *   baseUrl?: string,
@@ -224,7 +267,7 @@ class FlowsClient implements FlowsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "flows/{$id}",
+                    path: "flows/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -244,6 +287,14 @@ class FlowsClient implements FlowsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->update(
+     *     'id',
+     *     new UpdateFlowRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id Flow identifier
      * @param UpdateFlowRequestContent $request
      * @param ?array{
@@ -265,7 +316,7 @@ class FlowsClient implements FlowsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "flows/{$id}",
+                    path: "flows/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

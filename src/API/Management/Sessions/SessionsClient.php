@@ -54,6 +54,13 @@ class SessionsClient implements SessionsClientInterface
     /**
      * Retrieve session information.
      *
+     * Example:
+     * ```php
+     * $client->sessions->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of session to retrieve
      * @param ?array{
      *   baseUrl?: string,
@@ -74,7 +81,7 @@ class SessionsClient implements SessionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "sessions/{$id}",
+                    path: "sessions/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -102,6 +109,13 @@ class SessionsClient implements SessionsClientInterface
     /**
      * Delete a session by ID.
      *
+     * Example:
+     * ```php
+     * $client->sessions->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the session to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -121,7 +135,7 @@ class SessionsClient implements SessionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "sessions/{$id}",
+                    path: "sessions/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -142,6 +156,14 @@ class SessionsClient implements SessionsClientInterface
 
     /**
      * Update session information.
+     *
+     * Example:
+     * ```php
+     * $client->sessions->update(
+     *     'id',
+     *     new UpdateSessionRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the session to update.
      * @param UpdateSessionRequestContent $request
@@ -164,7 +186,7 @@ class SessionsClient implements SessionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "sessions/{$id}",
+                    path: "sessions/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -193,6 +215,13 @@ class SessionsClient implements SessionsClientInterface
     /**
      * Revokes a session by ID and all associated refresh tokens.
      *
+     * Example:
+     * ```php
+     * $client->sessions->revoke(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the session to revoke.
      * @param ?array{
      *   baseUrl?: string,
@@ -212,7 +241,7 @@ class SessionsClient implements SessionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "sessions/{$id}/revoke",
+                    path: "sessions/" . RawClient::encodePathParam($id) . "/revoke",
                     method: HttpMethod::POST,
                 ),
                 $options,

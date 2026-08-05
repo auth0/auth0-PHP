@@ -14,6 +14,17 @@ interface BindingsClientInterface
     /**
      * Retrieve the actions that are bound to a trigger. Once an action is created and deployed, it must be attached (i.e. bound) to a trigger so that it will be executed as part of a flow. The list of actions returned reflects the order in which they will be executed during the appropriate flow.
      *
+     * Example:
+     * ```php
+     * $client->actions->triggers->bindings->list(
+     *     ActionTriggerTypeEnum::PostLogin->value,
+     *     new ListActionTriggerBindingsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param value-of<ActionTriggerTypeEnum> $triggerId An actions extensibility point.
      * @param ListActionTriggerBindingsRequestParameters $request
      * @param ?array{
@@ -30,6 +41,14 @@ interface BindingsClientInterface
 
     /**
      * Update the actions that are bound (i.e. attached) to a trigger. Once an action is created and deployed, it must be attached (i.e. bound) to a trigger so that it will be executed as part of a flow. The order in which the actions are provided will determine the order in which they are executed.
+     *
+     * Example:
+     * ```php
+     * $client->actions->triggers->bindings->updateMany(
+     *     ActionTriggerTypeEnum::PostLogin->value,
+     *     new UpdateActionBindingsRequestContent([]),
+     * );
+     * ```
      *
      * @param value-of<ActionTriggerTypeEnum> $triggerId An actions extensibility point.
      * @param UpdateActionBindingsRequestContent $request

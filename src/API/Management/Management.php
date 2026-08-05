@@ -3,6 +3,7 @@
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Management\Actions\ActionsClient;
+use Auth0\SDK\API\Management\Agents\AgentsClient;
 use Auth0\SDK\API\Management\Branding\BrandingClient;
 use Auth0\SDK\API\Management\ClientGrants\ClientGrantsClient;
 use Auth0\SDK\API\Management\Clients\ClientsClient;
@@ -50,6 +51,7 @@ use Auth0\SDK\API\Management\VerifiableCredentials\VerifiableCredentialsClient;
 use Psr\Http\Client\ClientInterface;
 use Auth0\SDK\API\Management\Core\Client\RawClient;
 use Auth0\SDK\API\Management\Actions\ActionsClientInterface;
+use Auth0\SDK\API\Management\Agents\AgentsClientInterface;
 use Auth0\SDK\API\Management\Branding\BrandingClientInterface;
 use Auth0\SDK\API\Management\ClientGrants\ClientGrantsClientInterface;
 use Auth0\SDK\API\Management\Clients\ClientsClientInterface;
@@ -101,6 +103,11 @@ class Management implements ManagementInterface
      * @var ActionsClient $actions
      */
     public ActionsClient $actions;
+
+    /**
+     * @var AgentsClient $agents
+     */
+    public AgentsClient $agents;
 
     /**
      * @var BrandingClient $branding
@@ -340,6 +347,7 @@ class Management implements ManagementInterface
 
     /**
      * @param string $token The token to use for authentication.
+     * @param ?string $tenantDomain The tenantDomain to substitute into the base URL. Defaults to "{TENANT}.auth0.com".
      * @param ?array{
      *   baseUrl?: string,
      *   client?: ClientInterface,
@@ -350,17 +358,25 @@ class Management implements ManagementInterface
      */
     public function __construct(
         string $token,
+        ?string $tenantDomain = null,
         ?array $options = null,
     ) {
         $defaultHeaders = [
             'Authorization' => "Bearer $token",
             'X-Fern-Language' => 'PHP',
             'X-Fern-SDK-Name' => 'Auth0\SDK\API\Management',
-            'X-Fern-SDK-Version' => '9.0.0-beta.4',
-            'User-Agent' => 'auth0/auth0-php/9.0.0-beta.4',
+            'X-Fern-SDK-Version' => '9.0.0-beta.5',
+            'User-Agent' => 'auth0/auth0-php/9.0.0-beta.5',
         ];
 
         $this->options = $options ?? [];
+        if ($tenantDomain != null) {
+            $baseUrl = $this->options['baseUrl'] ?? null;
+            if ($baseUrl == null || $baseUrl === Environments::Default_->value) {
+                $this->options['baseUrl'] = 'https://' . $tenantDomain . '/api/v2';
+            }
+        }
+
 
         $this->options['headers'] = array_merge(
             $defaultHeaders,
@@ -372,6 +388,7 @@ class Management implements ManagementInterface
         );
 
         $this->actions = new ActionsClient($this->client, $this->options);
+        $this->agents = new AgentsClient($this->client, $this->options);
         $this->branding = new BrandingClient($this->client, $this->options);
         $this->clientGrants = new ClientGrantsClient($this->client, $this->options);
         $this->clients = new ClientsClient($this->client, $this->options);
@@ -424,6 +441,14 @@ class Management implements ManagementInterface
     public function getActions(): ActionsClientInterface
     {
         return $this->actions;
+    }
+
+    /**
+     * @return AgentsClientInterface
+     */
+    public function getAgents(): AgentsClientInterface
+    {
+        return $this->agents;
     }
 
     /**

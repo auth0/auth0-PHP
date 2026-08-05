@@ -70,6 +70,16 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
     /**
      * Retrieve a list of SCIM configurations of a tenant.
      *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->list(
+     *     new ListScimConfigurationsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListScimConfigurationsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -99,6 +109,13 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
     /**
      * Retrieves a scim configuration by its `connectionId`.
      *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to retrieve its SCIM configuration
      * @param ?array{
      *   baseUrl?: string,
@@ -119,7 +136,7 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/scim-configuration",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/scim-configuration",
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -147,6 +164,14 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
     /**
      * Create a scim configuration for a connection.
      *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->create(
+     *     'id',
+     *     new CreateScimConfigurationRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to create its SCIM configuration
      * @param ?CreateScimConfigurationRequestContent $request
      * @param ?array{
@@ -168,7 +193,7 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/scim-configuration",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/scim-configuration",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -197,6 +222,13 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
     /**
      * Deletes a scim configuration by its `connectionId`.
      *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to delete its SCIM configuration
      * @param ?array{
      *   baseUrl?: string,
@@ -216,7 +248,7 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/scim-configuration",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/scim-configuration",
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -237,6 +269,19 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
 
     /**
      * Update a scim configuration by its `connectionId`.
+     *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->update(
+     *     'id',
+     *     new UpdateScimConfigurationRequestContent([
+     *         'userIdAttribute' => 'user_id_attribute',
+     *         'mapping' => [
+     *             new ScimMappingItem([]),
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id The id of the connection to update its SCIM configuration
      * @param UpdateScimConfigurationRequestContent $request
@@ -259,7 +304,7 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/scim-configuration",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/scim-configuration",
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -288,6 +333,13 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
     /**
      * Retrieves a scim configuration's default mapping by its `connectionId`.
      *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->getDefaultMapping(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to retrieve its default SCIM mapping
      * @param ?array{
      *   baseUrl?: string,
@@ -308,7 +360,7 @@ class ScimConfigurationClient implements ScimConfigurationClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/scim-configuration/default-mapping",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/scim-configuration/default-mapping",
                     method: HttpMethod::GET,
                 ),
                 $options,

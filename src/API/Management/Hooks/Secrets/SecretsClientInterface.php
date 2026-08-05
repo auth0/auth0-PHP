@@ -7,6 +7,13 @@ interface SecretsClientInterface
     /**
      * Retrieve a hook's secrets by the ID of the hook.
      *
+     * Example:
+     * ```php
+     * $client->hooks->secrets->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the hook to retrieve secrets from.
      * @param ?array{
      *   baseUrl?: string,
@@ -22,6 +29,16 @@ interface SecretsClientInterface
 
     /**
      * Add one or more secrets to an existing hook. Accepts an object of key-value pairs, where the key is the name of the secret. A hook can have a maximum of 20 secrets.
+     *
+     * Example:
+     * ```php
+     * $client->hooks->secrets->create(
+     *     'id',
+     *     [
+     *         'key' => 'value',
+     *     ],
+     * );
+     * ```
      *
      * @param string $id The id of the hook to retrieve
      * @param array<string, string> $request
@@ -39,6 +56,16 @@ interface SecretsClientInterface
     /**
      * Delete one or more existing secrets for a given hook. Accepts an array of secret names to delete.
      *
+     * Example:
+     * ```php
+     * $client->hooks->secrets->delete(
+     *     'id',
+     *     [
+     *         'string',
+     *     ],
+     * );
+     * ```
+     *
      * @param string $id ID of the hook whose secrets to delete.
      * @param array<string> $request
      * @param ?array{
@@ -54,6 +81,16 @@ interface SecretsClientInterface
 
     /**
      * Update one or more existing secrets for an existing hook. Accepts an object of key-value pairs, where the key is the name of the existing secret.
+     *
+     * Example:
+     * ```php
+     * $client->hooks->secrets->update(
+     *     'id',
+     *     [
+     *         'key' => 'value',
+     *     ],
+     * );
+     * ```
      *
      * @param string $id ID of the hook whose secrets to update.
      * @param array<string, string> $request

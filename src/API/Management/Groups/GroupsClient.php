@@ -73,6 +73,23 @@ class GroupsClient implements GroupsClientInterface
     /**
      * List all groups in your tenant.
      *
+     * Example:
+     * ```php
+     * $client->groups->list(
+     *     new ListGroupsRequestParameters([
+     *         'connectionId' => 'connection_id',
+     *         'name' => 'name',
+     *         'externalId' => 'external_id',
+     *         'search' => 'search',
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListGroupsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -102,6 +119,13 @@ class GroupsClient implements GroupsClientInterface
     /**
      * Retrieve a group by its ID.
      *
+     * Example:
+     * ```php
+     * $client->groups->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the group (service-generated).
      * @param ?array{
      *   baseUrl?: string,
@@ -122,7 +146,7 @@ class GroupsClient implements GroupsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "groups/{$id}",
+                    path: "groups/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -150,6 +174,13 @@ class GroupsClient implements GroupsClientInterface
     /**
      * Delete a group by its ID.
      *
+     * Example:
+     * ```php
+     * $client->groups->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the group (service-generated).
      * @param ?array{
      *   baseUrl?: string,
@@ -169,7 +200,7 @@ class GroupsClient implements GroupsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "groups/{$id}",
+                    path: "groups/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -241,6 +272,9 @@ class GroupsClient implements GroupsClientInterface
         }
         if ($request->getIncludeFields() != null) {
             $query['include_fields'] = $request->getIncludeFields();
+        }
+        if ($request->getIncludeTotals() != null) {
+            $query['include_totals'] = $request->getIncludeTotals();
         }
         if ($request->getFrom() != null) {
             $query['from'] = $request->getFrom();

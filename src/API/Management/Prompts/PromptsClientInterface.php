@@ -14,6 +14,11 @@ interface PromptsClientInterface
     /**
      * Retrieve details of the Universal Login configuration of your tenant. This includes the <a href="https://auth0.com/docs/authenticate/login/auth0-universal-login/identifier-first">Identifier First Authentication</a> and <a href="https://auth0.com/docs/secure/multi-factor-authentication/fido-authentication-with-webauthn/configure-webauthn-device-biometrics-for-mfa">WebAuthn with Device Biometrics for MFA</a> features.
      *
+     * Example:
+     * ```php
+     * $client->prompts->getSettings();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -28,6 +33,13 @@ interface PromptsClientInterface
 
     /**
      * Update the Universal Login configuration of your tenant. This includes the <a href="https://auth0.com/docs/authenticate/login/auth0-universal-login/identifier-first">Identifier First Authentication</a> and <a href="https://auth0.com/docs/secure/multi-factor-authentication/fido-authentication-with-webauthn/configure-webauthn-device-biometrics-for-mfa">WebAuthn with Device Biometrics for MFA</a> features.
+     *
+     * Example:
+     * ```php
+     * $client->prompts->updateSettings(
+     *     new UpdateSettingsRequestContent([]),
+     * );
+     * ```
      *
      * @param UpdateSettingsRequestContent $request
      * @param ?array{

@@ -17,14 +17,22 @@ class SelfServiceProfileSsoTicketGoogleWorkspaceConfig extends JsonSerializableT
     private bool $syncUsers;
 
     /**
+     * @var ?bool $syncGroups Whether to enable Google Workspace Directory Sync for groups during the self-service flow.
+     */
+    #[JsonProperty('sync_groups')]
+    private ?bool $syncGroups;
+
+    /**
      * @param array{
      *   syncUsers: bool,
+     *   syncGroups?: ?bool,
      * } $values
      */
     public function __construct(
         array $values,
     ) {
         $this->syncUsers = $values['syncUsers'];
+        $this->syncGroups = $values['syncGroups'] ?? null;
     }
 
     /**
@@ -42,6 +50,24 @@ class SelfServiceProfileSsoTicketGoogleWorkspaceConfig extends JsonSerializableT
     {
         $this->syncUsers = $value;
         $this->_setField('syncUsers');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getSyncGroups(): ?bool
+    {
+        return $this->syncGroups;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setSyncGroups(?bool $value = null): self
+    {
+        $this->syncGroups = $value;
+        $this->_setField('syncGroups');
         return $this;
     }
 

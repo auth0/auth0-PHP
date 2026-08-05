@@ -14,6 +14,17 @@ interface ClientsClientInterface
      *
      * **Note**: The first time you call this endpoint, omit the `from` parameter. If there are more results, a `next` value is included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, no further results are remaining.
      *
+     * Example:
+     * ```php
+     * $client->connections->clients->get(
+     *     'id',
+     *     new GetConnectionEnabledClientsRequestParameters([
+     *         'take' => 1,
+     *         'from' => 'from',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The id of the connection for which enabled clients are to be retrieved
      * @param GetConnectionEnabledClientsRequestParameters $request
      * @param ?array{
@@ -29,6 +40,19 @@ interface ClientsClientInterface
     public function get(string $id, GetConnectionEnabledClientsRequestParameters $request = new GetConnectionEnabledClientsRequestParameters(), ?array $options = null): Pager;
 
     /**
+     * Example:
+     * ```php
+     * $client->connections->clients->update(
+     *     'id',
+     *     [
+     *         new UpdateEnabledClientConnectionsRequestContentItem([
+     *             'clientId' => 'client_id',
+     *             'status' => true,
+     *         ]),
+     *     ],
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to modify
      * @param array<UpdateEnabledClientConnectionsRequestContentItem> $request
      * @param ?array{

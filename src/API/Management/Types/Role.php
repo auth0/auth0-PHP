@@ -26,10 +26,24 @@ class Role extends JsonSerializableType
     private ?string $description;
 
     /**
+     * @var ?value-of<RoleTypeEnum> $type
+     */
+    #[JsonProperty('type')]
+    private ?string $type;
+
+    /**
+     * @var ?string $ownerId The id of the entity that owns this role, such as an organization id.
+     */
+    #[JsonProperty('owner_id')]
+    private ?string $ownerId;
+
+    /**
      * @param array{
      *   id?: ?string,
      *   name?: ?string,
      *   description?: ?string,
+     *   type?: ?value-of<RoleTypeEnum>,
+     *   ownerId?: ?string,
      * } $values
      */
     public function __construct(
@@ -38,6 +52,8 @@ class Role extends JsonSerializableType
         $this->id = $values['id'] ?? null;
         $this->name = $values['name'] ?? null;
         $this->description = $values['description'] ?? null;
+        $this->type = $values['type'] ?? null;
+        $this->ownerId = $values['ownerId'] ?? null;
     }
 
     /**
@@ -91,6 +107,42 @@ class Role extends JsonSerializableType
     {
         $this->description = $value;
         $this->_setField('description');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<RoleTypeEnum>
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param ?value-of<RoleTypeEnum> $value
+     */
+    public function setType(?string $value = null): self
+    {
+        $this->type = $value;
+        $this->_setField('type');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getOwnerId(): ?string
+    {
+        return $this->ownerId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setOwnerId(?string $value = null): self
+    {
+        $this->ownerId = $value;
+        $this->_setField('ownerId');
         return $this;
     }
 

@@ -60,6 +60,17 @@ class ClientsClient implements ClientsClientInterface
      *
      * **Note**: The first time you call this endpoint, omit the `from` parameter. If there are more results, a `next` value is included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, no further results are remaining.
      *
+     * Example:
+     * ```php
+     * $client->connections->clients->get(
+     *     'id',
+     *     new GetConnectionEnabledClientsRequestParameters([
+     *         'take' => 1,
+     *         'from' => 'from',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The id of the connection for which enabled clients are to be retrieved
      * @param GetConnectionEnabledClientsRequestParameters $request
      * @param ?array{
@@ -88,6 +99,19 @@ class ClientsClient implements ClientsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->connections->clients->update(
+     *     'id',
+     *     [
+     *         new UpdateEnabledClientConnectionsRequestContentItem([
+     *             'clientId' => 'client_id',
+     *             'status' => true,
+     *         ]),
+     *     ],
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to modify
      * @param array<UpdateEnabledClientConnectionsRequestContentItem> $request
      * @param ?array{
@@ -108,7 +132,7 @@ class ClientsClient implements ClientsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/clients",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/clients",
                     method: HttpMethod::PATCH,
                     body: JsonSerializer::serializeArray($request, [UpdateEnabledClientConnectionsRequestContentItem::class]),
                 ),
@@ -161,7 +185,7 @@ class ClientsClient implements ClientsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/clients",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/clients",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

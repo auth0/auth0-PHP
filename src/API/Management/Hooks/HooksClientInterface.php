@@ -18,6 +18,20 @@ interface HooksClientInterface
     /**
      * Retrieve all [hooks](https://auth0.com/docs/hooks). Accepts a list of fields to include or exclude in the result.
      *
+     * Example:
+     * ```php
+     * $client->hooks->list(
+     *     new ListHooksRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'enabled' => true,
+     *         'fields' => 'fields',
+     *         'triggerId' => HookTriggerIdEnum::CredentialsExchange->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListHooksRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -34,6 +48,17 @@ interface HooksClientInterface
     /**
      * Create a new hook.
      *
+     * Example:
+     * ```php
+     * $client->hooks->create(
+     *     new CreateHookRequestContent([
+     *         'name' => 'name',
+     *         'script' => 'script',
+     *         'triggerId' => HookTriggerIdEnum::CredentialsExchange->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateHookRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -49,6 +74,16 @@ interface HooksClientInterface
 
     /**
      * Retrieve [a hook](https://auth0.com/docs/hooks) by its ID. Accepts a list of fields to include in the result.
+     *
+     * Example:
+     * ```php
+     * $client->hooks->get(
+     *     'id',
+     *     new GetHookRequestParameters([
+     *         'fields' => 'fields',
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id ID of the hook to retrieve.
      * @param GetHookRequestParameters $request
@@ -67,6 +102,13 @@ interface HooksClientInterface
     /**
      * Delete a hook.
      *
+     * Example:
+     * ```php
+     * $client->hooks->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the hook to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -81,6 +123,14 @@ interface HooksClientInterface
 
     /**
      * Update an existing hook.
+     *
+     * Example:
+     * ```php
+     * $client->hooks->update(
+     *     'id',
+     *     new UpdateHookRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the hook to update.
      * @param UpdateHookRequestContent $request

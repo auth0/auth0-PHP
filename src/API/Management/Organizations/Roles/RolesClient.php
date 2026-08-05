@@ -3,9 +3,11 @@
 namespace Auth0\SDK\API\Management\Organizations\Roles;
 
 use Auth0\SDK\API\Management\Organizations\Roles\Members\MembersClient;
+use Auth0\SDK\API\Management\Organizations\Roles\Groups\GroupsClient;
 use Psr\Http\Client\ClientInterface;
 use Auth0\SDK\API\Management\Core\Client\RawClient;
 use Auth0\SDK\API\Management\Organizations\Roles\Members\MembersClientInterface;
+use Auth0\SDK\API\Management\Organizations\Roles\Groups\GroupsClientInterface;
 
 class RolesClient implements RolesClientInterface
 {
@@ -13,6 +15,11 @@ class RolesClient implements RolesClientInterface
      * @var MembersClient $members
      */
     public MembersClient $members;
+
+    /**
+     * @var GroupsClient $groups
+     */
+    public GroupsClient $groups;
 
     /**
      * @var array{
@@ -47,6 +54,7 @@ class RolesClient implements RolesClientInterface
         $this->client = $client;
         $this->options = $options ?? [];
         $this->members = new MembersClient($this->client, $this->options);
+        $this->groups = new GroupsClient($this->client, $this->options);
     }
 
     /**
@@ -55,5 +63,13 @@ class RolesClient implements RolesClientInterface
     public function getMembers(): MembersClientInterface
     {
         return $this->members;
+    }
+
+    /**
+     * @return GroupsClientInterface
+     */
+    public function getGroups(): GroupsClientInterface
+    {
+        return $this->groups;
     }
 }

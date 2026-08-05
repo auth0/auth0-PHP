@@ -11,6 +11,11 @@ interface BreachedPasswordDetectionClientInterface
     /**
      * Retrieve details of the Breached Password Detection configuration of your tenant.
      *
+     * Example:
+     * ```php
+     * $client->attackProtection->breachedPasswordDetection->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -25,6 +30,13 @@ interface BreachedPasswordDetectionClientInterface
 
     /**
      * Update details of the Breached Password Detection configuration of your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->attackProtection->breachedPasswordDetection->update(
+     *     new UpdateBreachedPasswordDetectionSettingsRequestContent([]),
+     * );
+     * ```
      *
      * @param UpdateBreachedPasswordDetectionSettingsRequestContent $request
      * @param ?array{

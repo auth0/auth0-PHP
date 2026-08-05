@@ -53,6 +53,24 @@ interface UsersClientInterface
      *
      * Auth0 limits the number of users you can return. If you exceed this threshold, please redefine your search, use the [export job](https://auth0.com/docs/api/management/v2#!/Jobs/post_users_exports), or the [User Import / Export](https://auth0.com/docs/extensions/user-import-export) extension.
      *
+     * Example:
+     * ```php
+     * $client->users->list(
+     *     new ListUsersRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'sort' => 'sort',
+     *         'connection' => 'connection',
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'q' => 'q',
+     *         'searchEngine' => SearchEngineVersionsEnum::V1->value,
+     *         'primaryOrder' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListUsersRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -70,6 +88,15 @@ interface UsersClientInterface
      * Create a new user for a given [database](https://auth0.com/docs/connections/database) or [passwordless](https://auth0.com/docs/connections/passwordless) connection.
      *
      * Note: `connection` is required but other parameters such as `email` and `password` are dependent upon the type of connection.
+     *
+     * Example:
+     * ```php
+     * $client->users->create(
+     *     new CreateUserRequestContent([
+     *         'connection' => 'connection',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateUserRequestContent $request
      * @param ?array{
@@ -91,6 +118,17 @@ interface UsersClientInterface
      *
      * Therefore, when using this endpoint, make sure that you are searching for users via email addresses using the correct case.
      *
+     * Example:
+     * ```php
+     * $client->users->listUsersByEmail(
+     *     new ListUsersByEmailRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'email' => 'email',
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListUsersByEmailRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -106,6 +144,17 @@ interface UsersClientInterface
 
     /**
      * Retrieve user details. A list of fields to include or exclude may also be specified. For more information, see [Retrieve Users with the Get Users Endpoint](https://auth0.com/docs/manage-users/user-search/retrieve-users-with-get-users-endpoint).
+     *
+     * Example:
+     * ```php
+     * $client->users->get(
+     *     'id',
+     *     new GetUserRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id ID of the user to retrieve.
      * @param GetUserRequestParameters $request
@@ -123,6 +172,13 @@ interface UsersClientInterface
 
     /**
      * Delete a user by user ID. This action cannot be undone. For Auth0 Dashboard instructions, see [Delete Users](https://auth0.com/docs/manage-users/user-accounts/delete-users).
+     *
+     * Example:
+     * ```php
+     * $client->users->delete(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id ID of the user to delete.
      * @param ?array{
@@ -229,6 +285,14 @@ interface UsersClientInterface
      * }
      * ```
      *
+     * Example:
+     * ```php
+     * $client->users->update(
+     *     'id',
+     *     new UpdateUserRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to update.
      * @param UpdateUserRequestContent $request
      * @param ?array{
@@ -246,6 +310,13 @@ interface UsersClientInterface
     /**
      * Remove an existing multi-factor authentication (MFA) [recovery code](https://auth0.com/docs/secure/multi-factor-authentication/reset-user-mfa) and generate a new one. If a user cannot access the original device or account used for MFA enrollment, they can use a recovery code to authenticate.
      *
+     * Example:
+     * ```php
+     * $client->users->regenerateRecoveryCode(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the user to regenerate a multi-factor authentication recovery code for.
      * @param ?array{
      *   baseUrl?: string,
@@ -261,6 +332,14 @@ interface UsersClientInterface
 
     /**
      * Revokes selected resources related to a user (sessions, refresh tokens, ...).
+     *
+     * Example:
+     * ```php
+     * $client->users->revokeAccess(
+     *     'id',
+     *     new RevokeUserAccessRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the user.
      * @param RevokeUserAccessRequestContent $request

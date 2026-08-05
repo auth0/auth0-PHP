@@ -23,9 +23,16 @@ class ConnectionConnectedAccountsPurposeXaa extends JsonSerializableType
     private bool $active;
 
     /**
+     * @var ?bool $allowMissingUserId When true, allows storing a connected account without an upstream identity provider user id. At most one such connected account is allowed per user per connection. Default false preserves the strict behaviour (an upstream user id is required).
+     */
+    #[JsonProperty('allow_missing_user_id')]
+    private ?bool $allowMissingUserId;
+
+    /**
      * @param array{
      *   active: bool,
      *   crossAppAccess?: ?bool,
+     *   allowMissingUserId?: ?bool,
      * } $values
      */
     public function __construct(
@@ -33,6 +40,7 @@ class ConnectionConnectedAccountsPurposeXaa extends JsonSerializableType
     ) {
         $this->crossAppAccess = $values['crossAppAccess'] ?? null;
         $this->active = $values['active'];
+        $this->allowMissingUserId = $values['allowMissingUserId'] ?? null;
     }
 
     /**
@@ -68,6 +76,24 @@ class ConnectionConnectedAccountsPurposeXaa extends JsonSerializableType
     {
         $this->active = $value;
         $this->_setField('active');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getAllowMissingUserId(): ?bool
+    {
+        return $this->allowMissingUserId;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setAllowMissingUserId(?bool $value = null): self
+    {
+        $this->allowMissingUserId = $value;
+        $this->_setField('allowMissingUserId');
         return $this;
     }
 

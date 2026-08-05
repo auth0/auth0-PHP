@@ -11,6 +11,11 @@ interface BotDetectionClientInterface
     /**
      * Get the Bot Detection configuration of your tenant.
      *
+     * Example:
+     * ```php
+     * $client->attackProtection->botDetection->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -25,6 +30,13 @@ interface BotDetectionClientInterface
 
     /**
      * Update the Bot Detection configuration of your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->attackProtection->botDetection->update(
+     *     new UpdateBotDetectionSettingsRequestContent([]),
+     * );
+     * ```
      *
      * @param UpdateBotDetectionSettingsRequestContent $request
      * @param ?array{

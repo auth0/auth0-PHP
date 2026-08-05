@@ -56,6 +56,18 @@ class ExecutionsClient implements ExecutionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->executions->list(
+     *     'flow_id',
+     *     new ListFlowExecutionsRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $flowId Flow id
      * @param ListFlowExecutionsRequestParameters $request
      * @param ?array{
@@ -84,6 +96,19 @@ class ExecutionsClient implements ExecutionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->executions->get(
+     *     'flow_id',
+     *     'execution_id',
+     *     new GetFlowExecutionRequestParameters([
+     *         'hydrate' => [
+     *             GetFlowExecutionRequestParametersHydrateEnum::Debug->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $flowId Flow id
      * @param string $executionId Flow execution id
      * @param GetFlowExecutionRequestParameters $request
@@ -110,7 +135,7 @@ class ExecutionsClient implements ExecutionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "flows/{$flowId}/executions/{$executionId}",
+                    path: "flows/" . RawClient::encodePathParam($flowId) . "/executions/" . RawClient::encodePathParam($executionId),
                     method: HttpMethod::GET,
                     query: $query,
                 ),
@@ -137,6 +162,14 @@ class ExecutionsClient implements ExecutionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->executions->delete(
+     *     'flow_id',
+     *     'execution_id',
+     * );
+     * ```
+     *
      * @param string $flowId Flows id
      * @param string $executionId Flow execution identifier
      * @param ?array{
@@ -157,7 +190,7 @@ class ExecutionsClient implements ExecutionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "flows/{$flowId}/executions/{$executionId}",
+                    path: "flows/" . RawClient::encodePathParam($flowId) . "/executions/" . RawClient::encodePathParam($executionId),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -195,6 +228,9 @@ class ExecutionsClient implements ExecutionsClientInterface
     {
         $options = array_merge($this->options, $options ?? []);
         $query = [];
+        if ($request->getIncludeTotals() != null) {
+            $query['include_totals'] = $request->getIncludeTotals();
+        }
         if ($request->getFrom() != null) {
             $query['from'] = $request->getFrom();
         }
@@ -205,7 +241,7 @@ class ExecutionsClient implements ExecutionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "flows/{$flowId}/executions",
+                    path: "flows/" . RawClient::encodePathParam($flowId) . "/executions",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

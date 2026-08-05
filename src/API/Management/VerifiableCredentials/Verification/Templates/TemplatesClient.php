@@ -61,6 +61,16 @@ class TemplatesClient implements TemplatesClientInterface
     /**
      * List verifiable credential templates.
      *
+     * Example:
+     * ```php
+     * $client->verifiableCredentials->verification->templates->list(
+     *     new ListVerifiableCredentialTemplatesRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListVerifiableCredentialTemplatesRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -89,6 +99,23 @@ class TemplatesClient implements TemplatesClientInterface
 
     /**
      * Create a verifiable credential template.
+     *
+     * Example:
+     * ```php
+     * $client->verifiableCredentials->verification->templates->create(
+     *     new CreateVerifiableCredentialTemplateRequestContent([
+     *         'name' => 'name',
+     *         'type' => 'type',
+     *         'dialect' => 'dialect',
+     *         'presentation' => new MdlPresentationRequest([
+     *             'orgIso1801351MDl' => new MdlPresentationRequestProperties([
+     *                 'orgIso1801351' => new MdlPresentationProperties([]),
+     *             ]),
+     *         ]),
+     *         'wellKnownTrustedIssuers' => 'well_known_trusted_issuers',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateVerifiableCredentialTemplateRequestContent $request
      * @param ?array{
@@ -139,6 +166,13 @@ class TemplatesClient implements TemplatesClientInterface
     /**
      * Get a verifiable credential template.
      *
+     * Example:
+     * ```php
+     * $client->verifiableCredentials->verification->templates->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the template to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -159,7 +193,7 @@ class TemplatesClient implements TemplatesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "verifiable-credentials/verification/templates/{$id}",
+                    path: "verifiable-credentials/verification/templates/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -187,6 +221,13 @@ class TemplatesClient implements TemplatesClientInterface
     /**
      * Delete a verifiable credential template.
      *
+     * Example:
+     * ```php
+     * $client->verifiableCredentials->verification->templates->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the template to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -206,7 +247,7 @@ class TemplatesClient implements TemplatesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "verifiable-credentials/verification/templates/{$id}",
+                    path: "verifiable-credentials/verification/templates/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -227,6 +268,14 @@ class TemplatesClient implements TemplatesClientInterface
 
     /**
      * Update a verifiable credential template.
+     *
+     * Example:
+     * ```php
+     * $client->verifiableCredentials->verification->templates->update(
+     *     'id',
+     *     new UpdateVerifiableCredentialTemplateRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the template to retrieve.
      * @param UpdateVerifiableCredentialTemplateRequestContent $request
@@ -249,7 +298,7 @@ class TemplatesClient implements TemplatesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "verifiable-credentials/verification/templates/{$id}",
+                    path: "verifiable-credentials/verification/templates/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

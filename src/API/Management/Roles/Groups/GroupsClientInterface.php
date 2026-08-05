@@ -13,6 +13,17 @@ interface GroupsClientInterface
     /**
      * Lists the groups to which the specified role is assigned.
      *
+     * Example:
+     * ```php
+     * $client->roles->groups->get(
+     *     'id',
+     *     new ListRoleGroupsParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the role (service-generated).
      * @param ListRoleGroupsParameters $request
      * @param ?array{
@@ -30,6 +41,18 @@ interface GroupsClientInterface
     /**
      * Assign one or more groups to a specified role.
      *
+     * Example:
+     * ```php
+     * $client->roles->groups->create(
+     *     'id',
+     *     new AssignRoleGroupsRequestContent([
+     *         'groups' => [
+     *             'groups',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the role (service-generated).
      * @param AssignRoleGroupsRequestContent $request
      * @param ?array{
@@ -45,6 +68,18 @@ interface GroupsClientInterface
 
     /**
      * Unassign one or more groups from a specified role.
+     *
+     * Example:
+     * ```php
+     * $client->roles->groups->delete(
+     *     'id',
+     *     new DeleteRoleGroupsRequestContent([
+     *         'groups' => [
+     *             'groups',
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id Unique identifier for the role (service-generated).
      * @param DeleteRoleGroupsRequestContent $request

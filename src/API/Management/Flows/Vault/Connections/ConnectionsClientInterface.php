@@ -63,6 +63,17 @@ use Auth0\SDK\API\Management\Types\UpdateFlowsVaultConnectionResponseContent;
 interface ConnectionsClientInterface
 {
     /**
+     * Example:
+     * ```php
+     * $client->flows->vault->connections->list(
+     *     new ListFlowsVaultConnectionsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListFlowsVaultConnectionsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -77,6 +88,21 @@ interface ConnectionsClientInterface
     public function list(ListFlowsVaultConnectionsRequestParameters $request = new ListFlowsVaultConnectionsRequestParameters(), ?array $options = null): Pager;
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->vault->connections->create(
+     *     new CreateFlowsVaultConnectionActivecampaignApiKey([
+     *         'name' => 'name',
+     *         'appId' => FlowsVaultConnectionAppIdActivecampaignEnum::Activecampaign->value,
+     *         'setup' => new FlowsVaultConnectioSetupApiKeyWithBaseUrl([
+     *             'type' => FlowsVaultConnectioSetupTypeApiKeyEnum::ApiKey->value,
+     *             'apiKey' => 'api_key',
+     *             'baseUrl' => 'base_url',
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param (
      *    CreateFlowsVaultConnectionActivecampaignApiKey
      *   |CreateFlowsVaultConnectionActivecampaignUninitialized
@@ -142,6 +168,13 @@ interface ConnectionsClientInterface
     public function create(CreateFlowsVaultConnectionActivecampaignApiKey|CreateFlowsVaultConnectionActivecampaignUninitialized|CreateFlowsVaultConnectionAirtableApiKey|CreateFlowsVaultConnectionAirtableUninitialized|CreateFlowsVaultConnectionAuth0OauthApp|CreateFlowsVaultConnectionAuth0Uninitialized|CreateFlowsVaultConnectionBigqueryJwt|CreateFlowsVaultConnectionBigqueryUninitialized|CreateFlowsVaultConnectionClearbitApiKey|CreateFlowsVaultConnectionClearbitUninitialized|CreateFlowsVaultConnectionDocusignOauthCode|CreateFlowsVaultConnectionDocusignUninitialized|CreateFlowsVaultConnectionGoogleSheetsOauthCode|CreateFlowsVaultConnectionGoogleSheetsUninitialized|CreateFlowsVaultConnectionHttpBearer|CreateFlowsVaultConnectionHttpBasicAuth|CreateFlowsVaultConnectionHttpApiKey|CreateFlowsVaultConnectionHttpOauthClientCredentials|CreateFlowsVaultConnectionHttpUninitialized|CreateFlowsVaultConnectionHubspotApiKey|CreateFlowsVaultConnectionHubspotOauthCode|CreateFlowsVaultConnectionHubspotUninitialized|CreateFlowsVaultConnectionJwtJwt|CreateFlowsVaultConnectionJwtUninitialized|CreateFlowsVaultConnectionMailchimpApiKey|CreateFlowsVaultConnectionMailchimpOauthCode|CreateFlowsVaultConnectionMailchimpUninitialized|CreateFlowsVaultConnectionMailjetApiKey|CreateFlowsVaultConnectionMailjetUninitialized|CreateFlowsVaultConnectionPipedriveToken|CreateFlowsVaultConnectionPipedriveOauthCode|CreateFlowsVaultConnectionPipedriveUninitialized|CreateFlowsVaultConnectionSalesforceOauthCode|CreateFlowsVaultConnectionSalesforceUninitialized|CreateFlowsVaultConnectionSendgridApiKey|CreateFlowsVaultConnectionSendgridUninitialized|CreateFlowsVaultConnectionSlackWebhook|CreateFlowsVaultConnectionSlackOauthCode|CreateFlowsVaultConnectionSlackUninitialized|CreateFlowsVaultConnectionStripeKeyPair|CreateFlowsVaultConnectionStripeOauthCode|CreateFlowsVaultConnectionStripeUninitialized|CreateFlowsVaultConnectionTelegramToken|CreateFlowsVaultConnectionTelegramUninitialized|CreateFlowsVaultConnectionTwilioApiKey|CreateFlowsVaultConnectionTwilioUninitialized|CreateFlowsVaultConnectionWhatsappToken|CreateFlowsVaultConnectionWhatsappUninitialized|CreateFlowsVaultConnectionZapierWebhook|CreateFlowsVaultConnectionZapierUninitialized $request, ?array $options = null): ?CreateFlowsVaultConnectionResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->vault->connections->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Flows Vault connection ID
      * @param ?array{
      *   baseUrl?: string,
@@ -156,6 +189,13 @@ interface ConnectionsClientInterface
     public function get(string $id, ?array $options = null): ?GetFlowsVaultConnectionResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->vault->connections->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Vault connection id
      * @param ?array{
      *   baseUrl?: string,
@@ -169,6 +209,14 @@ interface ConnectionsClientInterface
     public function delete(string $id, ?array $options = null): void;
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->vault->connections->update(
+     *     'id',
+     *     new UpdateFlowsVaultConnectionRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id Flows Vault connection ID
      * @param UpdateFlowsVaultConnectionRequestContent $request
      * @param ?array{

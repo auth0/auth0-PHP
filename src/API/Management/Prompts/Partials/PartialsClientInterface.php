@@ -9,6 +9,13 @@ interface PartialsClientInterface
     /**
      * Get template partials for a prompt
      *
+     * Example:
+     * ```php
+     * $client->prompts->partials->get(
+     *     PartialGroupsEnum::Login->value,
+     * );
+     * ```
+     *
      * @param value-of<PartialGroupsEnum> $prompt Name of the prompt.
      * @param ?array{
      *   baseUrl?: string,
@@ -24,6 +31,16 @@ interface PartialsClientInterface
 
     /**
      * Set template partials for a prompt
+     *
+     * Example:
+     * ```php
+     * $client->prompts->partials->set(
+     *     PartialGroupsEnum::Login->value,
+     *     [
+     *         'key' => "value",
+     *     ],
+     * );
+     * ```
      *
      * @param value-of<PartialGroupsEnum> $prompt Name of the prompt.
      * @param array<string, mixed> $request

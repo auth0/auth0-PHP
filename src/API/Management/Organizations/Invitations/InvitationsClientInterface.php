@@ -15,6 +15,21 @@ interface InvitationsClientInterface
     /**
      * Retrieve a detailed list of invitations sent to users for a specific Organization. The list includes details such as inviter and invitee information, invitation URLs, and dates of creation and expiration. To learn more about Organization invitations, review [Invite Organization Members](https://auth0.com/docs/manage-users/organizations/configure-organizations/invite-members).
      *
+     * Example:
+     * ```php
+     * $client->organizations->invitations->list(
+     *     'id',
+     *     new ListOrganizationInvitationsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'sort' => 'sort',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param ListOrganizationInvitationsRequestParameters $request
      * @param ?array{
@@ -32,6 +47,22 @@ interface InvitationsClientInterface
     /**
      * Create a user invitation for a specific Organization. Upon creation, the listed user receives an email inviting them to join the Organization. To learn more about Organization invitations, review [Invite Organization Members](https://auth0.com/docs/manage-users/organizations/configure-organizations/invite-members).
      *
+     * Example:
+     * ```php
+     * $client->organizations->invitations->create(
+     *     'id',
+     *     new CreateOrganizationInvitationRequestContent([
+     *         'inviter' => new OrganizationInvitationInviter([
+     *             'name' => 'name',
+     *         ]),
+     *         'invitee' => new OrganizationInvitationInvitee([
+     *             'email' => 'email',
+     *         ]),
+     *         'clientId' => 'client_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param CreateOrganizationInvitationRequestContent $request
      * @param ?array{
@@ -47,6 +78,18 @@ interface InvitationsClientInterface
     public function create(string $id, CreateOrganizationInvitationRequestContent $request, ?array $options = null): ?CreateOrganizationInvitationResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->invitations->get(
+     *     'id',
+     *     'invitation_id',
+     *     new GetOrganizationInvitationRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $invitationId The id of the user invitation.
      * @param GetOrganizationInvitationRequestParameters $request
@@ -63,6 +106,14 @@ interface InvitationsClientInterface
     public function get(string $id, string $invitationId, GetOrganizationInvitationRequestParameters $request = new GetOrganizationInvitationRequestParameters(), ?array $options = null): ?GetOrganizationInvitationResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->invitations->delete(
+     *     'id',
+     *     'invitation_id',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $invitationId The id of the user invitation.
      * @param ?array{

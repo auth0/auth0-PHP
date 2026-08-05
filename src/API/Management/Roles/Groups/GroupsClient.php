@@ -58,6 +58,17 @@ class GroupsClient implements GroupsClientInterface
     /**
      * Lists the groups to which the specified role is assigned.
      *
+     * Example:
+     * ```php
+     * $client->roles->groups->get(
+     *     'id',
+     *     new ListRoleGroupsParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the role (service-generated).
      * @param ListRoleGroupsParameters $request
      * @param ?array{
@@ -88,6 +99,18 @@ class GroupsClient implements GroupsClientInterface
     /**
      * Assign one or more groups to a specified role.
      *
+     * Example:
+     * ```php
+     * $client->roles->groups->create(
+     *     'id',
+     *     new AssignRoleGroupsRequestContent([
+     *         'groups' => [
+     *             'groups',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the role (service-generated).
      * @param AssignRoleGroupsRequestContent $request
      * @param ?array{
@@ -108,7 +131,7 @@ class GroupsClient implements GroupsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "roles/{$id}/groups",
+                    path: "roles/" . RawClient::encodePathParam($id) . "/groups",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -131,6 +154,18 @@ class GroupsClient implements GroupsClientInterface
     /**
      * Unassign one or more groups from a specified role.
      *
+     * Example:
+     * ```php
+     * $client->roles->groups->delete(
+     *     'id',
+     *     new DeleteRoleGroupsRequestContent([
+     *         'groups' => [
+     *             'groups',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the role (service-generated).
      * @param DeleteRoleGroupsRequestContent $request
      * @param ?array{
@@ -151,7 +186,7 @@ class GroupsClient implements GroupsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "roles/{$id}/groups",
+                    path: "roles/" . RawClient::encodePathParam($id) . "/groups",
                     method: HttpMethod::DELETE,
                     body: $request,
                 ),
@@ -202,7 +237,7 @@ class GroupsClient implements GroupsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "roles/{$id}/groups",
+                    path: "roles/" . RawClient::encodePathParam($id) . "/groups",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

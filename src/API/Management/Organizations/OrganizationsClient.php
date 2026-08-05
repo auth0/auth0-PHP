@@ -3,6 +3,7 @@
 namespace Auth0\SDK\API\Management\Organizations;
 
 use Auth0\SDK\API\Management\Organizations\ClientGrants\ClientGrantsClient;
+use Auth0\SDK\API\Management\Organizations\Clients\ClientsClient;
 use Auth0\SDK\API\Management\Organizations\Connections\ConnectionsClient;
 use Auth0\SDK\API\Management\Organizations\DiscoveryDomains\DiscoveryDomainsClient;
 use Auth0\SDK\API\Management\Organizations\EnabledConnections\EnabledConnectionsClient;
@@ -31,6 +32,7 @@ use Auth0\SDK\API\Management\Types\GetOrganizationResponseContent;
 use Auth0\SDK\API\Management\Organizations\Requests\UpdateOrganizationRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateOrganizationResponseContent;
 use Auth0\SDK\API\Management\Organizations\ClientGrants\ClientGrantsClientInterface;
+use Auth0\SDK\API\Management\Organizations\Clients\ClientsClientInterface;
 use Auth0\SDK\API\Management\Organizations\Connections\ConnectionsClientInterface;
 use Auth0\SDK\API\Management\Organizations\DiscoveryDomains\DiscoveryDomainsClientInterface;
 use Auth0\SDK\API\Management\Organizations\EnabledConnections\EnabledConnectionsClientInterface;
@@ -45,6 +47,11 @@ class OrganizationsClient implements OrganizationsClientInterface
      * @var ClientGrantsClient $clientGrants
      */
     public ClientGrantsClient $clientGrants;
+
+    /**
+     * @var ClientsClient $clients
+     */
+    public ClientsClient $clients;
 
     /**
      * @var ConnectionsClient $connections
@@ -114,6 +121,7 @@ class OrganizationsClient implements OrganizationsClientInterface
         $this->client = $client;
         $this->options = $options ?? [];
         $this->clientGrants = new ClientGrantsClient($this->client, $this->options);
+        $this->clients = new ClientsClient($this->client, $this->options);
         $this->connections = new ConnectionsClient($this->client, $this->options);
         $this->discoveryDomains = new DiscoveryDomainsClient($this->client, $this->options);
         $this->enabledConnections = new EnabledConnectionsClient($this->client, $this->options);
@@ -141,6 +149,19 @@ class OrganizationsClient implements OrganizationsClientInterface
      * - `take`: The total number of entries to retrieve when using the `from` parameter. Defaults to 50.
      *
      * **Note**: The first time you call this endpoint using checkpoint pagination, omit the `from` parameter. If there are more results, a `next` value is included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, no pages are remaining.
+     *
+     * Example:
+     * ```php
+     * $client->organizations->list(
+     *     new ListOrganizationsRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'sort' => 'sort',
+     *         'includeClientAssociationFor' => 'include_client_association_for',
+     *     ]),
+     * );
+     * ```
      *
      * @param ListOrganizationsRequestParameters $request
      * @param ?array{
@@ -170,6 +191,15 @@ class OrganizationsClient implements OrganizationsClientInterface
 
     /**
      * Create a new Organization within your tenant.  To learn more about Organization settings, behavior, and configuration options, review [Create Your First Organization](https://auth0.com/docs/manage-users/organizations/create-first-organization).
+     *
+     * Example:
+     * ```php
+     * $client->organizations->create(
+     *     new CreateOrganizationRequestContent([
+     *         'name' => 'name',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateOrganizationRequestContent $request
      * @param ?array{
@@ -220,6 +250,13 @@ class OrganizationsClient implements OrganizationsClientInterface
     /**
      * Retrieve details about a single Organization specified by name.
      *
+     * Example:
+     * ```php
+     * $client->organizations->getByName(
+     *     'name',
+     * );
+     * ```
+     *
      * @param string $name name of the organization to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -240,7 +277,7 @@ class OrganizationsClient implements OrganizationsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/name/{$name}",
+                    path: "organizations/name/" . RawClient::encodePathParam($name),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -268,6 +305,13 @@ class OrganizationsClient implements OrganizationsClientInterface
     /**
      * Retrieve details about a single Organization specified by ID.
      *
+     * Example:
+     * ```php
+     * $client->organizations->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the organization to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -288,7 +332,7 @@ class OrganizationsClient implements OrganizationsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}",
+                    path: "organizations/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -318,6 +362,13 @@ class OrganizationsClient implements OrganizationsClientInterface
      *
      * **Note**: Members are automatically disassociated from an Organization when it is deleted. However, this action does **not** delete these users from your tenant.
      *
+     * Example:
+     * ```php
+     * $client->organizations->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param ?array{
      *   baseUrl?: string,
@@ -337,7 +388,7 @@ class OrganizationsClient implements OrganizationsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}",
+                    path: "organizations/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -358,6 +409,14 @@ class OrganizationsClient implements OrganizationsClientInterface
 
     /**
      * Update the details of a specific [Organization](https://auth0.com/docs/manage-users/organizations/configure-organizations/create-organizations), such as name and display name, branding options, and metadata.
+     *
+     * Example:
+     * ```php
+     * $client->organizations->update(
+     *     'id',
+     *     new UpdateOrganizationRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the organization to update.
      * @param UpdateOrganizationRequestContent $request
@@ -380,7 +439,7 @@ class OrganizationsClient implements OrganizationsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}",
+                    path: "organizations/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -412,6 +471,14 @@ class OrganizationsClient implements OrganizationsClientInterface
     public function getClientGrants(): ClientGrantsClientInterface
     {
         return $this->clientGrants;
+    }
+
+    /**
+     * @return ClientsClientInterface
+     */
+    public function getClients(): ClientsClientInterface
+    {
+        return $this->clients;
     }
 
     /**
@@ -506,6 +573,9 @@ class OrganizationsClient implements OrganizationsClientInterface
     {
         $options = array_merge($this->options, $options ?? []);
         $query = [];
+        if ($request->getIncludeTotals() != null) {
+            $query['include_totals'] = $request->getIncludeTotals();
+        }
         if ($request->getFrom() != null) {
             $query['from'] = $request->getFrom();
         }
@@ -514,6 +584,9 @@ class OrganizationsClient implements OrganizationsClientInterface
         }
         if ($request->getSort() != null) {
             $query['sort'] = $request->getSort();
+        }
+        if ($request->getIncludeClientAssociationFor() != null) {
+            $query['include_client_association_for'] = $request->getIncludeClientAssociationFor();
         }
         try {
             $response = $this->client->sendRequest(

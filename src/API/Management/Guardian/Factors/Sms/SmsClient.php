@@ -62,6 +62,11 @@ class SmsClient implements SmsClientInterface
      *
      *     A new endpoint is available to retrieve the Twilio configuration related to phone factors (<a href='https://auth0.com/docs/api/management/v2/#!/Guardian/get_twilio'>phone Twilio configuration</a>). It has the same payload as this one. Please use it instead.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->sms->getTwilioProvider();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -110,6 +115,13 @@ class SmsClient implements SmsClientInterface
      * This endpoint has been deprecated. To complete this action, use the <a href="https://auth0.com/docs/api/management/v2/guardian/put-twilio">Update Twilio phone configuration</a> endpoint.
      *
      *     <b>Previous functionality</b>: Update the Twilio SMS provider configuration.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->sms->setTwilioProvider(
+     *     new SetGuardianFactorsProviderSmsTwilioRequestContent([]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorsProviderSmsTwilioRequestContent $request
      * @param ?array{
@@ -162,6 +174,11 @@ class SmsClient implements SmsClientInterface
      *
      *     <b>Previous functionality</b>: Retrieve details for the multi-factor authentication SMS provider configured for your tenant.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->sms->getSelectedProvider();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -210,6 +227,15 @@ class SmsClient implements SmsClientInterface
      * This endpoint has been deprecated. To complete this action, use the <a href="https://auth0.com/docs/api/management/v2/guardian/put-phone-providers">Update phone configuration</a> endpoint instead.
      *
      *     <b>Previous functionality</b>: Update the multi-factor authentication SMS provider configuration in your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->sms->setProvider(
+     *     new SetGuardianFactorsProviderSmsRequestContent([
+     *         'provider' => GuardianFactorsProviderSmsProviderEnum::Auth0->value,
+     *     ]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorsProviderSmsRequestContent $request
      * @param ?array{
@@ -262,6 +288,11 @@ class SmsClient implements SmsClientInterface
      *
      *     <b>Previous function</b>: Retrieve details of SMS enrollment and verification templates configured for your tenant.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->sms->getTemplates();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -310,6 +341,16 @@ class SmsClient implements SmsClientInterface
      * This endpoint has been deprecated. To complete this action, use the <a href="https://auth0.com/docs/api/management/v2/guardian/put-factor-phone-templates">Update enrollment and verification phone templates</a> endpoint instead.
      *
      *     <b>Previous functionality</b>: Customize the messages sent to complete SMS enrollment and verification.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->sms->setTemplates(
+     *     new SetGuardianFactorSmsTemplatesRequestContent([
+     *         'enrollmentMessage' => 'enrollment_message',
+     *         'verificationMessage' => 'verification_message',
+     *     ]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorSmsTemplatesRequestContent $request
      * @param ?array{

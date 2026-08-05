@@ -3,6 +3,7 @@
 namespace Auth0\SDK\API\Management\Roles\Requests;
 
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
+use Auth0\SDK\API\Management\Types\RoleTypeEnum;
 
 class ListRolesRequestParameters extends JsonSerializableType
 {
@@ -27,11 +28,23 @@ class ListRolesRequestParameters extends JsonSerializableType
     private ?string $nameFilter;
 
     /**
+     * @var ?value-of<RoleTypeEnum> $type Optional filter on the type of the role
+     */
+    private ?string $type;
+
+    /**
+     * @var ?string $ownerId Filter organization-level roles by owner ID. Required when type is "organization".
+     */
+    private ?string $ownerId;
+
+    /**
      * @param array{
      *   perPage?: ?int,
      *   page?: ?int,
      *   includeTotals?: ?bool,
      *   nameFilter?: ?string,
+     *   type?: ?value-of<RoleTypeEnum>,
+     *   ownerId?: ?string,
      * } $values
      */
     public function __construct(
@@ -41,6 +54,8 @@ class ListRolesRequestParameters extends JsonSerializableType
         $this->page = $values['page'] ?? null;
         $this->includeTotals = $values['includeTotals'] ?? null;
         $this->nameFilter = $values['nameFilter'] ?? null;
+        $this->type = $values['type'] ?? null;
+        $this->ownerId = $values['ownerId'] ?? null;
     }
 
     /**
@@ -112,6 +127,42 @@ class ListRolesRequestParameters extends JsonSerializableType
     {
         $this->nameFilter = $value;
         $this->_setField('nameFilter');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<RoleTypeEnum>
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param ?value-of<RoleTypeEnum> $value
+     */
+    public function setType(?string $value = null): self
+    {
+        $this->type = $value;
+        $this->_setField('type');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getOwnerId(): ?string
+    {
+        return $this->ownerId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setOwnerId(?string $value = null): self
+    {
+        $this->ownerId = $value;
+        $this->_setField('ownerId');
         return $this;
     }
 }

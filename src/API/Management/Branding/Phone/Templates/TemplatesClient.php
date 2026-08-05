@@ -59,6 +59,15 @@ class TemplatesClient implements TemplatesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->branding->phone->templates->list(
+     *     new ListPhoneTemplatesRequestParameters([
+     *         'disabled' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListPhoneTemplatesRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -110,6 +119,13 @@ class TemplatesClient implements TemplatesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->branding->phone->templates->create(
+     *     new CreatePhoneTemplateRequestContent([]),
+     * );
+     * ```
+     *
      * @param CreatePhoneTemplateRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -157,6 +173,13 @@ class TemplatesClient implements TemplatesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->branding->phone->templates->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id
      * @param ?array{
      *   baseUrl?: string,
@@ -177,7 +200,7 @@ class TemplatesClient implements TemplatesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "branding/phone/templates/{$id}",
+                    path: "branding/phone/templates/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -203,6 +226,13 @@ class TemplatesClient implements TemplatesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->branding->phone->templates->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id
      * @param ?array{
      *   baseUrl?: string,
@@ -222,7 +252,7 @@ class TemplatesClient implements TemplatesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "branding/phone/templates/{$id}",
+                    path: "branding/phone/templates/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -242,6 +272,14 @@ class TemplatesClient implements TemplatesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->branding->phone->templates->update(
+     *     'id',
+     *     new UpdatePhoneTemplateRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id
      * @param UpdatePhoneTemplateRequestContent $request
      * @param ?array{
@@ -263,7 +301,7 @@ class TemplatesClient implements TemplatesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "branding/phone/templates/{$id}",
+                    path: "branding/phone/templates/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -290,6 +328,16 @@ class TemplatesClient implements TemplatesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->branding->phone->templates->reset(
+     *     'id',
+     *     [
+     *         'key' => "value",
+     *     ],
+     * );
+     * ```
+     *
      * @param string $id
      * @param mixed $request
      * @param ?array{
@@ -311,7 +359,7 @@ class TemplatesClient implements TemplatesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "branding/phone/templates/{$id}/reset",
+                    path: "branding/phone/templates/" . RawClient::encodePathParam($id) . "/reset",
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -338,6 +386,16 @@ class TemplatesClient implements TemplatesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->branding->phone->templates->test(
+     *     'id',
+     *     new CreatePhoneTemplateTestNotificationRequestContent([
+     *         'to' => 'to',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id
      * @param CreatePhoneTemplateTestNotificationRequestContent $request
      * @param ?array{
@@ -359,7 +417,7 @@ class TemplatesClient implements TemplatesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "branding/phone/templates/{$id}/try",
+                    path: "branding/phone/templates/" . RawClient::encodePathParam($id) . "/try",
                     method: HttpMethod::POST,
                     body: $request,
                 ),

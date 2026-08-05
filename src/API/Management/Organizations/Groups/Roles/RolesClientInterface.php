@@ -13,6 +13,18 @@ interface RolesClientInterface
     /**
      * Lists the roles assigned to the specified group in the context of an organization.
      *
+     * Example:
+     * ```php
+     * $client->organizations->groups->roles->list(
+     *     'organization_id',
+     *     'group_id',
+     *     new ListOrganizationGroupRolesRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $organizationId ID of the organization
      * @param string $groupId ID of the group
      * @param ListOrganizationGroupRolesRequestParameters $request
@@ -31,6 +43,19 @@ interface RolesClientInterface
     /**
      * Assign one or more roles to a specified group in the context of an organization.
      *
+     * Example:
+     * ```php
+     * $client->organizations->groups->roles->create(
+     *     'organization_id',
+     *     'group_id',
+     *     new CreateOrganizationGroupRolesRequestContent([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $organizationId ID of the organization
      * @param string $groupId ID of the group
      * @param CreateOrganizationGroupRolesRequestContent $request
@@ -47,6 +72,19 @@ interface RolesClientInterface
 
     /**
      * Unassign one or more roles from a specified group in the context of an organization.
+     *
+     * Example:
+     * ```php
+     * $client->organizations->groups->roles->delete(
+     *     'organization_id',
+     *     'group_id',
+     *     new DeleteOrganizationGroupRolesRequestContent([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param string $organizationId ID of the organization
      * @param string $groupId ID of the group

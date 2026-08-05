@@ -58,6 +58,20 @@ class PermissionsClient implements PermissionsClientInterface
     /**
      * Retrieve all permissions associated with the user.
      *
+     * **Note**: Returns only permissions from direct assignments and directly assigned roles. For permissions a user has via group-based role assignments, use `GET /api/v2/users/{id}/effective-permissions`.
+     *
+     * Example:
+     * ```php
+     * $client->users->permissions->list(
+     *     'id',
+     *     new ListUserPermissionsRequestParameters([
+     *         'perPage' => 1,
+     *         'page' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to retrieve the permissions for.
      * @param ListUserPermissionsRequestParameters $request
      * @param ?array{
@@ -91,6 +105,21 @@ class PermissionsClient implements PermissionsClientInterface
     /**
      * Assign permissions to a user.
      *
+     * Example:
+     * ```php
+     * $client->users->permissions->create(
+     *     'id',
+     *     new CreateUserPermissionsRequestContent([
+     *         'permissions' => [
+     *             new PermissionRequestPayload([
+     *                 'resourceServerIdentifier' => 'resource_server_identifier',
+     *                 'permissionName' => 'permission_name',
+     *             ]),
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to assign permissions to.
      * @param CreateUserPermissionsRequestContent $request
      * @param ?array{
@@ -111,7 +140,7 @@ class PermissionsClient implements PermissionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/permissions",
+                    path: "users/" . RawClient::encodePathParam($id) . "/permissions",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -134,6 +163,21 @@ class PermissionsClient implements PermissionsClientInterface
     /**
      * Remove permissions from a user.
      *
+     * Example:
+     * ```php
+     * $client->users->permissions->delete(
+     *     'id',
+     *     new DeleteUserPermissionsRequestContent([
+     *         'permissions' => [
+     *             new PermissionRequestPayload([
+     *                 'resourceServerIdentifier' => 'resource_server_identifier',
+     *                 'permissionName' => 'permission_name',
+     *             ]),
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to remove permissions from.
      * @param DeleteUserPermissionsRequestContent $request
      * @param ?array{
@@ -154,7 +198,7 @@ class PermissionsClient implements PermissionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/permissions",
+                    path: "users/" . RawClient::encodePathParam($id) . "/permissions",
                     method: HttpMethod::DELETE,
                     body: $request,
                 ),
@@ -176,6 +220,8 @@ class PermissionsClient implements PermissionsClientInterface
 
     /**
      * Retrieve all permissions associated with the user.
+     *
+     * **Note**: Returns only permissions from direct assignments and directly assigned roles. For permissions a user has via group-based role assignments, use `GET /api/v2/users/{id}/effective-permissions`.
      *
      * @param string $id ID of the user to retrieve the permissions for.
      * @param ListUserPermissionsRequestParameters $request
@@ -208,7 +254,7 @@ class PermissionsClient implements PermissionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/permissions",
+                    path: "users/" . RawClient::encodePathParam($id) . "/permissions",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

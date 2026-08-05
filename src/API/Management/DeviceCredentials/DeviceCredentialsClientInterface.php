@@ -13,6 +13,22 @@ interface DeviceCredentialsClientInterface
     /**
      * Retrieve device credential information (`public_key`, `refresh_token`, or `rotating_refresh_token`) associated with a specific user.
      *
+     * Example:
+     * ```php
+     * $client->deviceCredentials->list(
+     *     new ListDeviceCredentialsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'userId' => 'user_id',
+     *         'clientId' => 'client_id',
+     *         'type' => DeviceCredentialTypeEnum::PublicKey->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListDeviceCredentialsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -31,6 +47,18 @@ interface DeviceCredentialsClientInterface
      *
      * When refresh token rotation is enabled, the endpoint becomes consistent. For more information, read [Signing Keys](https://auth0.com/docs/get-started/tenant-settings/signing-keys).
      *
+     * Example:
+     * ```php
+     * $client->deviceCredentials->createPublicKey(
+     *     new CreatePublicKeyDeviceCredentialRequestContent([
+     *         'deviceName' => 'device_name',
+     *         'type' => DeviceCredentialPublicKeyTypeEnum::PublicKey->value,
+     *         'value' => 'value',
+     *         'deviceId' => 'device_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreatePublicKeyDeviceCredentialRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -46,6 +74,13 @@ interface DeviceCredentialsClientInterface
 
     /**
      * Permanently delete a device credential (such as a refresh token or public key) with the given ID.
+     *
+     * Example:
+     * ```php
+     * $client->deviceCredentials->delete(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id ID of the credential to delete.
      * @param ?array{

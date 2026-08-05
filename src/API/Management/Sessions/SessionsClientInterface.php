@@ -11,6 +11,13 @@ interface SessionsClientInterface
     /**
      * Retrieve session information.
      *
+     * Example:
+     * ```php
+     * $client->sessions->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of session to retrieve
      * @param ?array{
      *   baseUrl?: string,
@@ -27,6 +34,13 @@ interface SessionsClientInterface
     /**
      * Delete a session by ID.
      *
+     * Example:
+     * ```php
+     * $client->sessions->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the session to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -41,6 +55,14 @@ interface SessionsClientInterface
 
     /**
      * Update session information.
+     *
+     * Example:
+     * ```php
+     * $client->sessions->update(
+     *     'id',
+     *     new UpdateSessionRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the session to update.
      * @param UpdateSessionRequestContent $request
@@ -58,6 +80,13 @@ interface SessionsClientInterface
 
     /**
      * Revokes a session by ID and all associated refresh tokens.
+     *
+     * Example:
+     * ```php
+     * $client->sessions->revoke(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id ID of the session to revoke.
      * @param ?array{

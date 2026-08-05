@@ -59,6 +59,17 @@ class VersionsClient implements VersionsClientInterface
     /**
      * Retrieve all of an action's versions. An action version is created whenever an action is deployed. An action version is immutable, once created.
      *
+     * Example:
+     * ```php
+     * $client->actions->versions->list(
+     *     'actionId',
+     *     new ListActionVersionsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $actionId The ID of the action.
      * @param ListActionVersionsRequestParameters $request
      * @param ?array{
@@ -92,6 +103,14 @@ class VersionsClient implements VersionsClientInterface
     /**
      * Retrieve a specific version of an action. An action version is created whenever an action is deployed. An action version is immutable, once created.
      *
+     * Example:
+     * ```php
+     * $client->actions->versions->get(
+     *     'actionId',
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $actionId The ID of the action.
      * @param string $id The ID of the action version.
      * @param ?array{
@@ -113,7 +132,7 @@ class VersionsClient implements VersionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/actions/{$actionId}/versions/{$id}",
+                    path: "actions/actions/" . RawClient::encodePathParam($actionId) . "/versions/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -141,6 +160,15 @@ class VersionsClient implements VersionsClientInterface
     /**
      * Performs the equivalent of a roll-back of an action to an earlier, specified version. Creates a new, deployed action version that is identical to the specified version. If this action is currently bound to a trigger, the system will begin executing the newly-created version immediately.
      *
+     * Example:
+     * ```php
+     * $client->actions->versions->deploy(
+     *     'actionId',
+     *     'id',
+     *     new DeployActionVersionRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $actionId The ID of an action.
      * @param string $id The ID of an action version.
      * @param ?DeployActionVersionRequestContent $request
@@ -163,7 +191,7 @@ class VersionsClient implements VersionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/actions/{$actionId}/versions/{$id}/deploy",
+                    path: "actions/actions/" . RawClient::encodePathParam($actionId) . "/versions/" . RawClient::encodePathParam($id) . "/deploy",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -220,7 +248,7 @@ class VersionsClient implements VersionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/actions/{$actionId}/versions",
+                    path: "actions/actions/" . RawClient::encodePathParam($actionId) . "/versions",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

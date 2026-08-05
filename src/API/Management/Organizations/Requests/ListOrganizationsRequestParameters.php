@@ -7,6 +7,11 @@ use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 class ListOrganizationsRequestParameters extends JsonSerializableType
 {
     /**
+     * @var ?bool $includeTotals Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
+     */
+    private ?bool $includeTotals = true;
+
+    /**
      * @var ?string $from Optional Id from which to start selection.
      */
     private ?string $from;
@@ -22,18 +27,45 @@ class ListOrganizationsRequestParameters extends JsonSerializableType
     private ?string $sort;
 
     /**
+     * @var ?string $includeClientAssociationFor Client ID. When set, each returned organization that has an association with this client gains a <code>client</code> object describing it; organizations without one omit the field.
+     */
+    private ?string $includeClientAssociationFor;
+
+    /**
      * @param array{
+     *   includeTotals?: ?bool,
      *   from?: ?string,
      *   take?: ?int,
      *   sort?: ?string,
+     *   includeClientAssociationFor?: ?string,
      * } $values
      */
     public function __construct(
         array $values = [],
     ) {
+        $this->includeTotals = $values['includeTotals'] ?? null;
         $this->from = $values['from'] ?? null;
         $this->take = $values['take'] ?? null;
         $this->sort = $values['sort'] ?? null;
+        $this->includeClientAssociationFor = $values['includeClientAssociationFor'] ?? null;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIncludeTotals(): ?bool
+    {
+        return $this->includeTotals;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIncludeTotals(?bool $value = null): self
+    {
+        $this->includeTotals = $value;
+        $this->_setField('includeTotals');
+        return $this;
     }
 
     /**
@@ -87,6 +119,24 @@ class ListOrganizationsRequestParameters extends JsonSerializableType
     {
         $this->sort = $value;
         $this->_setField('sort');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getIncludeClientAssociationFor(): ?string
+    {
+        return $this->includeClientAssociationFor;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setIncludeClientAssociationFor(?string $value = null): self
+    {
+        $this->includeClientAssociationFor = $value;
+        $this->_setField('includeClientAssociationFor');
         return $this;
     }
 }

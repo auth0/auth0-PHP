@@ -84,6 +84,13 @@ class JobsClient implements JobsClientInterface
     /**
      * Retrieves a job. Useful to check its status.
      *
+     * Example:
+     * ```php
+     * $client->jobs->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the job.
      * @param ?array{
      *   baseUrl?: string,
@@ -104,7 +111,7 @@ class JobsClient implements JobsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "jobs/{$id}",
+                    path: "jobs/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,

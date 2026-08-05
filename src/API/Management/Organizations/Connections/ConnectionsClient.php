@@ -59,6 +59,19 @@ class ConnectionsClient implements ConnectionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->connections->list(
+     *     'id',
+     *     new ListOrganizationAllConnectionsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'isEnabled' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param ListOrganizationAllConnectionsRequestParameters $request
      * @param ?array{
@@ -90,6 +103,16 @@ class ConnectionsClient implements ConnectionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->connections->create(
+     *     'id',
+     *     new CreateOrganizationAllConnectionRequestParameters([
+     *         'connectionId' => 'connection_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param CreateOrganizationAllConnectionRequestParameters $request
      * @param ?array{
@@ -111,7 +134,7 @@ class ConnectionsClient implements ConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/connections",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/connections",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -138,6 +161,14 @@ class ConnectionsClient implements ConnectionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->connections->get(
+     *     'id',
+     *     'connection_id',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.
      * @param ?array{
@@ -159,7 +190,7 @@ class ConnectionsClient implements ConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/connections/{$connectionId}",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/connections/" . RawClient::encodePathParam($connectionId),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -185,6 +216,14 @@ class ConnectionsClient implements ConnectionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->connections->delete(
+     *     'id',
+     *     'connection_id',
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.
      * @param ?array{
@@ -205,7 +244,7 @@ class ConnectionsClient implements ConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/connections/{$connectionId}",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/connections/" . RawClient::encodePathParam($connectionId),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -225,6 +264,15 @@ class ConnectionsClient implements ConnectionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->organizations->connections->update(
+     *     'id',
+     *     'connection_id',
+     *     new UpdateOrganizationConnectionRequestParameters([]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $connectionId Connection identifier.
      * @param UpdateOrganizationConnectionRequestParameters $request
@@ -247,7 +295,7 @@ class ConnectionsClient implements ConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/connections/{$connectionId}",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/connections/" . RawClient::encodePathParam($connectionId),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -308,7 +356,7 @@ class ConnectionsClient implements ConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$id}/connections",
+                    path: "organizations/" . RawClient::encodePathParam($id) . "/connections",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

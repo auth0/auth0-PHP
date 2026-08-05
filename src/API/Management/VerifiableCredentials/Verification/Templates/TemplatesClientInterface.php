@@ -16,6 +16,16 @@ interface TemplatesClientInterface
     /**
      * List verifiable credential templates.
      *
+     * Example:
+     * ```php
+     * $client->verifiableCredentials->verification->templates->list(
+     *     new ListVerifiableCredentialTemplatesRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListVerifiableCredentialTemplatesRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -31,6 +41,23 @@ interface TemplatesClientInterface
 
     /**
      * Create a verifiable credential template.
+     *
+     * Example:
+     * ```php
+     * $client->verifiableCredentials->verification->templates->create(
+     *     new CreateVerifiableCredentialTemplateRequestContent([
+     *         'name' => 'name',
+     *         'type' => 'type',
+     *         'dialect' => 'dialect',
+     *         'presentation' => new MdlPresentationRequest([
+     *             'orgIso1801351MDl' => new MdlPresentationRequestProperties([
+     *                 'orgIso1801351' => new MdlPresentationProperties([]),
+     *             ]),
+     *         ]),
+     *         'wellKnownTrustedIssuers' => 'well_known_trusted_issuers',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateVerifiableCredentialTemplateRequestContent $request
      * @param ?array{
@@ -48,6 +75,13 @@ interface TemplatesClientInterface
     /**
      * Get a verifiable credential template.
      *
+     * Example:
+     * ```php
+     * $client->verifiableCredentials->verification->templates->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the template to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -64,6 +98,13 @@ interface TemplatesClientInterface
     /**
      * Delete a verifiable credential template.
      *
+     * Example:
+     * ```php
+     * $client->verifiableCredentials->verification->templates->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the template to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -78,6 +119,14 @@ interface TemplatesClientInterface
 
     /**
      * Update a verifiable credential template.
+     *
+     * Example:
+     * ```php
+     * $client->verifiableCredentials->verification->templates->update(
+     *     'id',
+     *     new UpdateVerifiableCredentialTemplateRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the template to retrieve.
      * @param UpdateVerifiableCredentialTemplateRequestContent $request

@@ -583,6 +583,341 @@ $client->actions->test(
 </dl>
 </details>
 
+## Agents
+<details><summary><code>$client-&gt;agents-&gt;list($request) -> ?ListAgentsResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get agents
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->list(
+    new ListAgentsRequestParameters([
+        'from' => 'from',
+        'take' => 1,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$from:** `?string` — Optional Id from which to start selection.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$take:** `?int` — Number of results per page. Defaults to 50.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;agents-&gt;create($request) -> ?AgentResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create an agent
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->create(
+    new CreateAgentRequestContent([
+        'name' => 'name',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$name:** `string` — The agent name. Cannot contain <, >, or null bytes.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$clientId:** `?string` — Optional client ID to associate with the agent
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$externalAgentId:** `?string` — Optional external identifier for the agent. Immutable after creation. Must be unique within the tenant.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$metadata:** `?array` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;agents-&gt;read($id) -> ?AgentResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get an agent
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->read(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The agent ID
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;agents-&gt;delete($id)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete an agent
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->delete(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The agent ID
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;agents-&gt;update($id, $request) -> ?AgentResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update an agent
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->agents->update(
+    'id',
+    new PatchAgentRequestParameters([]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The agent ID
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` — The agent name. Cannot contain <, >, or null bytes.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$metadata:** `?array` — Arbitrary key-value metadata for the agent. Pass null to clear all metadata.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Branding
 <details><summary><code>$client-&gt;branding-&gt;get() -> ?GetBrandingResponseContent</code></summary>
 <dl>
@@ -733,6 +1068,7 @@ Retrieve a list of [client grants](https://auth0.com/docs/get-started/applicatio
 ```php
 $client->clientGrants->list(
     new ListClientGrantsRequestParameters([
+        'includeTotals' => true,
         'from' => 'from',
         'take' => 1,
         'audience' => 'audience',
@@ -752,6 +1088,14 @@ $client->clientGrants->list(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**$includeTotals:** `?bool` — Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -3213,6 +3557,7 @@ To search by checkpoint, use the following parameters:
 ```php
 $client->connections->list(
     new ListConnectionsQueryParameters([
+        'includeTotals' => true,
         'from' => 'from',
         'take' => 1,
         'strategy' => [
@@ -3233,6 +3578,14 @@ $client->connections->list(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**$includeTotals:** `?bool` — true if a query summary must be included in the result, false otherwise. Not returned when using checkpoint pagination. Default <code>false</code>.
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -6477,6 +6830,7 @@ $client->groups->list(
         'search' => 'search',
         'fields' => 'fields',
         'includeFields' => true,
+        'includeTotals' => true,
         'from' => 'from',
         'take' => 1,
     ]),
@@ -6536,6 +6890,14 @@ $client->groups->list(
 <dd>
 
 **$includeFields:** `?bool` — Whether specified fields are to be included (true) or excluded (false).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeTotals:** `?bool` — Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
     
 </dd>
 </dl>
@@ -8653,9 +9015,11 @@ To search by checkpoint, use the following parameters:
 ```php
 $client->organizations->list(
     new ListOrganizationsRequestParameters([
+        'includeTotals' => true,
         'from' => 'from',
         'take' => 1,
         'sort' => 'sort',
+        'includeClientAssociationFor' => 'include_client_association_for',
     ]),
 );
 ```
@@ -8668,6 +9032,14 @@ $client->organizations->list(
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**$includeTotals:** `?bool` — Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
+    
+</dd>
+</dl>
 
 <dl>
 <dd>
@@ -8689,6 +9061,14 @@ $client->organizations->list(
 <dd>
 
 **$sort:** `?string` — Field to sort by. Use <code>field:order</code> where order is <code>1</code> for ascending and <code>-1</code> for descending. e.g. <code>created_at:1</code>. We currently support sorting by the following fields: <code>name</code>, <code>display_name</code> and <code>created_at</code>.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeClientAssociationFor:** `?string` — Client ID. When set, each returned organization that has an association with this client gains a <code>client</code> object describing it; organizations without one omit the field.
     
 </dd>
 </dl>
@@ -8795,6 +9175,14 @@ $client->organizations->create(
 <dd>
 
 **$thirdPartyClientAccess:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isAppEntitlementActive:** `?bool` — Whether app entitlement is active for this organization.
     
 </dd>
 </dl>
@@ -9070,6 +9458,14 @@ $client->organizations->update(
 <dd>
 
 **$thirdPartyClientAccess:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isAppEntitlementActive:** `?bool` — Whether app entitlement is active for this organization.
     
 </dd>
 </dl>
@@ -10490,6 +10886,8 @@ $client->roles->list(
         'page' => 1,
         'includeTotals' => true,
         'nameFilter' => 'name_filter',
+        'type' => RoleTypeEnum::Tenant->value,
+        'ownerId' => 'owner_id',
     ]),
 );
 ```
@@ -10531,6 +10929,22 @@ $client->roles->list(
 <dd>
 
 **$nameFilter:** `?string` — Optional filter on name (case-insensitive).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$type:** `?string` — Optional filter on the type of the role
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ownerId:** `?string` — Filter organization-level roles by owner ID. Required when type is "organization".
     
 </dd>
 </dl>
@@ -10599,6 +11013,22 @@ $client->roles->create(
 <dd>
 
 **$description:** `?string` — Description of the role.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$type:** `?string` — The type of the role. Defaults to tenant.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$ownerId:** `?string` — The ID of the organization that owns this role. Required when type is "organization".
     
 </dd>
 </dl>
@@ -17940,6 +18370,7 @@ $client->branding->phone->templates->test(
 $client->clientGrants->organizations->list(
     'id',
     new ListClientGrantOrganizationsRequestParameters([
+        'includeTotals' => true,
         'from' => 'from',
         'take' => 1,
     ]),
@@ -17959,6 +18390,14 @@ $client->clientGrants->organizations->list(
 <dd>
 
 **$id:** `string` — ID of the client grant
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeTotals:** `?bool` — Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
     
 </dd>
 </dl>
@@ -18937,6 +19376,7 @@ $client->connections->directoryProvisioning->listSynchronizedGroups(
     new ListSynchronizedGroupsRequestParameters([
         'from' => 'from',
         'take' => 1,
+        'q' => 'q',
     ]),
 );
 ```
@@ -18970,6 +19410,85 @@ $client->connections->directoryProvisioning->listSynchronizedGroups(
 <dd>
 
 **$take:** `?int` — Number of results per page. Defaults to 50.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$q:** `?string` — Query in <a target='_new' href ='https://lucene.apache.org/core/2_9_4/queryparsersyntax.html'>Lucene query string syntax</a>. Only prefix search on "name" or "email" fields are allowed, with a single wildcard suffix. Operators, modifiers, and groupings are not allowed. Terms are treated as case-insensitive. Example query: "name:engineering*".
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;connections-&gt;directoryProvisioning-&gt;addSynchronizedGroupSelections($id, $request)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Add synchronized group selections to a directory provisioning configuration.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->connections->directoryProvisioning->addSynchronizedGroupSelections(
+    'id',
+    new AddSynchronizedGroupsRequestContent([
+        'groups' => [
+            new SynchronizedGroupPayload([
+                'id' => 'id',
+            ]),
+        ],
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The id of the connection to add synchronized groups to
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `array` — Array of Google Workspace Directory group objects to synchronize.
     
 </dd>
 </dl>
@@ -19041,6 +19560,77 @@ $client->connections->directoryProvisioning->set(
 <dd>
 
 **$groups:** `array` — Array of Google Workspace Directory group objects to synchronize.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;connections-&gt;directoryProvisioning-&gt;deleteSynchronizedGroupSelections($id, $request)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete synchronized group selections for a directory provisioning configuration
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->connections->directoryProvisioning->deleteSynchronizedGroupSelections(
+    'id',
+    new DeleteSynchronizedGroupsRequestContent([
+        'groups' => [
+            new SynchronizedGroupSelectionId([
+                'id' => 'id',
+            ]),
+        ],
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The id of the connection to delete synchronized group selections for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$groups:** `array` — Array of groups to remove from the selection set.
     
 </dd>
 </dl>
@@ -20411,7 +21001,7 @@ $client->emails->provider->update(
 </details>
 
 ## EventStreams Deliveries
-<details><summary><code>$client-&gt;eventStreams-&gt;deliveries-&gt;list($id, $request) -> ?array</code></summary>
+<details><summary><code>$client-&gt;eventStreams-&gt;deliveries-&gt;list($id, $request) -> ?ListEventStreamDeliveriesResponseContent</code></summary>
 <dl>
 <dd>
 
@@ -20704,6 +21294,7 @@ $client->eventStreams->redeliveries->createById(
 $client->flows->executions->list(
     'flow_id',
     new ListFlowExecutionsRequestParameters([
+        'includeTotals' => true,
         'from' => 'from',
         'take' => 1,
     ]),
@@ -20723,6 +21314,14 @@ $client->flows->executions->list(
 <dd>
 
 **$flowId:** `string` — Flow id
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeTotals:** `?bool` — Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
     
 </dd>
 </dl>
@@ -24570,6 +25169,83 @@ $client->keys->encryption->createPublicWrappingKey(
 </dl>
 </details>
 
+## Keys NetworkAcls
+<details><summary><code>$client-&gt;keys-&gt;networkAcls-&gt;create($request) -> ?CreateKeysNetworkAclsResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create a new key used to verify HTTP Message Signatures on Network ACL rules.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->keys->networkAcls->create(
+    new CreateKeysNetworkAclsRequestContent([
+        'name' => 'name',
+        'alg' => NetworkAclKeyAlgorithmEnum::HmacSha256->value,
+        'value' => 'value',
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$name:** `string` — Customer-supplied label with no cryptographic meaning. Must be unique across all Network ACL keys for the tenant.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$alg:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$value:** `string` — Base64-encoded raw key material. Constraints on the decoded value depend on the algorithm specified. Currently only HMAC-SHA256 is supported.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Keys Signing
 <details><summary><code>$client-&gt;keys-&gt;signing-&gt;list() -> ?array</code></summary>
 <dl>
@@ -24955,6 +25631,368 @@ $client->organizations->clientGrants->delete(
 <dd>
 
 **$grantId:** `string` — The Client Grant ID to remove from the organization
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Organizations Clients
+<details><summary><code>$client-&gt;organizations-&gt;clients-&gt;list($id, $request) -> ?ListOrganizationClientsResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+List all clients associated with an organization, using checkpoint pagination.
+<ul>
+  <li>
+    <b>Note</b>: The first time you call this endpoint, omit the <code>from</code> parameter. If there are more results, a <code>next</code> value is included in the response. You can use this for subsequent API calls. When <code>next</code> is no longer included in the response, no further results are remaining.
+  </li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizations->clients->list(
+    'id',
+    new ListOrganizationClientsRequestParameters([
+        'from' => 'from',
+        'take' => 1,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — ID of the organization.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$from:** `?string` — Optional Id from which to start selection.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$take:** `?int` — Number of results per page. Defaults to 50. Values greater than the maximum of 100 are capped at 100.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;organizations-&gt;clients-&gt;create($id, $request) -> ?array</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Associate one or more clients with an organization.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizations->clients->create(
+    'id',
+    new CreateOrganizationClientsRequestContent([
+        'clients' => [
+            new CreateOrganizationClientRequestItem([
+                'clientId' => 'client_id',
+                'useForMemberAccess' => true,
+            ]),
+        ],
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — ID of the organization.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$clients:** `array` — List of clients to associate with the organization.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;organizations-&gt;clients-&gt;delete($id, $request)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Remove one or more client associations from an organization.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizations->clients->delete(
+    'id',
+    new DeleteOrganizationClientsRequestContent([
+        'clients' => [
+            'clients',
+        ],
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — ID of the organization.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$clients:** `array` — List of client IDs to disassociate from the organization.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;organizations-&gt;clients-&gt;get($id, $clientId) -> ?GetOrganizationClientResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Get a specific client association for an organization.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizations->clients->get(
+    'id',
+    'client_id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — ID of the organization.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$clientId:** `string` — ID of the client association to retrieve.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;organizations-&gt;clients-&gt;update($id, $clientId, $request) -> ?UpdateOrganizationClientResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update an organization client association.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizations->clients->update(
+    'id',
+    'client_id',
+    new UpdateOrganizationClientRequestContent([]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — ID of the organization.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$clientId:** `string` — ID of the client association to update.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$useForMemberAccess:** `?bool` — Whether this client is used for member access to the organization.
     
 </dd>
 </dl>
@@ -26580,7 +27618,7 @@ List organization members.
 This endpoint is subject to eventual consistency. New users may not be immediately included in the response and deleted users may not be immediately removed from it.
 
 - Use the `fields` parameter to optionally define the specific member details retrieved. If `fields` is left blank, all fields (except roles) are returned.
-- Member roles are not sent by default. Use `fields=roles` to retrieve the roles assigned to each listed member. To use this parameter, you must include the `read:organization_member_roles` scope in the token.
+- Member roles are not sent by default. Use `fields=roles` to retrieve the roles assigned to each listed member. To use this parameter, you must include the `read:organization_member_roles` scope in the token. Only directly assigned roles are returned. To also include group-based role assignments, use `GET /api/v2/organizations/{id}/members/{user_id}/effective-roles`.
 
 This endpoint supports two types of pagination:
 
@@ -26609,6 +27647,7 @@ To search by checkpoint, use the following parameters: - from: Optional id from 
 $client->organizations->members->list(
     'id',
     new ListOrganizationMembersRequestParameters([
+        'includeTotals' => true,
         'from' => 'from',
         'take' => 1,
         'fields' => 'fields',
@@ -26630,6 +27669,14 @@ $client->organizations->members->list(
 <dd>
 
 **$id:** `string` — Organization identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeTotals:** `?bool` — Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
     
 </dd>
 </dl>
@@ -27220,6 +28267,8 @@ $client->organizations->members->effectiveRoles->list(
 Retrieve detailed list of roles assigned to a given user within the context of a specific Organization. 
 
 Users can be members of multiple Organizations with unique roles assigned for each membership. This action only returns the roles associated with the specified Organization; any roles assigned to the user within other Organizations are not included.
+
+**Note**: Returns only direct role assignments for this member. To also include group-based role assignments, use `GET /api/v2/organizations/{id}/members/{user_id}/effective-roles`.
 </dd>
 </dl>
 </dd>
@@ -27570,6 +28619,11 @@ $client->organizations->members->effectiveRoles->sources->groups->list(
 <dd>
 
 List the organization members assigned a specific role within the context of an organization.
+<ul>
+  <li>
+    <b>Note</b>: Returns only members with direct role assignments. For groups assigned to this role within the organization, use <code>GET /api/v2/organizations/{organization_id}/roles/{role_id}/groups</code>.
+  </li>
+</ul>
 </dd>
 </dl>
 </dd>
@@ -27649,6 +28703,92 @@ $client->organizations->roles->members->list(
 <dd>
 
 **$includeFields:** `?bool` — Whether specified fields are to be included (true) or excluded (false). Defaults to true.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## Organizations Roles Groups
+<details><summary><code>$client-&gt;organizations-&gt;roles-&gt;groups-&gt;list($organizationId, $roleId, $request) -> ?ListOrganizationRoleGroupsResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieve the list of groups assigned to a role in the context of an organization.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizations->roles->groups->list(
+    'organization_id',
+    'role_id',
+    new ListOrganizationRoleGroupsRequestParameters([
+        'from' => 'from',
+        'take' => 1,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$organizationId:** `string` — ID of the organization.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$roleId:** `string` — ID of the role.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$from:** `?string` — Optional Id from which to start selection.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$take:** `?int` — Number of results per page. Defaults to 50.
     
 </dd>
 </dl>
@@ -28946,6 +30086,8 @@ $client->roles->permissions->delete(
 
 Retrieve list of users associated with a specific role. For Dashboard instructions, review [View Users Assigned to Roles](https://auth0.com/docs/manage-users/access-control/configure-core-rbac/roles/view-users-assigned-to-roles).
 
+**Note**: Returns only users with direct role assignments. For groups assigned to this role, use `GET /api/v2/roles/{id}/groups`.
+
 This endpoint supports two types of pagination:
 
 - Offset pagination
@@ -28978,6 +30120,7 @@ To search by checkpoint, use the following parameters:
 $client->roles->users->list(
     'id',
     new ListRoleUsersRequestParameters([
+        'includeTotals' => true,
         'from' => 'from',
         'take' => 1,
     ]),
@@ -28997,6 +30140,14 @@ $client->roles->users->list(
 <dd>
 
 **$id:** `string` — ID of the role to retrieve a list of users associated with.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeTotals:** `?bool` — Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
     
 </dd>
 </dl>
@@ -30908,6 +32059,7 @@ $client->users->groups->get(
     new GetUserGroupsRequestParameters([
         'fields' => 'fields',
         'includeFields' => true,
+        'includeTotals' => true,
         'from' => 'from',
         'take' => 1,
     ]),
@@ -30943,6 +32095,14 @@ $client->users->groups->get(
 <dd>
 
 **$includeFields:** `?bool` — Whether specified fields are to be included (true) or excluded (false).
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeTotals:** `?bool` — Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
     
 </dd>
 </dl>
@@ -31487,6 +32647,8 @@ $client->users->organizations->list(
 <dd>
 
 Retrieve all permissions associated with the user.
+
+**Note**: Returns only permissions from direct assignments and directly assigned roles. For permissions a user has via group-based role assignments, use `GET /api/v2/users/{id}/effective-permissions`.
 </dd>
 </dl>
 </dd>
@@ -31798,6 +32960,8 @@ $client->users->riskAssessments->clear(
 Retrieve detailed list of all user roles currently assigned to a user.
 
 **Note**: This action retrieves all roles assigned to a user in the context of your whole tenant. To retrieve Organization-specific roles, use the following endpoint: [Get user roles assigned to an Organization member](https://auth0.com/docs/api/management/v2/organizations/get-organization-member-roles).
+
+**Note**: Returns only direct role assignments. To also include group-based role assignments, use `GET /api/v2/users/{id}/effective-roles`.
 </dd>
 </dl>
 </dd>
@@ -32043,6 +33207,7 @@ Retrieve details for a user's refresh tokens.
 $client->users->refreshToken->list(
     'user_id',
     new ListRefreshTokensRequestParameters([
+        'includeTotals' => true,
         'from' => 'from',
         'take' => 1,
     ]),
@@ -32062,6 +33227,14 @@ $client->users->refreshToken->list(
 <dd>
 
 **$userId:** `string` — ID of the user to get refresh tokens for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeTotals:** `?bool` — Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
     
 </dd>
 </dl>
@@ -32176,6 +33349,7 @@ Retrieve details for a user's sessions.
 $client->users->sessions->list(
     'user_id',
     new ListUserSessionsRequestParameters([
+        'includeTotals' => true,
         'from' => 'from',
         'take' => 1,
     ]),
@@ -32195,6 +33369,14 @@ $client->users->sessions->list(
 <dd>
 
 **$userId:** `string` — ID of the user to get sessions for
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$includeTotals:** `?bool` — Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
     
 </dd>
 </dl>

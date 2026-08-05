@@ -13,6 +13,18 @@ interface PermissionsClientInterface
     /**
      * Retrieve detailed list (name, description, resource server) of permissions granted by a specified user role.
      *
+     * Example:
+     * ```php
+     * $client->roles->permissions->list(
+     *     'id',
+     *     new ListRolePermissionsRequestParameters([
+     *         'perPage' => 1,
+     *         'page' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the role to list granted permissions.
      * @param ListRolePermissionsRequestParameters $request
      * @param ?array{
@@ -30,6 +42,21 @@ interface PermissionsClientInterface
     /**
      * Add one or more [permissions](https://auth0.com/docs/manage-users/access-control/configure-core-rbac/manage-permissions) to a specified user role.
      *
+     * Example:
+     * ```php
+     * $client->roles->permissions->add(
+     *     'id',
+     *     new AddRolePermissionsRequestContent([
+     *         'permissions' => [
+     *             new PermissionRequestPayload([
+     *                 'resourceServerIdentifier' => 'resource_server_identifier',
+     *                 'permissionName' => 'permission_name',
+     *             ]),
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the role to add permissions to.
      * @param AddRolePermissionsRequestContent $request
      * @param ?array{
@@ -45,6 +72,21 @@ interface PermissionsClientInterface
 
     /**
      * Remove one or more [permissions](https://auth0.com/docs/manage-users/access-control/configure-core-rbac/manage-permissions) from a specified user role.
+     *
+     * Example:
+     * ```php
+     * $client->roles->permissions->delete(
+     *     'id',
+     *     new DeleteRolePermissionsRequestContent([
+     *         'permissions' => [
+     *             new PermissionRequestPayload([
+     *                 'resourceServerIdentifier' => 'resource_server_identifier',
+     *                 'permissionName' => 'permission_name',
+     *             ]),
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id ID of the role to remove permissions from.
      * @param DeleteRolePermissionsRequestContent $request

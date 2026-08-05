@@ -54,6 +54,11 @@ class CaptchaClient implements CaptchaClientInterface
     /**
      * Get the CAPTCHA configuration for your client.
      *
+     * Example:
+     * ```php
+     * $client->attackProtection->captcha->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -100,6 +105,13 @@ class CaptchaClient implements CaptchaClientInterface
 
     /**
      * Update existing CAPTCHA configuration for your client.
+     *
+     * Example:
+     * ```php
+     * $client->attackProtection->captcha->update(
+     *     new UpdateAttackProtectionCaptchaRequestContent([]),
+     * );
+     * ```
      *
      * @param UpdateAttackProtectionCaptchaRequestContent $request
      * @param ?array{

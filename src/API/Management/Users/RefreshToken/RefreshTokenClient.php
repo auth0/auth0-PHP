@@ -56,6 +56,18 @@ class RefreshTokenClient implements RefreshTokenClientInterface
     /**
      * Retrieve details for a user's refresh tokens.
      *
+     * Example:
+     * ```php
+     * $client->users->refreshToken->list(
+     *     'user_id',
+     *     new ListRefreshTokensRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $userId ID of the user to get refresh tokens for
      * @param ListRefreshTokensRequestParameters $request
      * @param ?array{
@@ -86,6 +98,13 @@ class RefreshTokenClient implements RefreshTokenClientInterface
     /**
      * Delete all refresh tokens for a user.
      *
+     * Example:
+     * ```php
+     * $client->users->refreshToken->delete(
+     *     'user_id',
+     * );
+     * ```
+     *
      * @param string $userId ID of the user to get remove refresh tokens for
      * @param ?array{
      *   baseUrl?: string,
@@ -105,7 +124,7 @@ class RefreshTokenClient implements RefreshTokenClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$userId}/refresh-tokens",
+                    path: "users/" . RawClient::encodePathParam($userId) . "/refresh-tokens",
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -145,6 +164,9 @@ class RefreshTokenClient implements RefreshTokenClientInterface
     {
         $options = array_merge($this->options, $options ?? []);
         $query = [];
+        if ($request->getIncludeTotals() != null) {
+            $query['include_totals'] = $request->getIncludeTotals();
+        }
         if ($request->getFrom() != null) {
             $query['from'] = $request->getFrom();
         }
@@ -155,7 +177,7 @@ class RefreshTokenClient implements RefreshTokenClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$userId}/refresh-tokens",
+                    path: "users/" . RawClient::encodePathParam($userId) . "/refresh-tokens",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

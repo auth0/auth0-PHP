@@ -55,6 +55,13 @@ class ErrorsClient implements ErrorsClientInterface
     /**
      * Retrieve error details of a failed job.
      *
+     * Example:
+     * ```php
+     * $client->jobs->errors->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the job.
      * @param ?array{
      *   baseUrl?: string,
@@ -78,7 +85,7 @@ class ErrorsClient implements ErrorsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "jobs/{$id}/errors",
+                    path: "jobs/" . RawClient::encodePathParam($id) . "/errors",
                     method: HttpMethod::GET,
                 ),
                 $options,

@@ -11,6 +11,18 @@ interface RefreshTokenClientInterface
     /**
      * Retrieve details for a user's refresh tokens.
      *
+     * Example:
+     * ```php
+     * $client->users->refreshToken->list(
+     *     'user_id',
+     *     new ListRefreshTokensRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $userId ID of the user to get refresh tokens for
      * @param ListRefreshTokensRequestParameters $request
      * @param ?array{
@@ -27,6 +39,13 @@ interface RefreshTokenClientInterface
 
     /**
      * Delete all refresh tokens for a user.
+     *
+     * Example:
+     * ```php
+     * $client->users->refreshToken->delete(
+     *     'user_id',
+     * );
+     * ```
      *
      * @param string $userId ID of the user to get remove refresh tokens for
      * @param ?array{

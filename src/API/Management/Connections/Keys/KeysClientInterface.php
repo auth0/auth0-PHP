@@ -13,6 +13,13 @@ interface KeysClientInterface
     /**
      * Gets the connection keys for the Okta or OIDC connection strategy.
      *
+     * Example:
+     * ```php
+     * $client->connections->keys->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the connection
      * @param ?array{
      *   baseUrl?: string,
@@ -28,6 +35,14 @@ interface KeysClientInterface
 
     /**
      * Provision initial connection keys for Okta or OIDC connection strategies. This endpoint allows you to create keys before configuring the connection to use Private Key JWT authentication, enabling zero-downtime transitions.
+     *
+     * Example:
+     * ```php
+     * $client->connections->keys->create(
+     *     'id',
+     *     new PostConnectionKeysRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the connection
      * @param ?PostConnectionKeysRequestContent $request
@@ -45,6 +60,14 @@ interface KeysClientInterface
 
     /**
      * Rotates the connection keys for the Okta or OIDC connection strategies.
+     *
+     * Example:
+     * ```php
+     * $client->connections->keys->rotate(
+     *     'id',
+     *     new RotateConnectionKeysRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the connection
      * @param ?RotateConnectionKeysRequestContent $request

@@ -11,6 +11,11 @@ interface CaptchaClientInterface
     /**
      * Get the CAPTCHA configuration for your client.
      *
+     * Example:
+     * ```php
+     * $client->attackProtection->captcha->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -25,6 +30,13 @@ interface CaptchaClientInterface
 
     /**
      * Update existing CAPTCHA configuration for your client.
+     *
+     * Example:
+     * ```php
+     * $client->attackProtection->captcha->update(
+     *     new UpdateAttackProtectionCaptchaRequestContent([]),
+     * );
+     * ```
      *
      * @param UpdateAttackProtectionCaptchaRequestContent $request
      * @param ?array{

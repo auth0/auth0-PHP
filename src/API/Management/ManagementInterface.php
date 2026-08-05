@@ -3,6 +3,7 @@
 namespace Auth0\SDK\API\Management;
 
 use Auth0\SDK\API\Management\Actions\ActionsClientInterface;
+use Auth0\SDK\API\Management\Agents\AgentsClientInterface;
 use Auth0\SDK\API\Management\Branding\BrandingClientInterface;
 use Auth0\SDK\API\Management\ClientGrants\ClientGrantsClientInterface;
 use Auth0\SDK\API\Management\Clients\ClientsClientInterface;
@@ -54,6 +55,11 @@ interface ManagementInterface
      * @return ActionsClientInterface
      */
     public function getActions(): ActionsClientInterface;
+
+    /**
+     * @return AgentsClientInterface
+     */
+    public function getAgents(): AgentsClientInterface;
 
     /**
      * @return BrandingClientInterface

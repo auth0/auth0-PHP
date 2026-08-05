@@ -56,6 +56,18 @@ class SessionsClient implements SessionsClientInterface
     /**
      * Retrieve details for a user's sessions.
      *
+     * Example:
+     * ```php
+     * $client->users->sessions->list(
+     *     'user_id',
+     *     new ListUserSessionsRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $userId ID of the user to get sessions for
      * @param ListUserSessionsRequestParameters $request
      * @param ?array{
@@ -86,6 +98,13 @@ class SessionsClient implements SessionsClientInterface
     /**
      * Delete all sessions for a user.
      *
+     * Example:
+     * ```php
+     * $client->users->sessions->delete(
+     *     'user_id',
+     * );
+     * ```
+     *
      * @param string $userId ID of the user to get sessions for
      * @param ?array{
      *   baseUrl?: string,
@@ -105,7 +124,7 @@ class SessionsClient implements SessionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$userId}/sessions",
+                    path: "users/" . RawClient::encodePathParam($userId) . "/sessions",
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -145,6 +164,9 @@ class SessionsClient implements SessionsClientInterface
     {
         $options = array_merge($this->options, $options ?? []);
         $query = [];
+        if ($request->getIncludeTotals() != null) {
+            $query['include_totals'] = $request->getIncludeTotals();
+        }
         if ($request->getFrom() != null) {
             $query['from'] = $request->getFrom();
         }
@@ -155,7 +177,7 @@ class SessionsClient implements SessionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$userId}/sessions",
+                    path: "users/" . RawClient::encodePathParam($userId) . "/sessions",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

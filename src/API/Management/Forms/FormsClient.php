@@ -60,6 +60,20 @@ class FormsClient implements FormsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->forms->list(
+     *     new ListFormsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'hydrate' => [
+     *             FormsRequestParametersHydrateEnum::FlowCount->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListFormsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -90,6 +104,15 @@ class FormsClient implements FormsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->forms->create(
+     *     new CreateFormRequestContent([
+     *         'name' => 'name',
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateFormRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -137,6 +160,18 @@ class FormsClient implements FormsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->forms->get(
+     *     'id',
+     *     new GetFormRequestParameters([
+     *         'hydrate' => [
+     *             FormsRequestParametersHydrateEnum::FlowCount->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The ID of the form to retrieve.
      * @param GetFormRequestParameters $request
      * @param ?array{
@@ -162,7 +197,7 @@ class FormsClient implements FormsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "forms/{$id}",
+                    path: "forms/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                     query: $query,
                 ),
@@ -189,6 +224,13 @@ class FormsClient implements FormsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->forms->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the form to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -208,7 +250,7 @@ class FormsClient implements FormsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "forms/{$id}",
+                    path: "forms/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -228,6 +270,14 @@ class FormsClient implements FormsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->forms->update(
+     *     'id',
+     *     new UpdateFormRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id The ID of the form to update.
      * @param UpdateFormRequestContent $request
      * @param ?array{
@@ -249,7 +299,7 @@ class FormsClient implements FormsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "forms/{$id}",
+                    path: "forms/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

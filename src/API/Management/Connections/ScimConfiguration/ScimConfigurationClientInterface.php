@@ -18,6 +18,16 @@ interface ScimConfigurationClientInterface
     /**
      * Retrieve a list of SCIM configurations of a tenant.
      *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->list(
+     *     new ListScimConfigurationsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListScimConfigurationsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -34,6 +44,13 @@ interface ScimConfigurationClientInterface
     /**
      * Retrieves a scim configuration by its `connectionId`.
      *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to retrieve its SCIM configuration
      * @param ?array{
      *   baseUrl?: string,
@@ -49,6 +66,14 @@ interface ScimConfigurationClientInterface
 
     /**
      * Create a scim configuration for a connection.
+     *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->create(
+     *     'id',
+     *     new CreateScimConfigurationRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id The id of the connection to create its SCIM configuration
      * @param ?CreateScimConfigurationRequestContent $request
@@ -67,6 +92,13 @@ interface ScimConfigurationClientInterface
     /**
      * Deletes a scim configuration by its `connectionId`.
      *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to delete its SCIM configuration
      * @param ?array{
      *   baseUrl?: string,
@@ -81,6 +113,19 @@ interface ScimConfigurationClientInterface
 
     /**
      * Update a scim configuration by its `connectionId`.
+     *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->update(
+     *     'id',
+     *     new UpdateScimConfigurationRequestContent([
+     *         'userIdAttribute' => 'user_id_attribute',
+     *         'mapping' => [
+     *             new ScimMappingItem([]),
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id The id of the connection to update its SCIM configuration
      * @param UpdateScimConfigurationRequestContent $request
@@ -98,6 +143,13 @@ interface ScimConfigurationClientInterface
 
     /**
      * Retrieves a scim configuration's default mapping by its `connectionId`.
+     *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->getDefaultMapping(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id The id of the connection to retrieve its default SCIM mapping
      * @param ?array{

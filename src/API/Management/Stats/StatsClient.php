@@ -54,6 +54,11 @@ class StatsClient implements StatsClientInterface
     /**
      * Retrieve the number of active users that logged in during the last 30 days.
      *
+     * Example:
+     * ```php
+     * $client->stats->getActiveUsersCount();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -100,6 +105,16 @@ class StatsClient implements StatsClientInterface
 
     /**
      * Retrieve the number of logins, signups and breached-password detections (subscription required) that occurred each day within a specified date range.
+     *
+     * Example:
+     * ```php
+     * $client->stats->getDaily(
+     *     new GetDailyStatsRequestParameters([
+     *         'from' => 'from',
+     *         'to' => 'to',
+     *     ]),
+     * );
+     * ```
      *
      * @param GetDailyStatsRequestParameters $request
      * @param ?array{

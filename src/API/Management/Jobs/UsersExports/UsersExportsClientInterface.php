@@ -10,6 +10,13 @@ interface UsersExportsClientInterface
     /**
      * Export all users to a file via a long-running job.
      *
+     * Example:
+     * ```php
+     * $client->jobs->usersExports->create(
+     *     new CreateExportUsersRequestContent([]),
+     * );
+     * ```
+     *
      * @param CreateExportUsersRequestContent $request
      * @param ?array{
      *   baseUrl?: string,

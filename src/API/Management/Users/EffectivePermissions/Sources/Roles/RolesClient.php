@@ -56,6 +56,19 @@ class RolesClient implements RolesClientInterface
     /**
      * Lists the roles which grant the user a given permission, including roles assigned directly to the user and those inherited through group memberships.
      *
+     * Example:
+     * ```php
+     * $client->users->effectivePermissions->sources->roles->list(
+     *     'id',
+     *     new ListUserEffectivePermissionRoleSourceRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'resourceServerIdentifier' => 'resource_server_identifier',
+     *         'permissionName' => 'permission_name',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to retrieve the permissions for.
      * @param ListUserEffectivePermissionRoleSourceRequestParameters $request
      * @param ?array{
@@ -116,7 +129,7 @@ class RolesClient implements RolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/effective-permissions/sources/effective-roles",
+                    path: "users/" . RawClient::encodePathParam($id) . "/effective-permissions/sources/effective-roles",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

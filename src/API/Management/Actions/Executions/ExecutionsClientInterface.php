@@ -9,6 +9,13 @@ interface ExecutionsClientInterface
     /**
      * Retrieve information about a specific execution of a trigger. Relevant execution IDs will be included in tenant logs generated as part of that authentication flow. Executions will only be stored for 10 days after their creation.
      *
+     * Example:
+     * ```php
+     * $client->actions->executions->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the execution to retrieve.
      * @param ?array{
      *   baseUrl?: string,

@@ -60,6 +60,20 @@ class RolesClient implements RolesClientInterface
      *
      * **Note**: This action retrieves all roles assigned to a user in the context of your whole tenant. To retrieve Organization-specific roles, use the following endpoint: [Get user roles assigned to an Organization member](https://auth0.com/docs/api/management/v2/organizations/get-organization-member-roles).
      *
+     * **Note**: Returns only direct role assignments. To also include group-based role assignments, use `GET /api/v2/users/{id}/effective-roles`.
+     *
+     * Example:
+     * ```php
+     * $client->users->roles->list(
+     *     'id',
+     *     new ListUserRolesRequestParameters([
+     *         'perPage' => 1,
+     *         'page' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to list roles for.
      * @param ListUserRolesRequestParameters $request
      * @param ?array{
@@ -95,6 +109,18 @@ class RolesClient implements RolesClientInterface
      *
      * **Note**: New roles cannot be created through this action. Additionally, this action is used to assign roles to a user in the context of your whole tenant. To assign roles in the context of a specific Organization, use the following endpoint: [Assign user roles to an Organization member](https://auth0.com/docs/api/management/v2/organizations/post-organization-member-roles).
      *
+     * Example:
+     * ```php
+     * $client->users->roles->assign(
+     *     'id',
+     *     new AssignUserRolesRequestContent([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to associate roles with.
      * @param AssignUserRolesRequestContent $request
      * @param ?array{
@@ -115,7 +141,7 @@ class RolesClient implements RolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/roles",
+                    path: "users/" . RawClient::encodePathParam($id) . "/roles",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -140,6 +166,18 @@ class RolesClient implements RolesClientInterface
      *
      * **Note**: This action removes a role from a user in the context of your whole tenant. If you want to unassign a role from a user in the context of a specific Organization, use the following endpoint: [Delete user roles from an Organization member](https://auth0.com/docs/api/management/v2/organizations/delete-organization-member-roles).
      *
+     * Example:
+     * ```php
+     * $client->users->roles->delete(
+     *     'id',
+     *     new DeleteUserRolesRequestContent([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to remove roles from.
      * @param DeleteUserRolesRequestContent $request
      * @param ?array{
@@ -160,7 +198,7 @@ class RolesClient implements RolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/roles",
+                    path: "users/" . RawClient::encodePathParam($id) . "/roles",
                     method: HttpMethod::DELETE,
                     body: $request,
                 ),
@@ -184,6 +222,8 @@ class RolesClient implements RolesClientInterface
      * Retrieve detailed list of all user roles currently assigned to a user.
      *
      * **Note**: This action retrieves all roles assigned to a user in the context of your whole tenant. To retrieve Organization-specific roles, use the following endpoint: [Get user roles assigned to an Organization member](https://auth0.com/docs/api/management/v2/organizations/get-organization-member-roles).
+     *
+     * **Note**: Returns only direct role assignments. To also include group-based role assignments, use `GET /api/v2/users/{id}/effective-roles`.
      *
      * @param string $id ID of the user to list roles for.
      * @param ListUserRolesRequestParameters $request
@@ -216,7 +256,7 @@ class RolesClient implements RolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/roles",
+                    path: "users/" . RawClient::encodePathParam($id) . "/roles",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

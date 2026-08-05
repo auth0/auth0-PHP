@@ -11,6 +11,18 @@ use Auth0\SDK\API\Management\Types\GetFlowExecutionResponseContent;
 interface ExecutionsClientInterface
 {
     /**
+     * Example:
+     * ```php
+     * $client->flows->executions->list(
+     *     'flow_id',
+     *     new ListFlowExecutionsRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $flowId Flow id
      * @param ListFlowExecutionsRequestParameters $request
      * @param ?array{
@@ -26,6 +38,19 @@ interface ExecutionsClientInterface
     public function list(string $flowId, ListFlowExecutionsRequestParameters $request = new ListFlowExecutionsRequestParameters(), ?array $options = null): Pager;
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->executions->get(
+     *     'flow_id',
+     *     'execution_id',
+     *     new GetFlowExecutionRequestParameters([
+     *         'hydrate' => [
+     *             GetFlowExecutionRequestParametersHydrateEnum::Debug->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $flowId Flow id
      * @param string $executionId Flow execution id
      * @param GetFlowExecutionRequestParameters $request
@@ -42,6 +67,14 @@ interface ExecutionsClientInterface
     public function get(string $flowId, string $executionId, GetFlowExecutionRequestParameters $request = new GetFlowExecutionRequestParameters(), ?array $options = null): ?GetFlowExecutionResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->executions->delete(
+     *     'flow_id',
+     *     'execution_id',
+     * );
+     * ```
+     *
      * @param string $flowId Flows id
      * @param string $executionId Flow execution identifier
      * @param ?array{

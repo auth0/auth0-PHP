@@ -63,6 +63,16 @@ class ConnectionProfilesClient implements ConnectionProfilesClientInterface
     /**
      * Retrieve a list of Connection Profiles. This endpoint supports Checkpoint pagination.
      *
+     * Example:
+     * ```php
+     * $client->connectionProfiles->list(
+     *     new ListConnectionProfileRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListConnectionProfileRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -91,6 +101,15 @@ class ConnectionProfilesClient implements ConnectionProfilesClientInterface
 
     /**
      * Create a Connection Profile.
+     *
+     * Example:
+     * ```php
+     * $client->connectionProfiles->create(
+     *     new CreateConnectionProfileRequestContent([
+     *         'name' => 'name',
+     *     ]),
+     * );
+     * ```
      *
      * @param CreateConnectionProfileRequestContent $request
      * @param ?array{
@@ -141,6 +160,11 @@ class ConnectionProfilesClient implements ConnectionProfilesClientInterface
     /**
      * Retrieve a list of Connection Profile Templates.
      *
+     * Example:
+     * ```php
+     * $client->connectionProfiles->listTemplates();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -188,6 +212,13 @@ class ConnectionProfilesClient implements ConnectionProfilesClientInterface
     /**
      * Retrieve a Connection Profile Template.
      *
+     * Example:
+     * ```php
+     * $client->connectionProfiles->getTemplate(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the connection-profile-template to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -208,7 +239,7 @@ class ConnectionProfilesClient implements ConnectionProfilesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connection-profiles/templates/{$id}",
+                    path: "connection-profiles/templates/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -236,6 +267,13 @@ class ConnectionProfilesClient implements ConnectionProfilesClientInterface
     /**
      * Retrieve details about a single Connection Profile specified by ID.
      *
+     * Example:
+     * ```php
+     * $client->connectionProfiles->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the connection-profile to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -256,7 +294,7 @@ class ConnectionProfilesClient implements ConnectionProfilesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connection-profiles/{$id}",
+                    path: "connection-profiles/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -284,6 +322,13 @@ class ConnectionProfilesClient implements ConnectionProfilesClientInterface
     /**
      * Delete a single Connection Profile specified by ID.
      *
+     * Example:
+     * ```php
+     * $client->connectionProfiles->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the connection-profile to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -303,7 +348,7 @@ class ConnectionProfilesClient implements ConnectionProfilesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connection-profiles/{$id}",
+                    path: "connection-profiles/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -324,6 +369,14 @@ class ConnectionProfilesClient implements ConnectionProfilesClientInterface
 
     /**
      * Update the details of a specific Connection Profile.
+     *
+     * Example:
+     * ```php
+     * $client->connectionProfiles->update(
+     *     'id',
+     *     new UpdateConnectionProfileRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the connection profile to update.
      * @param UpdateConnectionProfileRequestContent $request
@@ -346,7 +399,7 @@ class ConnectionProfilesClient implements ConnectionProfilesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connection-profiles/{$id}",
+                    path: "connection-profiles/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

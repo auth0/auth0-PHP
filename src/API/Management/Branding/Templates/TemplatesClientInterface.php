@@ -8,6 +8,11 @@ use Auth0\SDK\API\Management\Types\UpdateUniversalLoginTemplateRequestContentTem
 interface TemplatesClientInterface
 {
     /**
+     * Example:
+     * ```php
+     * $client->branding->templates->getUniversalLogin();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -49,6 +54,13 @@ interface TemplatesClientInterface
      * </html>
      * ```
      *
+     * Example:
+     * ```php
+     * $client->branding->templates->updateUniversalLogin(
+     *     'string',
+     * );
+     * ```
+     *
      * @param (
      *    string
      *   |UpdateUniversalLoginTemplateRequestContentTemplate
@@ -65,6 +77,11 @@ interface TemplatesClientInterface
     public function updateUniversalLogin(string|UpdateUniversalLoginTemplateRequestContentTemplate $request, ?array $options = null): void;
 
     /**
+     * Example:
+     * ```php
+     * $client->branding->templates->deleteUniversalLogin();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,

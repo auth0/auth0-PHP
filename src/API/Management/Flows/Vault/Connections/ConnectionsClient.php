@@ -110,6 +110,17 @@ class ConnectionsClient implements ConnectionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->vault->connections->list(
+     *     new ListFlowsVaultConnectionsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListFlowsVaultConnectionsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -140,6 +151,21 @@ class ConnectionsClient implements ConnectionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->vault->connections->create(
+     *     new CreateFlowsVaultConnectionActivecampaignApiKey([
+     *         'name' => 'name',
+     *         'appId' => FlowsVaultConnectionAppIdActivecampaignEnum::Activecampaign->value,
+     *         'setup' => new FlowsVaultConnectioSetupApiKeyWithBaseUrl([
+     *             'type' => FlowsVaultConnectioSetupTypeApiKeyEnum::ApiKey->value,
+     *             'apiKey' => 'api_key',
+     *             'baseUrl' => 'base_url',
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param (
      *    CreateFlowsVaultConnectionActivecampaignApiKey
      *   |CreateFlowsVaultConnectionActivecampaignUninitialized
@@ -238,6 +264,13 @@ class ConnectionsClient implements ConnectionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->vault->connections->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Flows Vault connection ID
      * @param ?array{
      *   baseUrl?: string,
@@ -258,7 +291,7 @@ class ConnectionsClient implements ConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "flows/vault/connections/{$id}",
+                    path: "flows/vault/connections/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -284,6 +317,13 @@ class ConnectionsClient implements ConnectionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->vault->connections->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Vault connection id
      * @param ?array{
      *   baseUrl?: string,
@@ -303,7 +343,7 @@ class ConnectionsClient implements ConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "flows/vault/connections/{$id}",
+                    path: "flows/vault/connections/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -323,6 +363,14 @@ class ConnectionsClient implements ConnectionsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->vault->connections->update(
+     *     'id',
+     *     new UpdateFlowsVaultConnectionRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id Flows Vault connection ID
      * @param UpdateFlowsVaultConnectionRequestContent $request
      * @param ?array{
@@ -344,7 +392,7 @@ class ConnectionsClient implements ConnectionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "flows/vault/connections/{$id}",
+                    path: "flows/vault/connections/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

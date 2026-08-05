@@ -17,6 +17,20 @@ interface RulesClientInterface
     /**
      * Retrieve a filtered list of [rules](https://auth0.com/docs/rules). Accepts a list of fields to include or exclude.
      *
+     * Example:
+     * ```php
+     * $client->rules->list(
+     *     new ListRulesRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'enabled' => true,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListRulesRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -35,6 +49,16 @@ interface RulesClientInterface
      *
      * Note: Changing a rule's stage of execution from the default `login_success` can change the rule's function signature to have user omitted.
      *
+     * Example:
+     * ```php
+     * $client->rules->create(
+     *     new CreateRuleRequestContent([
+     *         'name' => 'name',
+     *         'script' => 'script',
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateRuleRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -50,6 +74,17 @@ interface RulesClientInterface
 
     /**
      * Retrieve [rule](https://auth0.com/docs/rules) details. Accepts a list of fields to include or exclude in the result.
+     *
+     * Example:
+     * ```php
+     * $client->rules->get(
+     *     'id',
+     *     new GetRuleRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id ID of the rule to retrieve.
      * @param GetRuleRequestParameters $request
@@ -68,6 +103,13 @@ interface RulesClientInterface
     /**
      * Delete a rule.
      *
+     * Example:
+     * ```php
+     * $client->rules->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the rule to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -82,6 +124,14 @@ interface RulesClientInterface
 
     /**
      * Update an existing rule.
+     *
+     * Example:
+     * ```php
+     * $client->rules->update(
+     *     'id',
+     *     new UpdateRuleRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the rule to retrieve.
      * @param UpdateRuleRequestContent $request

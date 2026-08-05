@@ -52,6 +52,13 @@ class SynchronizationsClient implements SynchronizationsClientInterface
     /**
      * Request an on-demand synchronization of the directory.
      *
+     * Example:
+     * ```php
+     * $client->connections->directoryProvisioning->synchronizations->create(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to trigger synchronization for
      * @param ?array{
      *   baseUrl?: string,
@@ -72,7 +79,7 @@ class SynchronizationsClient implements SynchronizationsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/directory-provisioning/synchronizations",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/directory-provisioning/synchronizations",
                     method: HttpMethod::POST,
                 ),
                 $options,

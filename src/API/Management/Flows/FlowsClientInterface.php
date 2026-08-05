@@ -17,6 +17,21 @@ use Auth0\SDK\API\Management\Flows\Vault\VaultClientInterface;
 interface FlowsClientInterface
 {
     /**
+     * Example:
+     * ```php
+     * $client->flows->list(
+     *     new ListFlowsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'hydrate' => [
+     *             ListFlowsRequestParametersHydrateEnum::FormCount->value,
+     *         ],
+     *         'synchronous' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListFlowsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -31,6 +46,15 @@ interface FlowsClientInterface
     public function list(ListFlowsRequestParameters $request = new ListFlowsRequestParameters(), ?array $options = null): Pager;
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->create(
+     *     new CreateFlowRequestContent([
+     *         'name' => 'name',
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateFlowRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -45,6 +69,18 @@ interface FlowsClientInterface
     public function create(CreateFlowRequestContent $request, ?array $options = null): ?CreateFlowResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->get(
+     *     'id',
+     *     new GetFlowRequestParameters([
+     *         'hydrate' => [
+     *             GetFlowRequestParametersHydrateEnum::FormCount->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Flow identifier
      * @param GetFlowRequestParameters $request
      * @param ?array{
@@ -60,6 +96,13 @@ interface FlowsClientInterface
     public function get(string $id, GetFlowRequestParameters $request = new GetFlowRequestParameters(), ?array $options = null): ?GetFlowResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Flow id
      * @param ?array{
      *   baseUrl?: string,
@@ -73,6 +116,14 @@ interface FlowsClientInterface
     public function delete(string $id, ?array $options = null): void;
 
     /**
+     * Example:
+     * ```php
+     * $client->flows->update(
+     *     'id',
+     *     new UpdateFlowRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id Flow identifier
      * @param UpdateFlowRequestContent $request
      * @param ?array{

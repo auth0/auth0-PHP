@@ -56,6 +56,20 @@ class GroupsClient implements GroupsClientInterface
     /**
      * List all groups to which this user belongs.
      *
+     * Example:
+     * ```php
+     * $client->users->groups->get(
+     *     'id',
+     *     new GetUserGroupsRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to list groups for.
      * @param GetUserGroupsRequestParameters $request
      * @param ?array{
@@ -110,6 +124,9 @@ class GroupsClient implements GroupsClientInterface
         if ($request->getIncludeFields() != null) {
             $query['include_fields'] = $request->getIncludeFields();
         }
+        if ($request->getIncludeTotals() != null) {
+            $query['include_totals'] = $request->getIncludeTotals();
+        }
         if ($request->getFrom() != null) {
             $query['from'] = $request->getFrom();
         }
@@ -120,7 +137,7 @@ class GroupsClient implements GroupsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/groups",
+                    path: "users/" . RawClient::encodePathParam($id) . "/groups",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

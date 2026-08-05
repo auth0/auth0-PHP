@@ -56,6 +56,19 @@ class MembersClient implements MembersClientInterface
     /**
      * List all users that are a member of this group.
      *
+     * Example:
+     * ```php
+     * $client->groups->members->get(
+     *     'id',
+     *     new GetGroupMembersRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the group (service-generated).
      * @param GetGroupMembersRequestParameters $request
      * @param ?array{
@@ -120,7 +133,7 @@ class MembersClient implements MembersClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "groups/{$id}/members",
+                    path: "groups/" . RawClient::encodePathParam($id) . "/members",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

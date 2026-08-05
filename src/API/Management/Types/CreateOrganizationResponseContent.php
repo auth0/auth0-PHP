@@ -52,6 +52,18 @@ class CreateOrganizationResponseContent extends JsonSerializableType
     private ?string $thirdPartyClientAccess;
 
     /**
+     * @var ?bool $isAppEntitlementActive Whether app entitlement is active for this organization.
+     */
+    #[JsonProperty('is_app_entitlement_active')]
+    private ?bool $isAppEntitlementActive;
+
+    /**
+     * @var ?OrganizationClientAssociation $client
+     */
+    #[JsonProperty('client')]
+    private ?OrganizationClientAssociation $client;
+
+    /**
      * @var ?array<OrganizationEnabledConnection> $enabledConnections
      */
     #[JsonProperty('enabled_connections'), ArrayType([OrganizationEnabledConnection::class])]
@@ -66,6 +78,8 @@ class CreateOrganizationResponseContent extends JsonSerializableType
      *   metadata?: ?array<string, ?string>,
      *   tokenQuota?: ?TokenQuota,
      *   thirdPartyClientAccess?: ?value-of<OrganizationThirdPartyClientAccessEnum>,
+     *   isAppEntitlementActive?: ?bool,
+     *   client?: ?OrganizationClientAssociation,
      *   enabledConnections?: ?array<OrganizationEnabledConnection>,
      * } $values
      */
@@ -79,6 +93,8 @@ class CreateOrganizationResponseContent extends JsonSerializableType
         $this->metadata = $values['metadata'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->thirdPartyClientAccess = $values['thirdPartyClientAccess'] ?? null;
+        $this->isAppEntitlementActive = $values['isAppEntitlementActive'] ?? null;
+        $this->client = $values['client'] ?? null;
         $this->enabledConnections = $values['enabledConnections'] ?? null;
     }
 
@@ -205,6 +221,42 @@ class CreateOrganizationResponseContent extends JsonSerializableType
     {
         $this->thirdPartyClientAccess = $value;
         $this->_setField('thirdPartyClientAccess');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIsAppEntitlementActive(): ?bool
+    {
+        return $this->isAppEntitlementActive;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIsAppEntitlementActive(?bool $value = null): self
+    {
+        $this->isAppEntitlementActive = $value;
+        $this->_setField('isAppEntitlementActive');
+        return $this;
+    }
+
+    /**
+     * @return ?OrganizationClientAssociation
+     */
+    public function getClient(): ?OrganizationClientAssociation
+    {
+        return $this->client;
+    }
+
+    /**
+     * @param ?OrganizationClientAssociation $value
+     */
+    public function setClient(?OrganizationClientAssociation $value = null): self
+    {
+        $this->client = $value;
+        $this->_setField('client');
         return $this;
     }
 

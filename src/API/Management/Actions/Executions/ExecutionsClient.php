@@ -52,6 +52,13 @@ class ExecutionsClient implements ExecutionsClientInterface
     /**
      * Retrieve information about a specific execution of a trigger. Relevant execution IDs will be included in tenant logs generated as part of that authentication flow. Executions will only be stored for 10 days after their creation.
      *
+     * Example:
+     * ```php
+     * $client->actions->executions->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the execution to retrieve.
      * @param ?array{
      *   baseUrl?: string,
@@ -72,7 +79,7 @@ class ExecutionsClient implements ExecutionsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "actions/executions/{$id}",
+                    path: "actions/executions/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,

@@ -17,6 +17,19 @@ interface LogsClientInterface
      *
      * Auth0 <a href="https://auth0.com/docs/logs/retrieve-log-events-using-mgmt-api#limitations">limits the number of logs</a> you can return by search criteria to 100 logs per request. Furthermore, you may only paginate through up to 1,000 search results. If you exceed this threshold, please redefine your search.
      *
+     * Example:
+     * ```php
+     * $client->users->logs->list(
+     *     'id',
+     *     new ListUserLogsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'sort' => 'sort',
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user of the logs to retrieve
      * @param ListUserLogsRequestParameters $request
      * @param ?array{

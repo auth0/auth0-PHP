@@ -64,6 +64,17 @@ class GroupsClient implements GroupsClientInterface
     /**
      * Lists the groups that are assigned to the specified organization.
      *
+     * Example:
+     * ```php
+     * $client->organizations->groups->list(
+     *     'organization_id',
+     *     new ListOrganizationGroupsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $organizationId ID of the organization
      * @param ListOrganizationGroupsRequestParameters $request
      * @param ?array{
@@ -130,7 +141,7 @@ class GroupsClient implements GroupsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "organizations/{$organizationId}/groups",
+                    path: "organizations/" . RawClient::encodePathParam($organizationId) . "/groups",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

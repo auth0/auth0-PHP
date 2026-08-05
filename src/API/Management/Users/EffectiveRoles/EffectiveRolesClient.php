@@ -64,6 +64,17 @@ class EffectiveRolesClient implements EffectiveRolesClientInterface
     /**
      * Retrieve detailed list of effective roles for a user, including roles assigned directly and through group memberships.
      *
+     * Example:
+     * ```php
+     * $client->users->effectiveRoles->list(
+     *     'id',
+     *     new ListUserEffectiveRolesRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to list effective roles for.
      * @param ListUserEffectiveRolesRequestParameters $request
      * @param ?array{
@@ -130,7 +141,7 @@ class EffectiveRolesClient implements EffectiveRolesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/effective-roles",
+                    path: "users/" . RawClient::encodePathParam($id) . "/effective-roles",
                     method: HttpMethod::GET,
                     query: $query,
                 ),

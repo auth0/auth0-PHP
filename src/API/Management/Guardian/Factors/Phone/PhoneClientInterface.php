@@ -20,6 +20,11 @@ interface PhoneClientInterface
     /**
      * Retrieve list of <a href="https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors/configure-sms-voice-notifications-mfa">phone-type MFA factors</a> (i.e., sms and voice) that are enabled for your tenant.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->getMessageTypes();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -34,6 +39,17 @@ interface PhoneClientInterface
 
     /**
      * Replace the list of <a href="https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors/configure-sms-voice-notifications-mfa">phone-type MFA factors</a> (i.e., sms and voice) that are enabled for your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->setMessageTypes(
+     *     new SetGuardianFactorPhoneMessageTypesRequestContent([
+     *         'messageTypes' => [
+     *             GuardianFactorPhoneFactorMessageTypeEnum::Sms->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorPhoneMessageTypesRequestContent $request
      * @param ?array{
@@ -51,6 +67,11 @@ interface PhoneClientInterface
     /**
      * Retrieve configuration details for a Twilio phone provider that has been set up in your tenant. To learn more, review <a href="https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors/configure-sms-voice-notifications-mfa">Configure SMS and Voice Notifications for MFA</a>.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->getTwilioProvider();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -65,6 +86,13 @@ interface PhoneClientInterface
 
     /**
      * Update the configuration of a Twilio phone provider that has been set up in your tenant. To learn more, review <a href="https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors/configure-sms-voice-notifications-mfa">Configure SMS and Voice Notifications for MFA</a>.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->setTwilioProvider(
+     *     new SetGuardianFactorsProviderPhoneTwilioRequestContent([]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorsProviderPhoneTwilioRequestContent $request
      * @param ?array{
@@ -82,6 +110,11 @@ interface PhoneClientInterface
     /**
      * Retrieve details of the multi-factor authentication phone provider configured for your tenant.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->getSelectedProvider();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -95,6 +128,15 @@ interface PhoneClientInterface
     public function getSelectedProvider(?array $options = null): ?GetGuardianFactorsProviderPhoneResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->setProvider(
+     *     new SetGuardianFactorsProviderPhoneRequestContent([
+     *         'provider' => GuardianFactorsProviderSmsProviderEnum::Auth0->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param SetGuardianFactorsProviderPhoneRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -111,6 +153,11 @@ interface PhoneClientInterface
     /**
      * Retrieve details of the multi-factor authentication enrollment and verification templates for phone-type factors available in your tenant.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->getTemplates();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -125,6 +172,16 @@ interface PhoneClientInterface
 
     /**
      * Customize the messages sent to complete phone enrollment and verification (subscription required).
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->setTemplates(
+     *     new SetGuardianFactorPhoneTemplatesRequestContent([
+     *         'enrollmentMessage' => 'enrollment_message',
+     *         'verificationMessage' => 'verification_message',
+     *     ]),
+     * );
+     * ```
      *
      * @param SetGuardianFactorPhoneTemplatesRequestContent $request
      * @param ?array{

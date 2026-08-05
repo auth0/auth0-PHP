@@ -13,6 +13,11 @@ interface SettingsClientInterface
     /**
      * Retrieves the DUO account and factor configuration.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->duo->settings->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -28,6 +33,13 @@ interface SettingsClientInterface
     /**
      * Set the DUO account configuration and other properties specific to this factor.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->duo->settings->set(
+     *     new SetGuardianFactorDuoSettingsRequestContent([]),
+     * );
+     * ```
+     *
      * @param SetGuardianFactorDuoSettingsRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -42,6 +54,13 @@ interface SettingsClientInterface
     public function set(SetGuardianFactorDuoSettingsRequestContent $request = new SetGuardianFactorDuoSettingsRequestContent(), ?array $options = null): ?SetGuardianFactorDuoSettingsResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->guardian->factors->duo->settings->update(
+     *     new UpdateGuardianFactorDuoSettingsRequestContent([]),
+     * );
+     * ```
+     *
      * @param UpdateGuardianFactorDuoSettingsRequestContent $request
      * @param ?array{
      *   baseUrl?: string,

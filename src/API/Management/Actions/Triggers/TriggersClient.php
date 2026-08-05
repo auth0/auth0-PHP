@@ -60,6 +60,11 @@ class TriggersClient implements TriggersClientInterface
     /**
      * Retrieve the set of triggers currently available within actions. A trigger is an extensibility point to which actions can be bound.
      *
+     * Example:
+     * ```php
+     * $client->actions->triggers->list();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,

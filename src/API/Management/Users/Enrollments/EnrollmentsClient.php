@@ -53,6 +53,13 @@ class EnrollmentsClient implements EnrollmentsClientInterface
     /**
      * Retrieve the first [multi-factor authentication](https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors) enrollment that a specific user has confirmed.
      *
+     * Example:
+     * ```php
+     * $client->users->enrollments->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the user to list enrollments for.
      * @param ?array{
      *   baseUrl?: string,
@@ -73,7 +80,7 @@ class EnrollmentsClient implements EnrollmentsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/enrollments",
+                    path: "users/" . RawClient::encodePathParam($id) . "/enrollments",
                     method: HttpMethod::GET,
                 ),
                 $options,

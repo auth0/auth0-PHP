@@ -54,6 +54,11 @@ class CustomSigningClient implements CustomSigningClientInterface
     /**
      * Get entire jwks representation of custom signing keys.
      *
+     * Example:
+     * ```php
+     * $client->keys->customSigning->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -100,6 +105,19 @@ class CustomSigningClient implements CustomSigningClientInterface
 
     /**
      * Create or replace entire jwks representation of custom signing keys.
+     *
+     * Example:
+     * ```php
+     * $client->keys->customSigning->set(
+     *     new SetCustomSigningKeysRequestContent([
+     *         'keys' => [
+     *             new CustomSigningKeyJwk([
+     *                 'kty' => CustomSigningKeyTypeEnum::Ec->value,
+     *             ]),
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param SetCustomSigningKeysRequestContent $request
      * @param ?array{
@@ -149,6 +167,11 @@ class CustomSigningClient implements CustomSigningClientInterface
 
     /**
      * Delete entire jwks representation of custom signing keys.
+     *
+     * Example:
+     * ```php
+     * $client->keys->customSigning->delete();
+     * ```
      *
      * @param ?array{
      *   baseUrl?: string,

@@ -59,6 +59,19 @@ class RateLimitPoliciesClient implements RateLimitPoliciesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->rateLimitPolicies->list(
+     *     new ListRateLimitPoliciesRequestParameters([
+     *         'resource' => RateLimitPolicyResourceEnum::OauthAuthenticationApi->value,
+     *         'consumer' => RateLimitPolicyConsumerEnum::Client->value,
+     *         'consumerSelector' => 'consumer_selector',
+     *         'take' => 1,
+     *         'from' => 'from',
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListRateLimitPoliciesRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -86,6 +99,20 @@ class RateLimitPoliciesClient implements RateLimitPoliciesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->rateLimitPolicies->create(
+     *     new CreateRateLimitPolicyRequestContent([
+     *         'resource' => RateLimitPolicyResourceEnum::OauthAuthenticationApi->value,
+     *         'consumer' => RateLimitPolicyConsumerEnum::Client->value,
+     *         'consumerSelector' => 'consumer_selector',
+     *         'configuration' => new RateLimitPolicyConfigurationZero([
+     *             'action' => RateLimitPolicyConfigurationZeroAction::Allow->value,
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateRateLimitPolicyRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -133,6 +160,13 @@ class RateLimitPoliciesClient implements RateLimitPoliciesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->rateLimitPolicies->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the Rate Limit Policy.
      * @param ?array{
      *   baseUrl?: string,
@@ -153,7 +187,7 @@ class RateLimitPoliciesClient implements RateLimitPoliciesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "rate-limit-policies/{$id}",
+                    path: "rate-limit-policies/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -179,6 +213,13 @@ class RateLimitPoliciesClient implements RateLimitPoliciesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->rateLimitPolicies->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the Rate Limit Policy.
      * @param ?array{
      *   baseUrl?: string,
@@ -198,7 +239,7 @@ class RateLimitPoliciesClient implements RateLimitPoliciesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "rate-limit-policies/{$id}",
+                    path: "rate-limit-policies/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -218,6 +259,18 @@ class RateLimitPoliciesClient implements RateLimitPoliciesClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->rateLimitPolicies->update(
+     *     'id',
+     *     new PatchRateLimitPolicyRequestContent([
+     *         'configuration' => new PatchRateLimitPolicyConfigurationRequestContentZero([
+     *             'action' => PatchRateLimitPolicyConfigurationRequestContentZeroAction::Allow->value,
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the Rate Limit Policy.
      * @param PatchRateLimitPolicyRequestContent $request
      * @param ?array{
@@ -239,7 +292,7 @@ class RateLimitPoliciesClient implements RateLimitPoliciesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "rate-limit-policies/{$id}",
+                    path: "rate-limit-policies/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

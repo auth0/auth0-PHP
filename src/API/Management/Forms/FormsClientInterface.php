@@ -15,6 +15,20 @@ use Auth0\SDK\API\Management\Types\UpdateFormResponseContent;
 interface FormsClientInterface
 {
     /**
+     * Example:
+     * ```php
+     * $client->forms->list(
+     *     new ListFormsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'hydrate' => [
+     *             FormsRequestParametersHydrateEnum::FlowCount->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListFormsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -29,6 +43,15 @@ interface FormsClientInterface
     public function list(ListFormsRequestParameters $request = new ListFormsRequestParameters(), ?array $options = null): Pager;
 
     /**
+     * Example:
+     * ```php
+     * $client->forms->create(
+     *     new CreateFormRequestContent([
+     *         'name' => 'name',
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateFormRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -43,6 +66,18 @@ interface FormsClientInterface
     public function create(CreateFormRequestContent $request, ?array $options = null): ?CreateFormResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->forms->get(
+     *     'id',
+     *     new GetFormRequestParameters([
+     *         'hydrate' => [
+     *             FormsRequestParametersHydrateEnum::FlowCount->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The ID of the form to retrieve.
      * @param GetFormRequestParameters $request
      * @param ?array{
@@ -58,6 +93,13 @@ interface FormsClientInterface
     public function get(string $id, GetFormRequestParameters $request = new GetFormRequestParameters(), ?array $options = null): ?GetFormResponseContent;
 
     /**
+     * Example:
+     * ```php
+     * $client->forms->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the form to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -71,6 +113,14 @@ interface FormsClientInterface
     public function delete(string $id, ?array $options = null): void;
 
     /**
+     * Example:
+     * ```php
+     * $client->forms->update(
+     *     'id',
+     *     new UpdateFormRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id The ID of the form to update.
      * @param UpdateFormRequestContent $request
      * @param ?array{

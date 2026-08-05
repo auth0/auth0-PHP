@@ -11,6 +11,11 @@ interface SuspiciousIpThrottlingClientInterface
     /**
      * Retrieve details of the Suspicious IP Throttling configuration of your tenant.
      *
+     * Example:
+     * ```php
+     * $client->attackProtection->suspiciousIpThrottling->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -25,6 +30,13 @@ interface SuspiciousIpThrottlingClientInterface
 
     /**
      * Update the details of the Suspicious IP Throttling configuration of your tenant.
+     *
+     * Example:
+     * ```php
+     * $client->attackProtection->suspiciousIpThrottling->update(
+     *     new UpdateSuspiciousIpThrottlingSettingsRequestContent([]),
+     * );
+     * ```
      *
      * @param UpdateSuspiciousIpThrottlingSettingsRequestContent $request
      * @param ?array{

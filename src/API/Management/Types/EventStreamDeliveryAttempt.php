@@ -28,10 +28,17 @@ class EventStreamDeliveryAttempt extends JsonSerializableType
     private ?string $errorMessage;
 
     /**
+     * @var ?float $duration Duration of the delivery attempt in milliseconds
+     */
+    #[JsonProperty('duration')]
+    private ?float $duration;
+
+    /**
      * @param array{
      *   status: value-of<EventStreamDeliveryStatusEnum>,
      *   timestamp: DateTime,
      *   errorMessage?: ?string,
+     *   duration?: ?float,
      * } $values
      */
     public function __construct(
@@ -40,6 +47,7 @@ class EventStreamDeliveryAttempt extends JsonSerializableType
         $this->status = $values['status'];
         $this->timestamp = $values['timestamp'];
         $this->errorMessage = $values['errorMessage'] ?? null;
+        $this->duration = $values['duration'] ?? null;
     }
 
     /**
@@ -93,6 +101,24 @@ class EventStreamDeliveryAttempt extends JsonSerializableType
     {
         $this->errorMessage = $value;
         $this->_setField('errorMessage');
+        return $this;
+    }
+
+    /**
+     * @return ?float
+     */
+    public function getDuration(): ?float
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @param ?float $value
+     */
+    public function setDuration(?float $value = null): self
+    {
+        $this->duration = $value;
+        $this->_setField('duration');
         return $this;
     }
 

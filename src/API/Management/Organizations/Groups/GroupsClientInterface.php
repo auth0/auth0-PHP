@@ -12,6 +12,17 @@ interface GroupsClientInterface
     /**
      * Lists the groups that are assigned to the specified organization.
      *
+     * Example:
+     * ```php
+     * $client->organizations->groups->list(
+     *     'organization_id',
+     *     new ListOrganizationGroupsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $organizationId ID of the organization
      * @param ListOrganizationGroupsRequestParameters $request
      * @param ?array{

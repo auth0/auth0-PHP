@@ -11,6 +11,17 @@ interface ConnectedAccountsClientInterface
     /**
      * Retrieve all connected accounts associated with the user.
      *
+     * Example:
+     * ```php
+     * $client->users->connectedAccounts->list(
+     *     'id',
+     *     new GetUserConnectedAccountsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to list connected accounts for.
      * @param GetUserConnectedAccountsRequestParameters $request
      * @param ?array{

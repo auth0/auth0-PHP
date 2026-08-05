@@ -11,6 +11,19 @@ interface GroupsClientInterface
     /**
      * Lists the groups which grant the org member a given role.
      *
+     * Example:
+     * ```php
+     * $client->organizations->members->effectiveRoles->sources->groups->list(
+     *     'id',
+     *     'user_id',
+     *     new ListOrganizationMemberRoleSourceGroupsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'roleId' => 'role_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Organization identifier.
      * @param string $userId ID of the user to list role source groups for.
      * @param ListOrganizationMemberRoleSourceGroupsRequestParameters $request

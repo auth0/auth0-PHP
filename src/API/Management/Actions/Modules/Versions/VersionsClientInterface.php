@@ -13,6 +13,17 @@ interface VersionsClientInterface
     /**
      * List all published versions of a specific Actions Module.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->versions->list(
+     *     'id',
+     *     new GetActionModuleVersionsRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id The unique ID of the module.
      * @param GetActionModuleVersionsRequestParameters $request
      * @param ?array{
@@ -30,6 +41,13 @@ interface VersionsClientInterface
     /**
      * Creates a new immutable version of an Actions Module from the current draft version. This publishes the draft as a new version that can be referenced by actions, while maintaining the existing draft for continued development.
      *
+     * Example:
+     * ```php
+     * $client->actions->modules->versions->create(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The ID of the action module to create a version for.
      * @param ?array{
      *   baseUrl?: string,
@@ -45,6 +63,14 @@ interface VersionsClientInterface
 
     /**
      * Retrieve the details of a specific, immutable version of an Actions Module.
+     *
+     * Example:
+     * ```php
+     * $client->actions->modules->versions->get(
+     *     'id',
+     *     'versionId',
+     * );
+     * ```
      *
      * @param string $id The unique ID of the module.
      * @param string $versionId The unique ID of the module version to retrieve.

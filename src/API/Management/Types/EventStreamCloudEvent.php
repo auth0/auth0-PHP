@@ -6,6 +6,7 @@ use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 use DateTime;
 use Auth0\SDK\API\Management\Core\Types\Date;
+use Auth0\SDK\API\Management\Core\Types\ArrayType;
 
 /**
  * Event content. This will only be set if delivery failed.
@@ -43,10 +44,10 @@ class EventStreamCloudEvent extends JsonSerializableType
     private ?DateTime $time;
 
     /**
-     * @var ?string $data Event contents encoded as a string.
+     * @var ?array<string, mixed> $data
      */
-    #[JsonProperty('data')]
-    private ?string $data;
+    #[JsonProperty('data'), ArrayType(['string' => 'mixed'])]
+    private ?array $data;
 
     /**
      * @param array{
@@ -55,7 +56,7 @@ class EventStreamCloudEvent extends JsonSerializableType
      *   specversion?: ?string,
      *   type?: ?string,
      *   time?: ?DateTime,
-     *   data?: ?string,
+     *   data?: ?array<string, mixed>,
      * } $values
      */
     public function __construct(
@@ -160,17 +161,17 @@ class EventStreamCloudEvent extends JsonSerializableType
     }
 
     /**
-     * @return ?string
+     * @return ?array<string, mixed>
      */
-    public function getData(): ?string
+    public function getData(): ?array
     {
         return $this->data;
     }
 
     /**
-     * @param ?string $value
+     * @param ?array<string, mixed> $value
      */
-    public function setData(?string $value = null): self
+    public function setData(?array $value = null): self
     {
         $this->data = $value;
         $this->_setField('data');

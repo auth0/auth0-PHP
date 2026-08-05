@@ -55,6 +55,13 @@ class TokensClient implements TokensClientInterface
     /**
      * Retrieves all scim tokens by its connection `id`.
      *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->tokens->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to retrieve its SCIM configuration
      * @param ?array{
      *   baseUrl?: string,
@@ -75,7 +82,7 @@ class TokensClient implements TokensClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/scim-configuration/tokens",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/scim-configuration/tokens",
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -103,6 +110,14 @@ class TokensClient implements TokensClientInterface
     /**
      * Create a scim token for a scim client.
      *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->tokens->create(
+     *     'id',
+     *     new CreateScimTokenRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id The id of the connection to create its SCIM token
      * @param CreateScimTokenRequestContent $request
      * @param ?array{
@@ -124,7 +139,7 @@ class TokensClient implements TokensClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/scim-configuration/tokens",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/scim-configuration/tokens",
                     method: HttpMethod::POST,
                     body: $request,
                 ),
@@ -153,6 +168,14 @@ class TokensClient implements TokensClientInterface
     /**
      * Deletes a scim token by its connection `id` and `tokenId`.
      *
+     * Example:
+     * ```php
+     * $client->connections->scimConfiguration->tokens->delete(
+     *     'id',
+     *     'tokenId',
+     * );
+     * ```
+     *
      * @param string $id The connection id that owns the SCIM token to delete
      * @param string $tokenId The id of the scim token to delete
      * @param ?array{
@@ -173,7 +196,7 @@ class TokensClient implements TokensClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "connections/{$id}/scim-configuration/tokens/{$tokenId}",
+                    path: "connections/" . RawClient::encodePathParam($id) . "/scim-configuration/tokens/" . RawClient::encodePathParam($tokenId),
                     method: HttpMethod::DELETE,
                 ),
                 $options,

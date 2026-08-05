@@ -15,6 +15,20 @@ interface RolesClientInterface
      *
      * **Note**: This action retrieves all roles assigned to a user in the context of your whole tenant. To retrieve Organization-specific roles, use the following endpoint: [Get user roles assigned to an Organization member](https://auth0.com/docs/api/management/v2/organizations/get-organization-member-roles).
      *
+     * **Note**: Returns only direct role assignments. To also include group-based role assignments, use `GET /api/v2/users/{id}/effective-roles`.
+     *
+     * Example:
+     * ```php
+     * $client->users->roles->list(
+     *     'id',
+     *     new ListUserRolesRequestParameters([
+     *         'perPage' => 1,
+     *         'page' => 1,
+     *         'includeTotals' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to list roles for.
      * @param ListUserRolesRequestParameters $request
      * @param ?array{
@@ -34,6 +48,18 @@ interface RolesClientInterface
      *
      * **Note**: New roles cannot be created through this action. Additionally, this action is used to assign roles to a user in the context of your whole tenant. To assign roles in the context of a specific Organization, use the following endpoint: [Assign user roles to an Organization member](https://auth0.com/docs/api/management/v2/organizations/post-organization-member-roles).
      *
+     * Example:
+     * ```php
+     * $client->users->roles->assign(
+     *     'id',
+     *     new AssignUserRolesRequestContent([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to associate roles with.
      * @param AssignUserRolesRequestContent $request
      * @param ?array{
@@ -51,6 +77,18 @@ interface RolesClientInterface
      * Remove one or more specified user roles assigned to a user.
      *
      * **Note**: This action removes a role from a user in the context of your whole tenant. If you want to unassign a role from a user in the context of a specific Organization, use the following endpoint: [Delete user roles from an Organization member](https://auth0.com/docs/api/management/v2/organizations/delete-organization-member-roles).
+     *
+     * Example:
+     * ```php
+     * $client->users->roles->delete(
+     *     'id',
+     *     new DeleteUserRolesRequestContent([
+     *         'roles' => [
+     *             'roles',
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id ID of the user to remove roles from.
      * @param DeleteUserRolesRequestContent $request

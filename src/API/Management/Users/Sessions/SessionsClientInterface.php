@@ -11,6 +11,18 @@ interface SessionsClientInterface
     /**
      * Retrieve details for a user's sessions.
      *
+     * Example:
+     * ```php
+     * $client->users->sessions->list(
+     *     'user_id',
+     *     new ListUserSessionsRequestParameters([
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $userId ID of the user to get sessions for
      * @param ListUserSessionsRequestParameters $request
      * @param ?array{
@@ -27,6 +39,13 @@ interface SessionsClientInterface
 
     /**
      * Delete all sessions for a user.
+     *
+     * Example:
+     * ```php
+     * $client->users->sessions->delete(
+     *     'user_id',
+     * );
+     * ```
      *
      * @param string $userId ID of the user to get sessions for
      * @param ?array{

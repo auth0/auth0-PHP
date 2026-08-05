@@ -49,6 +49,12 @@ class UpdateOrganizationRequestContent extends JsonSerializableType
     private ?string $thirdPartyClientAccess;
 
     /**
+     * @var ?bool $isAppEntitlementActive Whether app entitlement is active for this organization.
+     */
+    #[JsonProperty('is_app_entitlement_active')]
+    private ?bool $isAppEntitlementActive;
+
+    /**
      * @param array{
      *   displayName?: ?string,
      *   name?: ?string,
@@ -56,6 +62,7 @@ class UpdateOrganizationRequestContent extends JsonSerializableType
      *   metadata?: ?array<string, ?string>,
      *   tokenQuota?: ?UpdateTokenQuota,
      *   thirdPartyClientAccess?: ?value-of<OrganizationThirdPartyClientAccessEnum>,
+     *   isAppEntitlementActive?: ?bool,
      * } $values
      */
     public function __construct(
@@ -67,6 +74,7 @@ class UpdateOrganizationRequestContent extends JsonSerializableType
         $this->metadata = $values['metadata'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->thirdPartyClientAccess = $values['thirdPartyClientAccess'] ?? null;
+        $this->isAppEntitlementActive = $values['isAppEntitlementActive'] ?? null;
     }
 
     /**
@@ -174,6 +182,24 @@ class UpdateOrganizationRequestContent extends JsonSerializableType
     {
         $this->thirdPartyClientAccess = $value;
         $this->_setField('thirdPartyClientAccess');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIsAppEntitlementActive(): ?bool
+    {
+        return $this->isAppEntitlementActive;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIsAppEntitlementActive(?bool $value = null): self
+    {
+        $this->isAppEntitlementActive = $value;
+        $this->_setField('isAppEntitlementActive');
         return $this;
     }
 }

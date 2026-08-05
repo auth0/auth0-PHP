@@ -16,6 +16,11 @@ interface FactorsClientInterface
     /**
      * Retrieve details of all <a href="https://auth0.com/docs/secure/multi-factor-authentication/multi-factor-authentication-factors">multi-factor authentication factors</a> associated with your tenant.
      *
+     * Example:
+     * ```php
+     * $client->guardian->factors->list();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -30,6 +35,16 @@ interface FactorsClientInterface
 
     /**
      * Update the status (i.e., enabled or disabled) of a specific multi-factor authentication factor.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->set(
+     *     GuardianFactorNameEnum::PushNotification->value,
+     *     new SetGuardianFactorRequestContent([
+     *         'enabled' => true,
+     *     ]),
+     * );
+     * ```
      *
      * @param value-of<GuardianFactorNameEnum> $name Factor name. Can be `sms`, `push-notification`, `email`, `duo` `otp` `webauthn-roaming`, `webauthn-platform`, or `recovery-code`.
      * @param SetGuardianFactorRequestContent $request

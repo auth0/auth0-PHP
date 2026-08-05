@@ -51,6 +51,13 @@ class MultifactorClient implements MultifactorClientInterface
     /**
      * Invalidate all remembered browsers across all [authentication factors](https://auth0.com/docs/multifactor-authentication) for a user.
      *
+     * Example:
+     * ```php
+     * $client->users->multifactor->invalidateRememberBrowser(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the user to invalidate all remembered browsers and authentication factors for.
      * @param ?array{
      *   baseUrl?: string,
@@ -70,7 +77,7 @@ class MultifactorClient implements MultifactorClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/multifactor/actions/invalidate-remember-browser",
+                    path: "users/" . RawClient::encodePathParam($id) . "/multifactor/actions/invalidate-remember-browser",
                     method: HttpMethod::POST,
                 ),
                 $options,
@@ -92,6 +99,14 @@ class MultifactorClient implements MultifactorClientInterface
     /**
      * Remove a [multifactor](https://auth0.com/docs/multifactor-authentication) authentication configuration from a user's account. This forces the user to manually reconfigure the multi-factor provider.
      *
+     * Example:
+     * ```php
+     * $client->users->multifactor->deleteProvider(
+     *     'id',
+     *     UserMultifactorProviderEnum::Duo->value,
+     * );
+     * ```
+     *
      * @param string $id ID of the user to remove a multifactor configuration from.
      * @param value-of<UserMultifactorProviderEnum> $provider The multi-factor provider. Supported values 'duo' or 'google-authenticator'
      * @param ?array{
@@ -112,7 +127,7 @@ class MultifactorClient implements MultifactorClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "users/{$id}/multifactor/{$provider}",
+                    path: "users/" . RawClient::encodePathParam($id) . "/multifactor/" . RawClient::encodePathParam($provider),
                     method: HttpMethod::DELETE,
                 ),
                 $options,

@@ -61,6 +61,11 @@ class PoliciesClient implements PoliciesClientInterface
      *
      * **Note**: The `confidence-score` policy is part of the [Adaptive MFA feature](https://auth0.com/docs/secure/multi-factor-authentication/adaptive-mfa). Adaptive MFA requires an add-on for the Enterprise plan; review [Auth0 Pricing](https://auth0.com/pricing) for more details.
      *
+     * Example:
+     * ```php
+     * $client->guardian->policies->list();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -114,6 +119,15 @@ class PoliciesClient implements PoliciesClientInterface
      * - `confidence-score` policy prompts with MFA only for low confidence logins.
      *
      * **Note**: The `confidence-score` policy is part of the [Adaptive MFA feature](https://auth0.com/docs/secure/multi-factor-authentication/adaptive-mfa). Adaptive MFA requires an add-on for the Enterprise plan; review [Auth0 Pricing](https://auth0.com/pricing) for more details.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->policies->set(
+     *     [
+     *         MfaPolicyEnum::AllApplications->value,
+     *     ],
+     * );
+     * ```
      *
      * @param array<value-of<MfaPolicyEnum>> $request
      * @param ?array{

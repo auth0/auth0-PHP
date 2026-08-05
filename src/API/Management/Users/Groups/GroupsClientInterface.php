@@ -11,6 +11,20 @@ interface GroupsClientInterface
     /**
      * List all groups to which this user belongs.
      *
+     * Example:
+     * ```php
+     * $client->users->groups->get(
+     *     'id',
+     *     new GetUserGroupsRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'includeTotals' => true,
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to list groups for.
      * @param GetUserGroupsRequestParameters $request
      * @param ?array{

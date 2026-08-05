@@ -59,6 +59,15 @@ class EmailTemplatesClient implements EmailTemplatesClientInterface
     /**
      * Create an email template.
      *
+     * Example:
+     * ```php
+     * $client->emailTemplates->create(
+     *     new CreateEmailTemplateRequestContent([
+     *         'template' => EmailTemplateNameEnum::VerifyEmail->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateEmailTemplateRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -108,6 +117,13 @@ class EmailTemplatesClient implements EmailTemplatesClientInterface
     /**
      * Retrieve an email template by pre-defined name. These names are `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, and `async_approval`. The names `change_password`, and `password_reset` are also supported for legacy scenarios.
      *
+     * Example:
+     * ```php
+     * $client->emailTemplates->get(
+     *     EmailTemplateNameEnum::VerifyEmail->value,
+     * );
+     * ```
+     *
      * @param value-of<EmailTemplateNameEnum> $templateName Template name. Can be `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
      * @param ?array{
      *   baseUrl?: string,
@@ -128,7 +144,7 @@ class EmailTemplatesClient implements EmailTemplatesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "email-templates/{$templateName}",
+                    path: "email-templates/" . RawClient::encodePathParam($templateName),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -156,6 +172,16 @@ class EmailTemplatesClient implements EmailTemplatesClientInterface
     /**
      * Update an email template.
      *
+     * Example:
+     * ```php
+     * $client->emailTemplates->set(
+     *     EmailTemplateNameEnum::VerifyEmail->value,
+     *     new SetEmailTemplateRequestContent([
+     *         'template' => EmailTemplateNameEnum::VerifyEmail->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param value-of<EmailTemplateNameEnum> $templateName Template name. Can be `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
      * @param SetEmailTemplateRequestContent $request
      * @param ?array{
@@ -177,7 +203,7 @@ class EmailTemplatesClient implements EmailTemplatesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "email-templates/{$templateName}",
+                    path: "email-templates/" . RawClient::encodePathParam($templateName),
                     method: HttpMethod::PUT,
                     body: $request,
                 ),
@@ -206,6 +232,14 @@ class EmailTemplatesClient implements EmailTemplatesClientInterface
     /**
      * Modify an email template.
      *
+     * Example:
+     * ```php
+     * $client->emailTemplates->update(
+     *     EmailTemplateNameEnum::VerifyEmail->value,
+     *     new UpdateEmailTemplateRequestContent([]),
+     * );
+     * ```
+     *
      * @param value-of<EmailTemplateNameEnum> $templateName Template name. Can be `verify_email`, `verify_email_by_code`, `auth_email_by_code`, `reset_email`, `reset_email_by_code`, `welcome_email`, `blocked_account`, `stolen_credentials`, `enrollment_email`, `mfa_oob_code`, `user_invitation`, `async_approval`, `change_password` (legacy), or `password_reset` (legacy).
      * @param UpdateEmailTemplateRequestContent $request
      * @param ?array{
@@ -227,7 +261,7 @@ class EmailTemplatesClient implements EmailTemplatesClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "email-templates/{$templateName}",
+                    path: "email-templates/" . RawClient::encodePathParam($templateName),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

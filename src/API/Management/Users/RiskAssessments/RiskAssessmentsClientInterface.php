@@ -9,6 +9,19 @@ interface RiskAssessmentsClientInterface
     /**
      * Clear risk assessment assessors for a specific user
      *
+     * Example:
+     * ```php
+     * $client->users->riskAssessments->clear(
+     *     'id',
+     *     new ClearAssessorsRequestContent([
+     *         'connection' => 'connection',
+     *         'assessors' => [
+     *             AssessorsTypeEnum::NewDevice->value,
+     *         ],
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id ID of the user to clear assessors for.
      * @param ClearAssessorsRequestContent $request
      * @param ?array{

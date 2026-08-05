@@ -63,6 +63,22 @@ class RenderingClient implements RenderingClientInterface
     /**
      * Get render setting configurations for all screens.
      *
+     * Example:
+     * ```php
+     * $client->prompts->rendering->list(
+     *     new ListAculsRequestParameters([
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'prompt' => 'prompt',
+     *         'screen' => 'screen',
+     *         'renderingMode' => AculRenderingModeEnum::Advanced->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListAculsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -94,6 +110,20 @@ class RenderingClient implements RenderingClientInterface
 
     /**
      * Learn more about [configuring render settings](https://auth0.com/docs/customize/login-pages/advanced-customizations/getting-started/configure-acul-screens) for advanced customization.
+     *
+     * Example:
+     * ```php
+     * $client->prompts->rendering->bulkUpdate(
+     *     new BulkUpdateAculRequestContent([
+     *         'configs' => [
+     *             new AculConfigsItem([
+     *                 'prompt' => PromptGroupNameEnum::Login->value,
+     *                 'screen' => ScreenGroupNameEnum::Login->value,
+     *             ]),
+     *         ],
+     *     ]),
+     * );
+     * ```
      *
      * @param BulkUpdateAculRequestContent $request
      * @param ?array{
@@ -144,6 +174,14 @@ class RenderingClient implements RenderingClientInterface
     /**
      * Get render settings for a screen.
      *
+     * Example:
+     * ```php
+     * $client->prompts->rendering->get(
+     *     PromptGroupNameEnum::Login->value,
+     *     ScreenGroupNameEnum::Login->value,
+     * );
+     * ```
+     *
      * @param value-of<PromptGroupNameEnum> $prompt Name of the prompt
      * @param value-of<ScreenGroupNameEnum> $screen Name of the screen
      * @param ?array{
@@ -165,7 +203,7 @@ class RenderingClient implements RenderingClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "prompts/{$prompt}/screen/{$screen}/rendering",
+                    path: "prompts/" . RawClient::encodePathParam($prompt) . "/screen/" . RawClient::encodePathParam($screen) . "/rendering",
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -193,6 +231,15 @@ class RenderingClient implements RenderingClientInterface
     /**
      * Learn more about [configuring render settings](https://auth0.com/docs/customize/login-pages/advanced-customizations/getting-started/configure-acul-screens) for advanced customization.
      *
+     * Example:
+     * ```php
+     * $client->prompts->rendering->update(
+     *     PromptGroupNameEnum::Login->value,
+     *     ScreenGroupNameEnum::Login->value,
+     *     new UpdateAculRequestContent([]),
+     * );
+     * ```
+     *
      * @param value-of<PromptGroupNameEnum> $prompt Name of the prompt
      * @param value-of<ScreenGroupNameEnum> $screen Name of the screen
      * @param UpdateAculRequestContent $request
@@ -215,7 +262,7 @@ class RenderingClient implements RenderingClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "prompts/{$prompt}/screen/{$screen}/rendering",
+                    path: "prompts/" . RawClient::encodePathParam($prompt) . "/screen/" . RawClient::encodePathParam($screen) . "/rendering",
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

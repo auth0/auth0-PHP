@@ -7,6 +7,13 @@ interface BlocksClientInterface
     /**
      * Check if the given IP address is blocked via the <a href="https://auth0.com/docs/configure/attack-protection/suspicious-ip-throttling">Suspicious IP Throttling</a> due to multiple suspicious attempts.
      *
+     * Example:
+     * ```php
+     * $client->anomaly->blocks->checkIp(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id IP address to check.
      * @param ?array{
      *   baseUrl?: string,
@@ -21,6 +28,13 @@ interface BlocksClientInterface
 
     /**
      * Remove a block imposed by <a href="https://auth0.com/docs/configure/attack-protection/suspicious-ip-throttling">Suspicious IP Throttling</a> for the given IP address.
+     *
+     * Example:
+     * ```php
+     * $client->anomaly->blocks->unblockIp(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id IP address to unblock.
      * @param ?array{

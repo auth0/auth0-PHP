@@ -12,6 +12,11 @@ interface SettingsClientInterface
     /**
      * Gets the tenant settings for risk assessments
      *
+     * Example:
+     * ```php
+     * $client->riskAssessments->settings->get();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -26,6 +31,15 @@ interface SettingsClientInterface
 
     /**
      * Updates the tenant settings for risk assessments
+     *
+     * Example:
+     * ```php
+     * $client->riskAssessments->settings->update(
+     *     new UpdateRiskAssessmentsSettingsRequestContent([
+     *         'enabled' => true,
+     *     ]),
+     * );
+     * ```
      *
      * @param UpdateRiskAssessmentsSettingsRequestContent $request
      * @param ?array{

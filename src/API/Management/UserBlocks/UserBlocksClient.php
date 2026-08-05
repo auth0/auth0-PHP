@@ -56,6 +56,16 @@ class UserBlocksClient implements UserBlocksClientInterface
     /**
      * Retrieve details of all [Brute-force Protection](https://auth0.com/docs/secure/attack-protection/brute-force-protection) blocks for a user with the given identifier (username, phone number, or email).
      *
+     * Example:
+     * ```php
+     * $client->userBlocks->listByIdentifier(
+     *     new ListUserBlocksByIdentifierRequestParameters([
+     *         'identifier' => 'identifier',
+     *         'considerBruteForceEnablement' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListUserBlocksByIdentifierRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -112,6 +122,15 @@ class UserBlocksClient implements UserBlocksClientInterface
      *
      * Note: This endpoint does not unblock users that were [blocked by a tenant administrator](https://auth0.com/docs/user-profile#block-and-unblock-a-user).
      *
+     * Example:
+     * ```php
+     * $client->userBlocks->deleteByIdentifier(
+     *     new DeleteUserBlocksByIdentifierRequestParameters([
+     *         'identifier' => 'identifier',
+     *     ]),
+     * );
+     * ```
+     *
      * @param DeleteUserBlocksByIdentifierRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -156,6 +175,16 @@ class UserBlocksClient implements UserBlocksClientInterface
     /**
      * Retrieve details of all [Brute-force Protection](https://auth0.com/docs/secure/attack-protection/brute-force-protection) blocks for the user with the given ID.
      *
+     * Example:
+     * ```php
+     * $client->userBlocks->list(
+     *     'id',
+     *     new ListUserBlocksRequestParameters([
+     *         'considerBruteForceEnablement' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id user_id of the user blocks to retrieve.
      * @param ListUserBlocksRequestParameters $request
      * @param ?array{
@@ -181,7 +210,7 @@ class UserBlocksClient implements UserBlocksClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "user-blocks/{$id}",
+                    path: "user-blocks/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                     query: $query,
                 ),
@@ -212,6 +241,13 @@ class UserBlocksClient implements UserBlocksClientInterface
      *
      * Note: This endpoint does not unblock users that were [blocked by a tenant administrator](https://auth0.com/docs/user-profile#block-and-unblock-a-user).
      *
+     * Example:
+     * ```php
+     * $client->userBlocks->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The user_id of the user to update.
      * @param ?array{
      *   baseUrl?: string,
@@ -231,7 +267,7 @@ class UserBlocksClient implements UserBlocksClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "user-blocks/{$id}",
+                    path: "user-blocks/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,

@@ -95,6 +95,11 @@ interface LogStreamsClientInterface
      * }]
      * ```
      *
+     * Example:
+     * ```php
+     * $client->logStreams->list();
+     * ```
+     *
      * @param ?array{
      *   baseUrl?: string,
      *   maxRetries?: int,
@@ -315,6 +320,18 @@ interface LogStreamsClientInterface
      * }
      * ```
      *
+     * Example:
+     * ```php
+     * $client->logStreams->create(
+     *     new CreateLogStreamHttpRequestBody([
+     *         'type' => LogStreamHttpEnum::Http->value,
+     *         'sink' => new LogStreamHttpSink([
+     *             'httpEndpoint' => 'httpEndpoint',
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param (
      *    CreateLogStreamHttpRequestBody
      *   |CreateLogStreamEventBridgeRequestBody
@@ -500,6 +517,13 @@ interface LogStreamsClientInterface
      * 2. `paused` - Stream is currently user disabled and will not attempt log delivery.
      * 3. `suspended` - Stream is currently disabled because of errors and will not attempt log delivery.
      *
+     * Example:
+     * ```php
+     * $client->logStreams->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id The id of the log stream to get
      * @param ?array{
      *   baseUrl?: string,
@@ -524,6 +548,13 @@ interface LogStreamsClientInterface
 
     /**
      * Delete a log stream.
+     *
+     * Example:
+     * ```php
+     * $client->logStreams->delete(
+     *     'id',
+     * );
+     * ```
      *
      * @param string $id The id of the log stream to delete
      * @param ?array{
@@ -611,6 +642,14 @@ interface LogStreamsClientInterface
      *     "sumoSourceAddress": "string"
      *   }
      * }
+     * ```
+     *
+     * Example:
+     * ```php
+     * $client->logStreams->update(
+     *     'id',
+     *     new UpdateLogStreamRequestContent([]),
+     * );
      * ```
      *
      * @param string $id The id of the log stream to get

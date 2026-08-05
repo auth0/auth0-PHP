@@ -17,6 +17,21 @@ interface ResourceServersClientInterface
     /**
      * Retrieve details of all APIs associated with your tenant.
      *
+     * Example:
+     * ```php
+     * $client->resourceServers->list(
+     *     new ListResourceServerRequestParameters([
+     *         'identifiers' => [
+     *             'identifiers',
+     *         ],
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListResourceServerRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -33,6 +48,15 @@ interface ResourceServersClientInterface
     /**
      * Create a new API associated with your tenant. Note that all new APIs must be registered with Auth0. For more information, read <a href="https://www.auth0.com/docs/get-started/apis"> APIs</a>.
      *
+     * Example:
+     * ```php
+     * $client->resourceServers->create(
+     *     new CreateResourceServerRequestContent([
+     *         'identifier' => 'identifier',
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateResourceServerRequestContent $request
      * @param ?array{
      *   baseUrl?: string,
@@ -48,6 +72,16 @@ interface ResourceServersClientInterface
 
     /**
      * Retrieve <a href="https://auth0.com/docs/apis">API</a> details with the given ID.
+     *
+     * Example:
+     * ```php
+     * $client->resourceServers->get(
+     *     'id',
+     *     new GetResourceServerRequestParameters([
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
      *
      * @param string $id ID or audience of the resource server to retrieve.
      * @param GetResourceServerRequestParameters $request
@@ -66,6 +100,13 @@ interface ResourceServersClientInterface
     /**
      * Delete an existing API by ID. For more information, read <a href="https://www.auth0.com/docs/get-started/apis/api-settings">API Settings</a>.
      *
+     * Example:
+     * ```php
+     * $client->resourceServers->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID or the audience of the resource server to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -80,6 +121,14 @@ interface ResourceServersClientInterface
 
     /**
      * Change an existing API setting by resource server ID. For more information, read <a href="https://www.auth0.com/docs/get-started/apis/api-settings">API Settings</a>.
+     *
+     * Example:
+     * ```php
+     * $client->resourceServers->update(
+     *     'id',
+     *     new UpdateResourceServerRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID or audience of the resource server to update.
      * @param UpdateResourceServerRequestContent $request

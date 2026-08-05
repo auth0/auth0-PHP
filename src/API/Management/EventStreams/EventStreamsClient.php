@@ -81,6 +81,16 @@ class EventStreamsClient implements EventStreamsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->list(
+     *     new ListEventStreamsRequestParameters([
+     *         'from' => 'from',
+     *         'take' => 1,
+     *     ]),
+     * );
+     * ```
+     *
      * @param ListEventStreamsRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -112,6 +122,24 @@ class EventStreamsClient implements EventStreamsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->create(
+     *     new CreateEventStreamWebHookRequestContent([
+     *         'destination' => new EventStreamWebhookDestination([
+     *             'type' => EventStreamWebhookDestinationTypeEnum::Webhook->value,
+     *             'configuration' => new EventStreamWebhookConfiguration([
+     *                 'webhookEndpoint' => 'webhook_endpoint',
+     *                 'webhookAuthorization' => new EventStreamWebhookBasicAuth([
+     *                     'method' => EventStreamWebhookBasicAuthMethodEnum::Basic->value,
+     *                     'username' => 'username',
+     *                 ]),
+     *             ]),
+     *         ]),
+     *     ]),
+     * );
+     * ```
+     *
      * @param (
      *    CreateEventStreamWebHookRequestContent
      *   |CreateEventStreamEventBridgeRequestContent
@@ -167,6 +195,13 @@ class EventStreamsClient implements EventStreamsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param ?array{
      *   baseUrl?: string,
@@ -191,7 +226,7 @@ class EventStreamsClient implements EventStreamsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "event-streams/{$id}",
+                    path: "event-streams/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -217,6 +252,13 @@ class EventStreamsClient implements EventStreamsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param ?array{
      *   baseUrl?: string,
@@ -236,7 +278,7 @@ class EventStreamsClient implements EventStreamsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "event-streams/{$id}",
+                    path: "event-streams/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -256,6 +298,14 @@ class EventStreamsClient implements EventStreamsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->update(
+     *     'id',
+     *     new UpdateEventStreamRequestContent([]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param UpdateEventStreamRequestContent $request
      * @param ?array{
@@ -281,7 +331,7 @@ class EventStreamsClient implements EventStreamsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "event-streams/{$id}",
+                    path: "event-streams/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),
@@ -308,6 +358,16 @@ class EventStreamsClient implements EventStreamsClientInterface
     }
 
     /**
+     * Example:
+     * ```php
+     * $client->eventStreams->test(
+     *     'id',
+     *     new CreateEventStreamTestEventRequestContent([
+     *         'eventType' => EventStreamTestEventTypeEnum::ConnectionCreated->value,
+     *     ]),
+     * );
+     * ```
+     *
      * @param string $id Unique identifier for the event stream.
      * @param CreateEventStreamTestEventRequestContent $request
      * @param ?array{
@@ -329,7 +389,7 @@ class EventStreamsClient implements EventStreamsClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "event-streams/{$id}/test",
+                    path: "event-streams/" . RawClient::encodePathParam($id) . "/test",
                     method: HttpMethod::POST,
                     body: $request,
                 ),

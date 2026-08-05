@@ -10,6 +10,16 @@ interface UsersImportsClientInterface
     /**
      * Import users from a <a href="https://auth0.com/docs/users/references/bulk-import-database-schema-examples">formatted file</a> into a connection via a long-running job. When importing users, with or without upsert, the `email_verified` is set to `false` when the email address is added or updated. Users must verify their email address. To avoid this behavior, set `email_verified` to `true` in the imported data.
      *
+     * Example:
+     * ```php
+     * $client->jobs->usersImports->create(
+     *     new CreateImportUsersRequestContent([
+     *         'users' => File::createFromString("example_users", "example_users"),
+     *         'connectionId' => 'connection_id',
+     *     ]),
+     * );
+     * ```
+     *
      * @param CreateImportUsersRequestContent $request
      * @param ?array{
      *   baseUrl?: string,

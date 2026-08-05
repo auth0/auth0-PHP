@@ -60,6 +60,20 @@ class RefreshTokensClient implements RefreshTokensClientInterface
     /**
      * Retrieve a paginated list of refresh tokens for a specific user, with optional filtering by client ID. Results are sorted by credential_id ascending.
      *
+     * Example:
+     * ```php
+     * $client->refreshTokens->list(
+     *     new GetRefreshTokensRequestParameters([
+     *         'userId' => 'user_id',
+     *         'clientId' => 'client_id',
+     *         'from' => 'from',
+     *         'take' => 1,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *     ]),
+     * );
+     * ```
+     *
      * @param GetRefreshTokensRequestParameters $request
      * @param ?array{
      *   baseUrl?: string,
@@ -88,6 +102,13 @@ class RefreshTokensClient implements RefreshTokensClientInterface
 
     /**
      * Revoke refresh tokens in bulk by ID list, user, user+client, or user+client+audience.
+     *
+     * Example:
+     * ```php
+     * $client->refreshTokens->revoke(
+     *     new RevokeRefreshTokensRequestContent([]),
+     * );
+     * ```
      *
      * @param RevokeRefreshTokensRequestContent $request
      * @param ?array{
@@ -131,6 +152,13 @@ class RefreshTokensClient implements RefreshTokensClientInterface
     /**
      * Retrieve refresh token information.
      *
+     * Example:
+     * ```php
+     * $client->refreshTokens->get(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID refresh token to retrieve
      * @param ?array{
      *   baseUrl?: string,
@@ -151,7 +179,7 @@ class RefreshTokensClient implements RefreshTokensClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "refresh-tokens/{$id}",
+                    path: "refresh-tokens/" . RawClient::encodePathParam($id),
                     method: HttpMethod::GET,
                 ),
                 $options,
@@ -179,6 +207,13 @@ class RefreshTokensClient implements RefreshTokensClientInterface
     /**
      * Delete a refresh token by its ID.
      *
+     * Example:
+     * ```php
+     * $client->refreshTokens->delete(
+     *     'id',
+     * );
+     * ```
+     *
      * @param string $id ID of the refresh token to delete.
      * @param ?array{
      *   baseUrl?: string,
@@ -198,7 +233,7 @@ class RefreshTokensClient implements RefreshTokensClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "refresh-tokens/{$id}",
+                    path: "refresh-tokens/" . RawClient::encodePathParam($id),
                     method: HttpMethod::DELETE,
                 ),
                 $options,
@@ -219,6 +254,14 @@ class RefreshTokensClient implements RefreshTokensClientInterface
 
     /**
      * Update a refresh token by its ID.
+     *
+     * Example:
+     * ```php
+     * $client->refreshTokens->update(
+     *     'id',
+     *     new UpdateRefreshTokenRequestContent([]),
+     * );
+     * ```
      *
      * @param string $id ID of the refresh token to update.
      * @param UpdateRefreshTokenRequestContent $request
@@ -241,7 +284,7 @@ class RefreshTokensClient implements RefreshTokensClientInterface
             $response = $this->client->sendRequest(
                 new JsonApiRequest(
                     baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "refresh-tokens/{$id}",
+                    path: "refresh-tokens/" . RawClient::encodePathParam($id),
                     method: HttpMethod::PATCH,
                     body: $request,
                 ),

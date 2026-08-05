@@ -143,7 +143,7 @@ final class ManagementClient
         );
 
         /** @phpstan-ignore argument.type */
-        $this->management = new ApiManagement('', $managementOptions);
+        $this->management = new ApiManagement('', null, $managementOptions);
     }
 
     /**
