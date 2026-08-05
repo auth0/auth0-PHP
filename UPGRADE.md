@@ -2,9 +2,9 @@
 
 ## Upgrading from v8.x → v9.0
 
-See [v9_MIGRATION_GUIDE.md](v9_MIGRATION_GUIDE.md) for the complete v8 to v9 migration guide.
+### Authentication API
 
-### Authentication API: reserved authorization parameters
+#### Reserved authorization parameters
 
 The `$params` argument accepted by `Auth0::login()`, `Auth0::signup()`, `Auth0::handleInvitation()`, `Authentication::getLoginLink()`, and the Pushed Authorization Request flow no longer lets callers override the following keys. They are always resolved from your SDK configuration:
 
@@ -16,6 +16,18 @@ If you previously passed any of these through `$params`, the value was silently 
 
 > [!WARNING]
 > `redirect_uri` remains overridable via `$params`. Never pass unsanitized user input into `$params`, because a caller-supplied `redirect_uri` is used to build the authorization request. Always source your redirect URI from a trusted, explicit value.
+
+#### Backchannel logout cache expiry
+
+`Auth0::handleBackchannelLogout()` now stores each cache entry with the configured relative expiry (`backchannelLogoutExpires`, default 2592000 / 30 days). Since the feature was introduced in 8.10.0, entries were stored with an absolute timestamp, so they were set to expire far in the future and did not fall off the cache as intended.
+
+`backchannelLogoutExpires` can now also be set through the array configuration form, not just the `SdkConfiguration` constructor.
+
+If you ran any build from 8.10.0 onward with a persistent backchannel logout cache (Redis, filesystem, etc.), those entries still carry the old long expiry and will not be cleaned up automatically. Flush the backchannel logout cache once after upgrading to clear them.
+
+### Management API
+
+The Management API was regenerated using [Fern](https://github.com/fern-api/fern) in v9, with new client initialization, renamed endpoints, typed request/response structures, and updated pagination. See [v9_MIGRATION_GUIDE.md](v9_MIGRATION_GUIDE.md) for the complete details.
 
 ---
 
