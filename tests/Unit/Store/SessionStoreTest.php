@@ -75,6 +75,22 @@ test('purge() clears values as expected', function(string $key, string $value): 
     fn() => uniqid(),
 ]]);
 
+test('purge() clears values when a falsy key precedes them in the session', function(string $key, string $value): void {
+    // A falsy key positioned before the prefixed keys must not stop the purge early.
+    $_SESSION = ['' => 'falsy-string'] + $_SESSION;
+    $_SESSION[0] = 'falsy-int';
+    $_SESSION[$this->namespace . '_' . $key] = $value;
+    expect(isset($_SESSION[$this->namespace . '_' . $key]))->toBeTrue();
+
+    $this->store->purge();
+
+    expect($this->store->get($key))->toBeNull();
+    expect(isset($_SESSION[$this->namespace . '_' . $key]))->toBeFalse();
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
+
 test('regenerate() preserves stored values', function(string $key, string $value): void {
     $this->store->set($key, $value);
     expect($this->store->get($key))->toEqual($value);
