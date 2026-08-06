@@ -1142,6 +1142,56 @@ test('getCredentials() returns null when matching backchannel request is queued'
     expect($credentials)->toBeNull();
 });
 
+test('getCredentials() enforces a queued backchannel logout on a subsequent request', function(): void {
+    $issuer = 'https://' . $this->configuration['domain'] . '/';
+    $sid = uniqid();
+
+    $token = (new TokenGenerator())->withHs256([
+        'sid' => $sid,
+        'iss' => $issuer,
+    ]);
+
+    $pool = new ArrayAdapter();
+
+    // Shared session storage so a subsequent instance sees the persisted session.
+    $config = array_merge($this->configuration, [
+        'tokenAlgorithm' => 'HS256',
+        'backchannelLogoutCache' => $pool,
+        'sessionStorage' => new SessionStore(new SdkConfiguration($this->configuration), 'auth0_session'),
+    ]);
+
+    $auth0 = new Auth0($config);
+    $auth0->authentication()->getHttpClient()->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6","scope":"test:part1,test:part2","expires_in":300}'),
+        HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $logoutToken = TokenGenerator::create(
+        tokenType: TokenGenerator::TOKEN_LOGOUT,
+        algorithm: TokenGenerator::ALG_HS256,
+        claims: [
+            'sub' => '__test_sub__',
+            'iss' => $issuer,
+            'sid' => $sid,
+        ],
+    );
+
+    $auth0->handleBackchannelLogout($logoutToken->token);
+
+    // A subsequent request: a fresh instance must rehydrate the backchannel key
+    // from session storage for the queued logout to be enforced.
+    $fresh = new Auth0($config);
+    expect($fresh->getCredentials())->toBeNull();
+});
+
 test('setIdToken() properly stores data', function(): void {
     $token = (new TokenGenerator())->withHs256();
     $auth0 = new Auth0($this->configuration + [

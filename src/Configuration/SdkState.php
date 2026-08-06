@@ -248,6 +248,7 @@ final class SdkState implements ConfigurableContract
             'refreshToken' => null,
             'user' => null,
             'accessTokenExpiration' => null,
+            'backchannel' => null,
         ];
     }
 
@@ -265,6 +266,7 @@ final class SdkState implements ConfigurableContract
             'refreshToken' => static fn ($value): bool => is_string($value) || null === $value,
             'user' => static fn ($value): bool => is_array($value) || null === $value,
             'accessTokenExpiration' => static fn ($value): bool => is_int($value) || null === $value,
+            'backchannel' => static fn ($value): bool => is_string($value) || null === $value,
         ];
     }
 }

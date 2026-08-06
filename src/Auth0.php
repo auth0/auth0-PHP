@@ -826,6 +826,9 @@ final class Auth0 implements Auth0Interface
             if ($this->configuration()->getPersistRefreshToken()) {
                 $state['refreshToken'] = $this->configuration()->getSessionStorage()->get('refreshToken');
             }
+
+            // Rehydrate the backchannel key so revocation is enforced on subsequent requests.
+            $state['backchannel'] = $this->configuration()->getSessionStorage()->get('backchannel');
         }
 
         return $this->state = new SdkState($state);
