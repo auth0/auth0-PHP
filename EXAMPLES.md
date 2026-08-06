@@ -104,6 +104,114 @@ $api->emailPasswordlessStart(
 );
 ```
 
+## Custom Token Exchange
+
+[Custom Token Exchange](https://auth0.com/docs/authenticate/custom-token-exchange) ([RFC 8693](https://datatracker.ietf.org/doc/html/rfc8693)) exchanges an external or legacy token for Auth0 tokens without a browser redirect. The SDK exposes two methods, depending on whether you want a session.
+
+Use `Auth0->authentication()->customTokenExchange()` to perform the exchange and get the raw token response back with no session side effects. This suits delegation and machine-to-machine scenarios.
+
+```PHP
+use Auth0\SDK\Auth0;
+use Auth0\SDK\Utility\HttpResponse;
+
+$auth0 = new Auth0($configuration);
+
+$response = $auth0->authentication()->customTokenExchange(
+    subjectToken: 'external-token-value',
+    subjectTokenType: 'urn:acme:mcp-token',
+    params: [
+        'audience' => 'https://api.example.com',
+        'scope' => 'read:data write:data',
+    ],
+);
+
+$tokens = HttpResponse::decodeContent($response);
+echo $tokens['access_token'];
+```
+
+`subjectTokenType` must be a valid URI. Any custom scheme is accepted (for example `urn:acme:mcp-token` or `custom:legacy-token`), so you can use your own namespace. A blank token or type, a `Bearer ` prefix on the token, or a non-URI type throws an `ArgumentException` before any network call.
+
+Use `Auth0->loginWithCustomTokenExchange()` to perform the same exchange and persist the result as a session, logging the user in. After it succeeds, `isAuthenticated()`, `getUser()`, and `getAccessToken()` work immediately. This method requires a stateful `strategy` with sessions configured.
+
+```PHP
+$auth0->loginWithCustomTokenExchange(
+    subjectToken: 'external-token-value',
+    subjectTokenType: 'urn:acme:mcp-token',
+);
+
+$user = $auth0->getUser();
+```
+
+> [!NOTE]
+> The session user is populated from the returned ID token, so your Token Exchange Profile must issue one. When you do not pass a `scope`, the SDK sends its configured `scope` on the exchange so Auth0 returns an ID token. Make sure that scope includes `openid`.
+
+### Actor tokens (delegation)
+
+Both methods accept an optional `actorToken` and `actorTokenType` for delegation, where one party acts on behalf of a user. Auth0 records the acting party in the [`act` claim](https://datatracker.ietf.org/doc/html/rfc8693#section-4.1) on the issued tokens. The two must be supplied together, and `actorTokenType` follows the same URI rules as `subjectTokenType`.
+
+```PHP
+$response = $auth0->authentication()->customTokenExchange(
+    subjectToken: 'user-token-value',
+    subjectTokenType: 'urn:ietf:params:oauth:token-type:access_token',
+    actorToken: 'service-token-value',
+    actorTokenType: 'urn:ietf:params:oauth:token-type:access_token',
+);
+```
+
+When you establish a session with `loginWithCustomTokenExchange()`, the `act` claim is read from the returned ID token and surfaced on the session user, so you can read it back later via `getUser()`.
+
+```PHP
+$auth0->loginWithCustomTokenExchange(
+    subjectToken: 'user-token-value',
+    subjectTokenType: 'urn:ietf:params:oauth:token-type:access_token',
+    actorToken: 'service-token-value',
+    actorTokenType: 'urn:ietf:params:oauth:token-type:access_token',
+);
+
+$user = $auth0->getUser();
+if (isset($user['act'])) {
+    echo $user['act']['sub'];
+}
+```
+
+> [!IMPORTANT]
+> When an actor token is used, Auth0 does not issue a refresh token, even if `offline_access` is in the scope. For `loginWithCustomTokenExchange()` this means the session cannot be silently renewed once the access token expires, so re-run the exchange to obtain new tokens.
+
+### Organization support
+
+Pass an organization through `$params` to scope the exchange to it.
+
+```PHP
+$response = $auth0->authentication()->customTokenExchange(
+    subjectToken: 'external-token-value',
+    subjectTokenType: 'urn:acme:mcp-token',
+    params: [
+        'organization' => 'org_abc123',
+    ],
+);
+```
+
+> [!NOTE]
+> The `grant_type`, `client_id`, `subject_token`, `subject_token_type`, `actor_token`, and `actor_token_type` keys are controlled by the SDK and cannot be overridden through `$params`.
+
+### Error handling
+
+API errors from the token endpoint (for example `invalid_grant`) surface through the response, which you can inspect with `HttpResponse::wasSuccessful()`. Client-side validation failures throw `Auth0\SDK\Exception\ArgumentException` before any request is made.
+
+```PHP
+use Auth0\SDK\Utility\HttpResponse;
+
+$response = $auth0->authentication()->customTokenExchange(
+    subjectToken: 'external-token-value',
+    subjectTokenType: 'urn:acme:mcp-token',
+);
+
+if (! HttpResponse::wasSuccessful($response)) {
+    $error = HttpResponse::decodeContent($response);
+    echo $error['error'] ?? 'unknown_error';
+}
+```
+
 ## Management API
 
 Use the `ManagementClient` wrapper for automatic token management when interacting with the Management API.

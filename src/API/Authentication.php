@@ -36,6 +36,22 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
     ];
 
     /**
+     * Token exchange parameters callers may not override via $params.
+     *
+     * @internal
+     *
+     * @var string[]
+     */
+    public const RESERVED_TOKEN_EXCHANGE_PARAMS = [
+        'grant_type',
+        'client_id',
+        'subject_token',
+        'subject_token_type',
+        'actor_token',
+        'actor_token_type',
+    ];
+
+    /**
      * Instance of Auth0\SDK\API\Utility\HttpClient.
      */
     private ?HttpClient $httpClient = null;
@@ -128,6 +144,70 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         /** @var array<null|int|string> $params */
 
         return $this->oauthToken('authorization_code', $params);
+    }
+
+    public function customTokenExchange(
+        string $subjectToken,
+        string $subjectTokenType,
+        ?string $actorToken = null,
+        ?string $actorTokenType = null,
+        ?array $params = null,
+        ?array $headers = null,
+    ): ResponseInterface {
+        [$subjectToken, $subjectTokenType, $actorToken, $actorTokenType] = Toolkit::filter([$subjectToken, $subjectTokenType, $actorToken, $actorTokenType])->string()->trim();
+
+        /** @var array<int|string> $headers */
+        /** @var array<null|int|string> $params */
+        [$params, $headers] = Toolkit::filter([$params, $headers])->array()->trim();
+
+        Toolkit::assert([
+            [$subjectToken, \Auth0\SDK\Exception\ArgumentException::missing('subjectToken')],
+            [$subjectTokenType, \Auth0\SDK\Exception\ArgumentException::missing('subjectTokenType')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$subjectTokenType, \Auth0\SDK\Exception\ArgumentException::invalidUri('subjectTokenType')],
+        ])->isUri();
+
+        // Reject a `Bearer ` prefix, a common copy-paste mistake the token endpoint would reject.
+        if (1 === preg_match('/^bearer\s/i', $subjectToken ?? '')) {
+            throw \Auth0\SDK\Exception\ArgumentException::hasBearerPrefix('subjectToken');
+        }
+
+        // An actor token and its type must be supplied together.
+        if (null !== $actorToken && null === $actorTokenType) {
+            throw \Auth0\SDK\Exception\ArgumentException::missing('actorTokenType');
+        }
+
+        if (null !== $actorTokenType && null === $actorToken) {
+            throw \Auth0\SDK\Exception\ArgumentException::missing('actorToken');
+        }
+
+        if (null !== $actorToken && 1 === preg_match('/^bearer\s/i', $actorToken)) {
+            throw \Auth0\SDK\Exception\ArgumentException::hasBearerPrefix('actorToken');
+        }
+
+        if (null !== $actorTokenType) {
+            Toolkit::assert([
+                [$actorTokenType, \Auth0\SDK\Exception\ArgumentException::invalidUri('actorTokenType')],
+            ])->isUri();
+        }
+
+        // Prevent caller-supplied $params from overriding security-critical values the SDK controls.
+        $params = self::filterReservedTokenExchangeParams($params);
+
+        /** @var array<null|int|string> $params */
+        $parameters = Toolkit::merge([$params, [
+            'subject_token' => $subjectToken,
+            'subject_token_type' => $subjectTokenType,
+            'actor_token' => $actorToken,
+            'actor_token_type' => $actorTokenType,
+        ]]);
+
+        /** @var array<null|int|string> $parameters */
+        /** @var array<int|string> $headers */
+
+        return $this->oauthToken('urn:ietf:params:oauth:grant-type:token-exchange', $parameters, $headers);
     }
 
     public function dbConnectionsChangePassword(
@@ -573,6 +653,24 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
     public static function filterReservedParams(array $params): array
     {
         foreach (self::RESERVED_AUTHORIZE_PARAMS as $reserved) {
+            unset($params[$reserved]);
+        }
+
+        return $params;
+    }
+
+    /**
+     * Strip reserved token exchange parameters from a caller-supplied $params array.
+     *
+     * @internal
+     *
+     * @param array<int|string, mixed> $params
+     *
+     * @return array<int|string, mixed>
+     */
+    public static function filterReservedTokenExchangeParams(array $params): array
+    {
+        foreach (self::RESERVED_TOKEN_EXCHANGE_PARAMS as $reserved) {
             unset($params[$reserved]);
         }
 

@@ -666,3 +666,136 @@ test('pushedAuthorizationRequest() returns an instance of Auth0\SDK\API\Authenti
 
     expect($pushedAuthorizationRequest)->toBeInstanceOf(PushedAuthorizationRequest::class);
 });
+
+test('customTokenExchange() is properly formatted', function(): void {
+    $clientSecret = uniqid();
+    $subjectToken = uniqid();
+    $subjectTokenType = 'urn:acme:mcp-token';
+
+    $this->configuration->setClientSecret($clientSecret);
+
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->customTokenExchange($subjectToken, $subjectTokenType);
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestUri = $request->getUri();
+    $requestBody = explode('&', $request->getBody()->__toString());
+
+    expect($requestUri->getHost())->toEqual($this->configuration->getDomain());
+    expect($requestUri->getPath())->toEqual('/oauth/token');
+
+    expect($requestBody)->toContain('grant_type=' . rawurlencode('urn:ietf:params:oauth:grant-type:token-exchange'));
+    expect($requestBody)->toContain('client_id=__test_client_id__');
+    expect($requestBody)->toContain('client_secret=' . $clientSecret);
+    expect($requestBody)->toContain('subject_token=' . $subjectToken);
+    expect($requestBody)->toContain('subject_token_type=' . rawurlencode($subjectTokenType));
+});
+
+test('customTokenExchange() passes audience, scope, and organization through $params', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->customTokenExchange(uniqid(), 'urn:acme:mcp-token', null, null, [
+        'audience' => 'https://api.example.com',
+        'scope' => 'read:data',
+        'organization' => 'org_xyz',
+    ]);
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBody = explode('&', $request->getBody()->__toString());
+
+    expect($requestBody)->toContain('audience=' . rawurlencode('https://api.example.com'));
+    expect($requestBody)->toContain('scope=' . rawurlencode('read:data'));
+    expect($requestBody)->toContain('organization=org_xyz');
+});
+
+test('customTokenExchange() includes the actor token and type when supplied', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+    $actorToken = uniqid();
+
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->customTokenExchange(uniqid(), 'urn:acme:mcp-token', $actorToken, 'urn:acme:actor-token');
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBody = explode('&', $request->getBody()->__toString());
+
+    expect($requestBody)->toContain('actor_token=' . $actorToken);
+    expect($requestBody)->toContain('actor_token_type=' . rawurlencode('urn:acme:actor-token'));
+});
+
+test('customTokenExchange() ignores caller attempts to override reserved parameters', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+    $subjectToken = uniqid();
+
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->customTokenExchange($subjectToken, 'urn:acme:mcp-token', null, null, [
+        'grant_type' => 'password',
+        'subject_token' => 'attacker-token',
+        'subject_token_type' => 'urn:evil:token',
+        'client_id' => 'attacker-client',
+    ]);
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBody = explode('&', $request->getBody()->__toString());
+
+    expect($requestBody)->toContain('grant_type=' . rawurlencode('urn:ietf:params:oauth:grant-type:token-exchange'));
+    expect($requestBody)->toContain('subject_token=' . $subjectToken);
+    expect($requestBody)->toContain('subject_token_type=' . rawurlencode('urn:acme:mcp-token'));
+    expect($requestBody)->toContain('client_id=__test_client_id__');
+    expect($requestBody)->not()->toContain('grant_type=password');
+    expect($requestBody)->not()->toContain('subject_token=attacker-token');
+});
+
+test('customTokenExchange() throws an exception when subjectToken is blank', function(): void {
+    $this->sdk->authentication()->customTokenExchange('', 'urn:acme:mcp-token');
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'subjectToken'));
+
+test('customTokenExchange() throws an exception when subjectTokenType is blank', function(): void {
+    $this->sdk->authentication()->customTokenExchange(uniqid(), '');
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'subjectTokenType'));
+
+test('customTokenExchange() throws an exception when subjectTokenType is not a URI', function(): void {
+    $this->sdk->authentication()->customTokenExchange(uniqid(), 'not-a-uri');
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_IS_NOT_URI, 'subjectTokenType'));
+
+test('customTokenExchange() throws an exception when actorToken is supplied without actorTokenType', function(): void {
+    $this->sdk->authentication()->customTokenExchange(uniqid(), 'urn:acme:mcp-token', uniqid());
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'actorTokenType'));
+
+test('customTokenExchange() throws an exception when actorTokenType is supplied without actorToken', function(): void {
+    $this->sdk->authentication()->customTokenExchange(uniqid(), 'urn:acme:mcp-token', null, 'urn:acme:actor-token');
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_CANNOT_BE_EMPTY, 'actorToken'));
+
+test('customTokenExchange() throws an exception when actorTokenType is not a URI', function(): void {
+    $this->sdk->authentication()->customTokenExchange(uniqid(), 'urn:acme:mcp-token', uniqid(), 'not-a-uri');
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_IS_NOT_URI, 'actorTokenType'));
+
+test('customTokenExchange() throws an exception when subjectToken carries a Bearer prefix', function(): void {
+    $this->sdk->authentication()->customTokenExchange('Bearer abc123', 'urn:acme:mcp-token');
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_HAS_BEARER_PREFIX, 'subjectToken'));
+
+test('customTokenExchange() throws an exception when actorToken carries a Bearer prefix', function(): void {
+    $this->sdk->authentication()->customTokenExchange(uniqid(), 'urn:acme:mcp-token', 'Bearer abc123', 'urn:acme:actor-token');
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_HAS_BEARER_PREFIX, 'actorToken'));
+
+test('customTokenExchange() ignores a caller-supplied actor token in $params', function(): void {
+    $this->configuration->setClientSecret(uniqid());
+    $subjectToken = uniqid();
+
+    $authentication = $this->sdk->authentication();
+    $authentication->getHttpClient()->mockResponses([HttpResponseGenerator::create()]);
+    $authentication->customTokenExchange($subjectToken, 'urn:acme:mcp-token', null, null, [
+        'actor_token' => 'smuggled-actor',
+        'actor_token_type' => 'urn:evil:actor',
+    ]);
+
+    $request = $authentication->getHttpClient()->getLastRequest()->getLastRequest();
+    $requestBody = explode('&', $request->getBody()->__toString());
+
+    expect($requestBody)->not()->toContain('actor_token=smuggled-actor');
+    expect($requestBody)->not()->toContain('actor_token_type=' . rawurlencode('urn:evil:actor'));
+});

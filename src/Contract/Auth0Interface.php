@@ -209,6 +209,32 @@ interface Auth0Interface
     ): string;
 
     /**
+     * Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured.
+     *
+     * @param string                      $subjectToken     the token being exchanged
+     * @param string                      $subjectTokenType a URI identifying the type of `subjectToken`. Any custom URI scheme is accepted (e.g. `urn:acme:token`).
+     * @param null|string                 $actorToken       Optional. A token representing the acting party for delegation. Requires `actorTokenType`.
+     * @param null|string                 $actorTokenType   Optional. A URI identifying the type of `actorToken`. Requires `actorToken`.
+     * @param null|array<null|int|string> $params           Optional. Additional content to include in the body of the API request, such as `audience`, `scope`, and `organization`.
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException      when `subjectToken` is blank, `subjectTokenType` is blank or not a valid URI, or the actor token and its type are not supplied together
+     * @throws \Auth0\SDK\Exception\ConfigurationException when used without statefulness being configured
+     * @throws \Auth0\SDK\Exception\StateException         if the token exchange request fails, or an access token is missing from the response
+     * @throws \Auth0\SDK\Exception\InvalidTokenException  when validation of a returned ID token fails
+     * @throws \Auth0\SDK\Exception\NetworkException       when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/authenticate/custom-token-exchange
+     * @see https://datatracker.ietf.org/doc/html/rfc8693
+     */
+    public function loginWithCustomTokenExchange(
+        string $subjectToken,
+        string $subjectTokenType,
+        ?string $actorToken = null,
+        ?string $actorTokenType = null,
+        ?array $params = null,
+    ): bool;
+
+    /**
      * Delete any persistent data and clear out all stored properties, and return the URI to Auth0 /logout endpoint for redirection.
      *
      * @param null|string                 $returnUri Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
