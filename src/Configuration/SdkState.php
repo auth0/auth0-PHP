@@ -237,7 +237,7 @@ final class SdkState implements ConfigurableContract
     }
 
     /**
-     * @return array{idToken: null, accessToken: null, accessTokenScope: null, refreshToken: null, user: null, accessTokenExpiration: null}
+     * @return array{idToken: null, accessToken: null, accessTokenScope: null, refreshToken: null, user: null, accessTokenExpiration: null, backchannel: null}
      */
     private function getPropertyDefaults(): array
     {
