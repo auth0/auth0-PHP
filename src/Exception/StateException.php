@@ -35,7 +35,7 @@ final class StateException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_FAILED_TOKEN_EXCHANGE = 'Token exchange was unsuccessful; network error resulted in unfulfilled request';
+    public const MSG_FAILED_TOKEN_EXCHANGE = 'Token exchange was unsuccessful; the endpoint returned an error response';
 
     /**
      * @var string

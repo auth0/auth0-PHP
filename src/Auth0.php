@@ -626,7 +626,8 @@ final class Auth0 implements Auth0Interface
             }
 
             try {
-                $token = $this->decode($response['id_token']);
+                // A token exchange has no interactive max_age, so skip the auth_time check a configured tokenMaxAge would otherwise apply.
+                $token = $this->decode($response['id_token'], tokenMaxAge: Token::MAX_AGE_SKIP);
 
                 $sub = $token->getSubject() ?? '';
                 $iss = $token->getIssuer() ?? '';
@@ -921,6 +922,9 @@ final class Auth0 implements Auth0Interface
             if ($this->configuration()->getPersistRefreshToken()) {
                 $state['refreshToken'] = $this->configuration()->getSessionStorage()->get('refreshToken');
             }
+
+            // Rehydrate the backchannel key so revocation is enforced on subsequent requests.
+            $state['backchannel'] = $this->configuration()->getSessionStorage()->get('backchannel');
         }
 
         return $this->state = new SdkState($state);

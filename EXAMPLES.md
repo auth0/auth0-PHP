@@ -158,7 +158,7 @@ $response = $auth0->authentication()->customTokenExchange(
 );
 ```
 
-When you establish a session with `loginWithCustomTokenExchange()`, the `act` claim is read from the returned ID token and surfaced on the session user, so you can read it back later via `getUser()`.
+When you establish a session with `loginWithCustomTokenExchange()`, the session user is populated from all claims on the returned ID token, so the `act` claim is available through `getUser()` alongside the rest.
 
 ```PHP
 $auth0->loginWithCustomTokenExchange(
@@ -176,6 +176,9 @@ if (isset($user['act'])) {
 
 > [!IMPORTANT]
 > When an actor token is used, Auth0 does not issue a refresh token, even if `offline_access` is in the scope. For `loginWithCustomTokenExchange()` this means the session cannot be silently renewed once the access token expires, so re-run the exchange to obtain new tokens.
+
+> [!NOTE]
+> A session established with `loginWithCustomTokenExchange()` participates in back-channel logout the same way an interactive login does, provided the returned ID token carries a `sub` and `iss`. Enforcement across requests requires `backchannelLogoutCache` to be a shared, persistent PSR-6 pool, so a logout queued on one request is seen on the next.
 
 ### Organization support
 

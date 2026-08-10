@@ -47,6 +47,13 @@ final class Token implements TokenInterface
     public const ALGO_RS512 = 'RS512';
 
     /**
+     * Sentinel for `$tokenMaxAge` that skips the `auth_time` check for flows with no interactive `max_age`, such as token exchange.
+     *
+     * @var int
+     */
+    public const MAX_AGE_SKIP = -1;
+
+    /**
      * @var int
      */
     public const TYPE_ACCESS_TOKEN = 2;
@@ -330,7 +337,7 @@ final class Token implements TokenInterface
             $validator->nonce($tokenNonce);
         }
 
-        if (null !== $tokenMaxAge) {
+        if (null !== $tokenMaxAge && self::MAX_AGE_SKIP !== $tokenMaxAge) {
             $validator->authTime($tokenMaxAge, $tokenLeeway, $tokenNow);
         }
 
