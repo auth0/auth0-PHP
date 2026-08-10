@@ -1456,6 +1456,30 @@ test('loginWithCustomTokenExchange() establishes a session from a valid id token
     expect($auth0->getAccessTokenScope())->toEqual(['test:part1', 'test:part2']);
     expect($auth0->getAccessTokenExpiration())->toBeGreaterThan(time());
     expect($auth0->getRefreshToken())->toEqual('4.5.6');
+    expect($auth0->getCredentials()->backchannel)->not()->toBeEmpty();
+});
+
+test('loginWithCustomTokenExchange() ignores a stale transient nonce from an abandoned redirect', function(): void {
+    // A CTE id token carries no nonce claim, matching a real token exchange response.
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'nonce' => null,
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    // A prior abandoned login() left a nonce in transient storage. decode() must not validate the CTE token against it.
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__stale_nonce__');
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    $this->assertArrayHasKey('sub', $auth0->getUser());
 });
 
 test('loginWithCustomTokenExchange() surfaces the act claim on the session user', function(): void {
@@ -1489,6 +1513,8 @@ test('loginWithCustomTokenExchange() establishes a session from an access-token-
     expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
     expect($auth0->getAccessToken())->toEqual('1.2.3');
     expect($auth0->getIdToken())->toBeNull();
+    // No id token means no sub/iss/sid to build a backchannel key from.
+    expect($auth0->getBackchannel())->toBeNull();
 });
 
 test('loginWithCustomTokenExchange() sends the configured scope when the caller passes none', function(): void {
@@ -1544,7 +1570,7 @@ test('loginWithCustomTokenExchange() throws when the token exchange request fail
     ]);
 
     $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
-})->throws(StateException::class, StateException::MSG_FAILED_CODE_EXCHANGE);
+})->throws(StateException::class, StateException::MSG_FAILED_TOKEN_EXCHANGE);
 
 test('loginWithCustomTokenExchange() clears state and rethrows when the id token is invalid', function(): void {
     $token = (new TokenGenerator())->withHs256([

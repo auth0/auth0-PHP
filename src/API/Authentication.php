@@ -169,8 +169,8 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             [$subjectTokenType, \Auth0\SDK\Exception\ArgumentException::invalidUri('subjectTokenType')],
         ])->isUri();
 
-        // Reject a `Bearer ` prefix, a common copy-paste mistake the token endpoint would reject.
-        if (1 === preg_match('/^bearer\s/i', $subjectToken ?? '')) {
+        // Reject a `Bearer` prefix, a common copy-paste mistake the token endpoint would reject.
+        if (null !== $subjectToken && 1 === preg_match('/^bearer\b/i', $subjectToken)) {
             throw \Auth0\SDK\Exception\ArgumentException::hasBearerPrefix('subjectToken');
         }
 
@@ -183,7 +183,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             throw \Auth0\SDK\Exception\ArgumentException::missing('actorToken');
         }
 
-        if (null !== $actorToken && 1 === preg_match('/^bearer\s/i', $actorToken)) {
+        if (null !== $actorToken && 1 === preg_match('/^bearer\b/i', $actorToken)) {
             throw \Auth0\SDK\Exception\ArgumentException::hasBearerPrefix('actorToken');
         }
 

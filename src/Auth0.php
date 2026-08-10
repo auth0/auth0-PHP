@@ -604,7 +604,7 @@ final class Auth0 implements Auth0Interface
         $response = $this->authentication()->customTokenExchange($subjectToken, $subjectTokenType, $actorToken, $actorTokenType, $params);
 
         if (! HttpResponse::wasSuccessful($response)) {
-            throw Exception\StateException::failedCodeExchange();
+            throw Exception\StateException::failedTokenExchange();
         }
 
         $response = HttpResponse::decodeContent($response);
@@ -616,8 +616,23 @@ final class Auth0 implements Auth0Interface
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
         if (isset($response['id_token'])) {
+            // A token exchange has no redirect, so a transient nonce/max_age is from an unrelated login.
+            // Clear them so decode() does not validate a CTE token against a stale value.
+            $transientStore = $this->getTransientStore();
+
+            if ($transientStore instanceof TransientStoreHandler) {
+                $transientStore->delete('nonce');
+                $transientStore->delete('max_age');
+            }
+
             try {
                 $token = $this->decode($response['id_token']);
+
+                $sub = $token->getSubject() ?? '';
+                $iss = $token->getIssuer() ?? '';
+                $sid = $token->getIdentifier() ?? '';
+                $this->setBackchannel(hash('sha256', implode('|', [$sub, $iss, $sid])));
+
                 $user = $token->toArray();
                 $this->setIdToken($response['id_token']);
             } catch (Throwable $throwable) {

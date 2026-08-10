@@ -778,6 +778,10 @@ test('customTokenExchange() throws an exception when subjectToken carries a Bear
     $this->sdk->authentication()->customTokenExchange('Bearer abc123', 'urn:acme:mcp-token');
 })->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_HAS_BEARER_PREFIX, 'subjectToken'));
 
+test('customTokenExchange() throws an exception when subjectToken carries a Bearer prefix without a trailing space', function(): void {
+    $this->sdk->authentication()->customTokenExchange('Bearer', 'urn:acme:mcp-token');
+})->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_HAS_BEARER_PREFIX, 'subjectToken'));
+
 test('customTokenExchange() throws an exception when actorToken carries a Bearer prefix', function(): void {
     $this->sdk->authentication()->customTokenExchange(uniqid(), 'urn:acme:mcp-token', 'Bearer abc123', 'urn:acme:actor-token');
 })->throws(ArgumentException::class, sprintf(ArgumentException::MSG_VALUE_HAS_BEARER_PREFIX, 'actorToken'));
