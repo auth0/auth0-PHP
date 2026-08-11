@@ -140,9 +140,17 @@ $response = $auth->refreshToken(refreshToken: $refreshToken);
 // Client credentials (M2M) authentication
 $response = $auth->clientCredentials();
 
+// Exchange an external or custom token for Auth0 tokens (RFC 8693)
+$response = $auth->customTokenExchange(
+    subjectToken: 'external-token-value',
+    subjectTokenType: 'urn:acme:mcp-token',
+);
+
 // Get logout URL
 $logoutUrl = $auth->getLogoutLink(returnTo: 'http://localhost:3000');
 ```
+
+> See [EXAMPLES.md](./EXAMPLES.md#custom-token-exchange) for Custom Token Exchange, including session login and actor-token delegation.
 
 ### Database Connection Operations
 
