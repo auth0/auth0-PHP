@@ -1,5 +1,32 @@
 # Change Log
 
+## [9.0.0](https://github.com/auth0/auth0-PHP/tree/9.0.0) (2026-08-12)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.19.0...9.0.0)
+
+Note: As this is a major release it is recommended to understand the `Breaking Changes` section before upgrading. The [v9 Migration Guide](v9_MIGRATION_GUIDE.md) and [UPGRADE.md](UPGRADE.md) contain details on the version upgrade.
+
+v9.0.0 is the first stable release of the v9 line. The Management API client is now generated from Auth0's OpenAPI specification via [Fern](https://github.com/fern-api/fern), with strongly-typed requests and responses, built-in pagination, and automatic token management through the `ManagementClient` wrapper.
+
+### ⚠️ Breaking Changes
+
+**Management API**
+
+- Minimum PHP raised to 8.2, with an upper bound of `<8.5`
+- Management API client namespace changed and initialization reworked (`new Management(token: ...)` with sub-clients as public properties)
+- `Auth0::management()` removed, use the `ManagementClient` wrapper instead
+- `getAll()` renamed to `list()` across every endpoint, and sub-resource operations moved to dedicated sub-clients
+- `grants()` renamed to `userGrants`, and `usersByEmail()` merged into `users->listUsersByEmail()`
+- Management methods now return typed objects instead of raw PSR-7 responses
+
+**Authentication API**
+
+- `client_id`, `response_type`, and `response_mode` can no longer be overridden through the `$params` argument on `Auth0::login()`, `Auth0::signup()`, `Auth0::handleInvitation()`, `Authentication::getLoginLink()`, and the Pushed Authorization Request flow. They are always resolved from your `SdkConfiguration`. If you previously passed any of these through `$params` they are now ignored in favor of the configured value
+- `Auth0::handleBackchannelLogout()` now stores cache entries with the configured relative expiry (`backchannelLogoutExpires`, default 30 days) instead of an absolute timestamp. If you ran a persistent backchannel logout cache on 8.10.0 or later, flush it once after upgrading to clear the old long-lived entries
+
+### Added
+
+- Custom Token Exchange support via `Authentication::customTokenExchange()` and `Auth0::loginWithCustomTokenExchange()`, exchanging an external or legacy token for Auth0 tokens without a browser redirect
+
 ## [9.0.0-beta.6](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.6) (2026-08-05)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.5...9.0.0-beta.6)
 
@@ -24,7 +51,7 @@
 
 **Added**
 
-- feat: add Organization Roles, Connection lifecycle events, and Token Vault access grants; rename Connection attribute identifier [\#838](https://github.com/auth0/auth0-PHP/pull/838) ([fern-api[bot]](https://github.com/apps/fern-api))
+- feat: add Organization Roles, Connection lifecycle events, and Token Vault access grants, and rename Connection attribute identifier [\#838](https://github.com/auth0/auth0-PHP/pull/838) ([fern-api[bot]](https://github.com/apps/fern-api))
 - feat: add Network ACL curated-list match and Confirmation prompt partial [\#840](https://github.com/auth0/auth0-PHP/pull/840) ([fern-api[bot]](https://github.com/apps/fern-api))
 
 **Fixed**
@@ -46,14 +73,14 @@
 
 **Fixed**
 
-- fix: correct offset pagination page-skipping; split Client update FedCM/native-social types [\#833](https://github.com/auth0/auth0-PHP/pull/833) ([fern-api[bot]](https://github.com/apps/fern-api))
+- fix: correct offset pagination page-skipping, and split Client update FedCM/native-social types [\#833](https://github.com/auth0/auth0-PHP/pull/833) ([fern-api[bot]](https://github.com/apps/fern-api))
 
 ## [9.0.0-beta.2](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.2) (2026-06-11)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.1...9.0.0-beta.2)
 
 **Added**
 
-- feat: add Tenant Security Headers and Connection Session Expiry; remove Branding Phone Display [\#830](https://github.com/auth0/auth0-PHP/pull/830) ([fern-api[bot]](https://github.com/apps/fern-api))
+- feat: add Tenant Security Headers and Connection Session Expiry, and remove Branding Phone Display [\#830](https://github.com/auth0/auth0-PHP/pull/830) ([fern-api[bot]](https://github.com/apps/fern-api))
 
 ## [9.0.0-beta.1](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.1) (2026-05-28)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.0...9.0.0-beta.1)
@@ -89,8 +116,8 @@
 
 **Unchanged**
 
-- Authentication API (`Auth0\SDK\API\Authentication`) — no changes
-- Session handling, token management, and the `Auth0\SDK\Auth0` entry point class — no changes
+- Authentication API (`Auth0\SDK\API\Authentication`) - no changes
+- Session handling, token management, and the `Auth0\SDK\Auth0` entry point class - no changes
 
 ## [8.19.0](https://github.com/auth0/auth0-PHP/tree/8.19.0) (2026-04-01)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.18.0...8.19.0)
