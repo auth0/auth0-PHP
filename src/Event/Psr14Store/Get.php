@@ -18,8 +18,8 @@ final class Get implements Auth0Event
     private $value;
 
     public function __construct(
-        private StoreInterface $store,
-        private string $key,
+        private readonly StoreInterface $store,
+        private readonly string $key,
     ) {
     }
 

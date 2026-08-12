@@ -19,7 +19,7 @@ use function is_string;
  *
  * @author Tobias Nyholm <tobias.nyholm@gmail.com>
  */
-final class Psr6Store implements StoreInterface
+final readonly class Psr6Store implements StoreInterface
 {
     /**
      * Psr6Store constructor.

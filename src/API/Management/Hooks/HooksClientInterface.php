@@ -1,0 +1,153 @@
+<?php
+
+namespace Auth0\SDK\API\Management\Hooks;
+
+use Auth0\SDK\API\Management\Hooks\Requests\ListHooksRequestParameters;
+use Auth0\SDK\API\Management\Core\Pagination\Pager;
+use Auth0\SDK\API\Management\Types\Hook;
+use Auth0\SDK\API\Management\Hooks\Requests\CreateHookRequestContent;
+use Auth0\SDK\API\Management\Types\CreateHookResponseContent;
+use Auth0\SDK\API\Management\Hooks\Requests\GetHookRequestParameters;
+use Auth0\SDK\API\Management\Types\GetHookResponseContent;
+use Auth0\SDK\API\Management\Hooks\Requests\UpdateHookRequestContent;
+use Auth0\SDK\API\Management\Types\UpdateHookResponseContent;
+use Auth0\SDK\API\Management\Hooks\Secrets\SecretsClientInterface;
+
+interface HooksClientInterface
+{
+    /**
+     * Retrieve all [hooks](https://auth0.com/docs/hooks). Accepts a list of fields to include or exclude in the result.
+     *
+     * Example:
+     * ```php
+     * $client->hooks->list(
+     *     new ListHooksRequestParameters([
+     *         'page' => 1,
+     *         'perPage' => 1,
+     *         'includeTotals' => true,
+     *         'enabled' => true,
+     *         'fields' => 'fields',
+     *         'triggerId' => HookTriggerIdEnum::CredentialsExchange->value,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param ListHooksRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return Pager<Hook>
+     */
+    public function list(ListHooksRequestParameters $request = new ListHooksRequestParameters(), ?array $options = null): Pager;
+
+    /**
+     * Create a new hook.
+     *
+     * Example:
+     * ```php
+     * $client->hooks->create(
+     *     new CreateHookRequestContent([
+     *         'name' => 'name',
+     *         'script' => 'script',
+     *         'triggerId' => HookTriggerIdEnum::CredentialsExchange->value,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param CreateHookRequestContent $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?CreateHookResponseContent
+     */
+    public function create(CreateHookRequestContent $request, ?array $options = null): ?CreateHookResponseContent;
+
+    /**
+     * Retrieve [a hook](https://auth0.com/docs/hooks) by its ID. Accepts a list of fields to include in the result.
+     *
+     * Example:
+     * ```php
+     * $client->hooks->get(
+     *     'id',
+     *     new GetHookRequestParameters([
+     *         'fields' => 'fields',
+     *     ]),
+     * );
+     * ```
+     *
+     * @param string $id ID of the hook to retrieve.
+     * @param GetHookRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?GetHookResponseContent
+     */
+    public function get(string $id, GetHookRequestParameters $request = new GetHookRequestParameters(), ?array $options = null): ?GetHookResponseContent;
+
+    /**
+     * Delete a hook.
+     *
+     * Example:
+     * ```php
+     * $client->hooks->delete(
+     *     'id',
+     * );
+     * ```
+     *
+     * @param string $id ID of the hook to delete.
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     */
+    public function delete(string $id, ?array $options = null): void;
+
+    /**
+     * Update an existing hook.
+     *
+     * Example:
+     * ```php
+     * $client->hooks->update(
+     *     'id',
+     *     new UpdateHookRequestContent([]),
+     * );
+     * ```
+     *
+     * @param string $id ID of the hook to update.
+     * @param UpdateHookRequestContent $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?UpdateHookResponseContent
+     */
+    public function update(string $id, UpdateHookRequestContent $request = new UpdateHookRequestContent(), ?array $options = null): ?UpdateHookResponseContent;
+
+    /**
+     * @return SecretsClientInterface
+     */
+    public function getSecrets(): SecretsClientInterface;
+}

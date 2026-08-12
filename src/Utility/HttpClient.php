@@ -47,10 +47,10 @@ final class HttpClient
      * @param array<int|string> $headers       Optional. Additional headers to send with the HTTP request.
      */
     public function __construct(
-        private SdkConfiguration $configuration,
-        private int $context = self::CONTEXT_AUTHENTICATION_CLIENT,
-        private string $basePath = '/',
-        private array $headers = [],
+        private readonly SdkConfiguration $configuration,
+        private readonly int $context = self::CONTEXT_AUTHENTICATION_CLIENT,
+        private readonly string $basePath = '/',
+        private readonly array $headers = [],
     ) {
     }
 
@@ -86,10 +86,6 @@ final class HttpClient
      * Inject a series of Psr\Http\Message\ResponseInterface objects into created HttpRequest clients.
      *
      * @codeCoverageIgnore
-     *
-     * @param ResponseInterface $response
-     * @param ?callable         $callback
-     * @param ?\Exception       $exception
      */
     public function mockResponse(
         ResponseInterface $response,

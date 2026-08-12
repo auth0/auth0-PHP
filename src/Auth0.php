@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Auth0\SDK;
 
-use Auth0\SDK\API\{Authentication, Management};
+use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Configuration\{SdkConfiguration, SdkState};
-use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
+use Auth0\SDK\Contract\API\AuthenticationInterface;
 use Auth0\SDK\Contract\{Auth0Interface, StoreInterface, TokenInterface};
 use Auth0\SDK\Exception\ConfigurationException;
+use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Utility\{HttpResponse, PKCE, Toolkit, TransientStoreHandler};
 use Throwable;
 
 use function count;
+use function in_array;
 use function is_array;
 use function is_string;
 
@@ -21,17 +23,12 @@ final class Auth0 implements Auth0Interface
     /**
      * @var string
      */
-    public const VERSION = '8.19.0';
+    public const VERSION = '9.0.0-beta.6';
 
     /**
      * Authentication Client.
      */
     private ?Authentication $authentication = null;
-
-    /**
-     * Authentication Client.
-     */
-    private ?Management $management = null;
 
     /**
      * Instance of SdkState, for shared state across classes.
@@ -264,6 +261,14 @@ final class Auth0 implements Auth0Interface
         $this->setUser($user ?? []);
         $this->deferStateSaving(false);
 
+        // Rotate the session ID now that the auth state has changed, to prevent
+        // session fixation. Only applies when using PHP session-backed storage.
+        $sessionStorage = $this->configuration()->getSessionStorage();
+
+        if ($sessionStorage instanceof SessionStore) {
+            $sessionStorage->regenerate();
+        }
+
         return true;
     }
 
@@ -420,7 +425,7 @@ final class Auth0 implements Auth0Interface
         $orgId = $this->getRequestParameter('organization');
         $orgName = $this->getRequestParameter('organization_name');
 
-        if (null !== $invite && null !== $orgId && null !== $orgName) {
+        if (! in_array(null, [$invite, $orgId, $orgName], true)) {
             return [
                 'invitation' => $invite,
                 'organization' => $orgId,
@@ -492,7 +497,7 @@ final class Auth0 implements Auth0Interface
         ]));
 
         // Let the backchannel logout request fall off after a reasonable amount of time.
-        $request->expiresAfter(time() + $this->configuration()->getBackchannelLogoutExpires());
+        $request->expiresAfter($this->configuration()->getBackchannelLogoutExpires());
 
         // Finally, add this to the Backchannel Logout cache.
         $cache->save($request);
@@ -578,6 +583,102 @@ final class Auth0 implements Auth0Interface
         return $this->authentication()->getLoginLink((string) $state, $redirectUrl, $params);
     }
 
+    public function loginWithCustomTokenExchange(
+        string $subjectToken,
+        string $subjectTokenType,
+        ?string $actorToken = null,
+        ?string $actorTokenType = null,
+        ?array $params = null,
+    ): bool {
+        if (! $this->configuration()->usingStatefulness()) {
+            throw ConfigurationException::requiresStatefulness('Auth0->loginWithCustomTokenExchange()');
+        }
+
+        // A session needs an ID token to populate the user, so ensure a scope is requested. Fall back to the configured scope when the caller did not pass one.
+        $params ??= [];
+
+        if ((! isset($params['scope']) || '' === $params['scope']) && $this->configuration()->hasScope()) {
+            $params['scope'] = $this->configuration()->formatScope();
+        }
+
+        $response = $this->authentication()->customTokenExchange($subjectToken, $subjectTokenType, $actorToken, $actorTokenType, $params);
+
+        if (! HttpResponse::wasSuccessful($response)) {
+            throw Exception\StateException::failedTokenExchange();
+        }
+
+        $response = HttpResponse::decodeContent($response);
+
+        $this->clear(false);
+        $this->deferStateSaving();
+
+        $user = null;
+
+        /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
+        if (isset($response['id_token'])) {
+            // A token exchange has no redirect, so a transient nonce/max_age is from an unrelated login.
+            // Clear them so decode() does not validate a CTE token against a stale value.
+            $transientStore = $this->getTransientStore();
+
+            if ($transientStore instanceof TransientStoreHandler) {
+                $transientStore->delete('nonce');
+                $transientStore->delete('max_age');
+            }
+
+            try {
+                // A token exchange has no interactive max_age, so skip the auth_time check a configured tokenMaxAge would otherwise apply.
+                $token = $this->decode($response['id_token'], tokenMaxAge: Token::MAX_AGE_SKIP);
+
+                $sub = $token->getSubject() ?? '';
+                $iss = $token->getIssuer() ?? '';
+                $sid = $token->getIdentifier() ?? '';
+                $this->setBackchannel(hash('sha256', implode('|', [$sub, $iss, $sid])));
+
+                $user = $token->toArray();
+                $this->setIdToken($response['id_token']);
+            } catch (Throwable $throwable) {
+                $this->clear();
+
+                throw $throwable;
+            }
+        }
+
+        if (! isset($response['access_token']) || '' === trim($response['access_token'])) {
+            $this->clear();
+
+            throw Exception\StateException::badAccessToken();
+        }
+
+        $this->setAccessToken($response['access_token']);
+
+        if (isset($response['scope'])) {
+            $this->setAccessTokenScope(explode(' ', $response['scope']));
+        }
+
+        if (isset($response['refresh_token'])) {
+            $this->setRefreshToken($response['refresh_token']);
+        }
+
+        if (isset($response['expires_in']) && is_numeric($response['expires_in'])) {
+            $expiresIn = time() + (int) $response['expires_in'];
+            $this->setAccessTokenExpiration($expiresIn);
+        }
+
+        /** @var null|array<array<mixed>|int|string> $user */
+        $this->setUser($user ?? []);
+        $this->deferStateSaving(false);
+
+        // Rotate the session ID now that the auth state has changed, to prevent
+        // session fixation. Only applies when using PHP session-backed storage.
+        $sessionStorage = $this->configuration()->getSessionStorage();
+
+        if ($sessionStorage instanceof SessionStore) {
+            $sessionStorage->regenerate();
+        }
+
+        return true;
+    }
+
     public function logout(
         ?string $returnUri = null,
         ?array $params = null,
@@ -588,16 +689,15 @@ final class Auth0 implements Auth0Interface
 
         $this->clear();
 
-        return $this->authentication()->getLogoutLink($returnUri, $params);
-    }
+        // Rotate the session ID on logout so a new ID is issued for the next
+        // authentication, preventing session fixation across login/logout cycles.
+        $sessionStorage = $this->configuration()->getSessionStorage();
 
-    public function management(): ManagementInterface
-    {
-        if (! $this->management instanceof Management) {
-            $this->management = new Management($this->configuration());
+        if ($sessionStorage instanceof SessionStore) {
+            $sessionStorage->regenerate();
         }
 
-        return $this->management;
+        return $this->authentication()->getLogoutLink($returnUri, $params);
     }
 
     public function refreshState(): self
@@ -789,8 +889,6 @@ final class Auth0 implements Auth0Interface
 
     /**
      * Retrieve state from session storage and configure SDK state.
-     *
-     * @param bool $reset
      */
     private function getState(bool $reset = false): SdkState
     {
@@ -824,6 +922,9 @@ final class Auth0 implements Auth0Interface
             if ($this->configuration()->getPersistRefreshToken()) {
                 $state['refreshToken'] = $this->configuration()->getSessionStorage()->get('refreshToken');
             }
+
+            // Rehydrate the backchannel key so revocation is enforced on subsequent requests.
+            $state['backchannel'] = $this->configuration()->getSessionStorage()->get('backchannel');
         }
 
         return $this->state = new SdkState($state);
@@ -831,8 +932,6 @@ final class Auth0 implements Auth0Interface
 
     /**
      * Create a transient storage handler using the configured transientStorage medium.
-     *
-     * @param bool $reset
      */
     private function getTransientStore(bool $reset = false): ?TransientStoreHandler
     {

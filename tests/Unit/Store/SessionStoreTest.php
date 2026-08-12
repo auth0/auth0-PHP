@@ -74,3 +74,15 @@ test('purge() clears values as expected', function(string $key, string $value): 
     fn() => uniqid(),
     fn() => uniqid(),
 ]]);
+
+test('regenerate() preserves stored values', function(string $key, string $value): void {
+    $this->store->set($key, $value);
+    expect($this->store->get($key))->toEqual($value);
+
+    $this->store->regenerate();
+
+    expect($this->store->get($key))->toEqual($value);
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);

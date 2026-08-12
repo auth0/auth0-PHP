@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Auth0\SDK\Contract;
 
 use Auth0\SDK\Configuration\SdkConfiguration;
-use Auth0\SDK\Contract\API\{AuthenticationInterface, ManagementInterface};
+use Auth0\SDK\Contract\API\AuthenticationInterface;
 
 interface Auth0Interface
 {
@@ -38,7 +38,6 @@ interface Auth0Interface
      * @param null|int           $tokenMaxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
      * @param null|int           $tokenLeeway       Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
      * @param null|int           $tokenNow          Optional. Unix timestamp representing the current point in time to use for time calculations.
-     * @param ?int               $tokenType
      *
      * @throws \Auth0\SDK\Exception\InvalidTokenException When token validation fails. See the exception message for further details.
      */
@@ -210,6 +209,32 @@ interface Auth0Interface
     ): string;
 
     /**
+     * Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured.
+     *
+     * @param string                      $subjectToken     the token being exchanged
+     * @param string                      $subjectTokenType a URI identifying the type of `subjectToken`. Any custom URI scheme is accepted (e.g. `urn:acme:token`).
+     * @param null|string                 $actorToken       Optional. A token representing the acting party for delegation. Requires `actorTokenType`.
+     * @param null|string                 $actorTokenType   Optional. A URI identifying the type of `actorToken`. Requires `actorToken`.
+     * @param null|array<null|int|string> $params           Optional. Additional content to include in the body of the API request, such as `audience`, `scope`, and `organization`.
+     *
+     * @throws \Auth0\SDK\Exception\ArgumentException      when `subjectToken` is blank, `subjectTokenType` is blank or not a valid URI, or the actor token and its type are not supplied together
+     * @throws \Auth0\SDK\Exception\ConfigurationException when used without statefulness being configured
+     * @throws \Auth0\SDK\Exception\StateException         if the token exchange request fails, or an access token is missing from the response
+     * @throws \Auth0\SDK\Exception\InvalidTokenException  when validation of a returned ID token fails
+     * @throws \Auth0\SDK\Exception\NetworkException       when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/authenticate/custom-token-exchange
+     * @see https://datatracker.ietf.org/doc/html/rfc8693
+     */
+    public function loginWithCustomTokenExchange(
+        string $subjectToken,
+        string $subjectTokenType,
+        ?string $actorToken = null,
+        ?string $actorTokenType = null,
+        ?array $params = null,
+    ): bool;
+
+    /**
      * Delete any persistent data and clear out all stored properties, and return the URI to Auth0 /logout endpoint for redirection.
      *
      * @param null|string                 $returnUri Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.
@@ -224,11 +249,6 @@ interface Auth0Interface
         ?string $returnUri = null,
         ?array $params = null,
     ): string;
-
-    /**
-     * Create, configure, and return an instance of the Management class.
-     */
-    public function management(): ManagementInterface;
 
     /**
      * Updates the SDK's internal state by clearing it's credentials cache, and retrieving the current credentials from the configured session medium. Use this when you directly make changes to the configured session medium to ensure the SDK reflects those changes.

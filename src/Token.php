@@ -47,6 +47,13 @@ final class Token implements TokenInterface
     public const ALGO_RS512 = 'RS512';
 
     /**
+     * Sentinel for `$tokenMaxAge` that skips the `auth_time` check for flows with no interactive `max_age`, such as token exchange.
+     *
+     * @var int
+     */
+    public const MAX_AGE_SKIP = -1;
+
+    /**
      * @var int
      */
     public const TYPE_ACCESS_TOKEN = 2;
@@ -78,9 +85,9 @@ final class Token implements TokenInterface
      * @throws InvalidTokenException When Token parsing fails. See the exception message for further details.
      */
     public function __construct(
-        private SdkConfiguration $configuration,
-        private string $jwt,
-        private int $type = self::TYPE_ID_TOKEN,
+        private readonly SdkConfiguration $configuration,
+        private readonly string $jwt,
+        private readonly int $type = self::TYPE_ID_TOKEN,
     ) {
     }
 
@@ -265,12 +272,14 @@ final class Token implements TokenInterface
             if (null !== $this->getParser()->getClaim('nonce')) {
                 throw InvalidTokenException::idTokenUsedAsAccessToken();
             }
+
             if ([] === $tokenAudience) {
                 $tokenAudience[] = (string) $this->configuration->getClientId();
             }
         } else {
             $tokenAudience[] = (string) $this->configuration->getClientId();
         }
+
         $tokenAudience = array_unique($tokenAudience);
 
         $validator = $this->getParser()->validate();
@@ -328,7 +337,7 @@ final class Token implements TokenInterface
             $validator->nonce($tokenNonce);
         }
 
-        if (null !== $tokenMaxAge) {
+        if (null !== $tokenMaxAge && self::MAX_AGE_SKIP !== $tokenMaxAge) {
             $validator->authTime($tokenMaxAge, $tokenLeeway, $tokenNow);
         }
 

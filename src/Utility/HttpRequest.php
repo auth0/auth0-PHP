@@ -110,12 +110,12 @@ final class HttpRequest
      * @param null|array<object> $mockedResponses Optional. Only intended for unit testing purposes.
      */
     public function __construct(
-        private SdkConfiguration $configuration,
-        private int $context,
-        private string $method,
-        private string $basePath = '/',
+        private readonly SdkConfiguration $configuration,
+        private readonly int $context,
+        private readonly string $method,
+        private readonly string $basePath = '/',
         private array $headers = [],
-        private ?string $domain = null,
+        private readonly ?string $domain = null,
         private ?array &$mockedResponses = null,
     ) {
     }
@@ -233,6 +233,7 @@ final class HttpRequest
             if ($mockedResponse && property_exists($mockedResponse, 'callback') && is_callable($mockedResponse->callback)) { // @phpstan-ignore-line
                 ($mockedResponse->callback)($httpRequest, $httpResponse);
             }
+
             // @codeCoverageIgnoreEnd
 
             // Dispatch event to listeners of Auth0\SDK\HttpResponseReceived.
@@ -507,7 +508,7 @@ final class HttpRequest
     /**
      * Build a multi-part request.
      *
-     * @return array{stream: \Psr\Http\Message\StreamInterface, boundary: string}
+     * @return array{stream: StreamInterface, boundary: string}
      */
     private function buildMultiPart(): array
     {

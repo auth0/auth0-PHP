@@ -7,6 +7,8 @@ namespace Auth0\SDK\Exception;
 use Exception;
 use Throwable;
 
+use function sprintf;
+
 /**
  * @codeCoverageIgnore
  */
@@ -32,6 +34,16 @@ final class ArgumentException extends Exception implements Auth0Exception
      */
     public const MSG_VALUE_CANNOT_BE_EMPTY = 'A value for `%s` must be provided';
 
+    /**
+     * @var string
+     */
+    public const MSG_VALUE_HAS_BEARER_PREFIX = 'A value for `%s` must not include a `Bearer` prefix';
+
+    /**
+     * @var string
+     */
+    public const MSG_VALUE_IS_NOT_URI = 'A value for `%s` must be a valid URI';
+
     public static function badPermissionsArray(
         ?Throwable $previous = null,
     ): self {
@@ -42,6 +54,20 @@ final class ArgumentException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(self::MSG_PKCE_CODE_VERIFIER_LENGTH, 0, $previous);
+    }
+
+    public static function hasBearerPrefix(
+        string $parameterName,
+        ?Throwable $previous = null,
+    ): self {
+        return new self(sprintf(self::MSG_VALUE_HAS_BEARER_PREFIX, $parameterName), 0, $previous);
+    }
+
+    public static function invalidUri(
+        string $parameterName,
+        ?Throwable $previous = null,
+    ): self {
+        return new self(sprintf(self::MSG_VALUE_IS_NOT_URI, $parameterName), 0, $previous);
     }
 
     public static function missing(
