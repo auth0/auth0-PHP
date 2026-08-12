@@ -12,7 +12,7 @@ use function is_bool;
 use function is_int;
 use function is_string;
 
-final class Assert
+final readonly class Assert
 {
     /**
      * ArrayProcessor Constructor.
@@ -125,6 +125,26 @@ final class Assert
             }
 
             if (0 === mb_strlen($value)) {
+                throw $exception;
+            }
+        }
+    }
+
+    /**
+     * Check that a variable is a string beginning with a valid URI scheme. Accepts any RFC 3986 scheme, including custom URNs (e.g. `urn:acme:token`), so it does not use FILTER_VALIDATE_URL.
+     *
+     * Only the presence of a scheme is validated, not the rest of the URI. `urn:` and `x:` pass. This is a cheap client-side guard to catch obvious mistakes before a network call, not a full URI validator.
+     *
+     * @throws Exception when subject is not a string or does not begin with a valid URI scheme
+     */
+    public function isUri(): void
+    {
+        foreach ($this->subjects as [$value, $exception]) {
+            if (! is_string($value)) {
+                throw $exception;
+            }
+
+            if (1 !== preg_match('/^[a-zA-Z][a-zA-Z0-9+.\-]*:/', $value)) {
                 throw $exception;
             }
         }

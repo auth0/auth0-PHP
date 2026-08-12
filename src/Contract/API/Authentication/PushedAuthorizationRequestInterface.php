@@ -13,7 +13,7 @@ interface PushedAuthorizationRequestInterface
     /**
      * Produces a redirection URL for authentication using Pushed Authorization Request.
      *
-     * @param null|array<string,null|int|string> $parameters Request parameters to send to the API endpoint.
+     * @param null|array<string,null|int|string> $parameters Request parameters to send to the API endpoint. The `client_id`, `response_type`, and `response_mode` keys are controlled by the SDK and cannot be overridden here.
      * @param null|array<string,int|string>      $headers    Headers to send with the API request.
      *
      * @throws NetworkException     If the network request is unable to be completed.
@@ -27,7 +27,7 @@ interface PushedAuthorizationRequestInterface
     /**
      * Establish a Pushed Authorization Request.
      *
-     * @param null|array<string,null|int|string> $parameters Request parameters to send to the API endpoint.
+     * @param null|array<string,null|int|string> $parameters Request parameters to send to the API endpoint. The `client_id`, `response_type`, and `response_mode` keys are controlled by the SDK and cannot be overridden here.
      * @param null|array<string,int|string>      $headers    Headers to send with the API request.
      *
      * @throws NetworkException     If the network request is unable to be completed.

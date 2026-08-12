@@ -25,7 +25,7 @@ final class Psr14Store implements StoreInterface
      * @param string           $sessionPrefix a string to prefix session keys with
      */
     public function __construct(
-        private SdkConfiguration $configuration,
+        private readonly SdkConfiguration $configuration,
         private string $sessionPrefix = 'auth0',
     ) {
     }

@@ -1,5 +1,97 @@
 # Change Log
 
+## [9.0.0-beta.6](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.6) (2026-08-05)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.5...9.0.0-beta.6)
+
+**Added**
+
+- feat: add Agents, Organization Clients, and Directory Provisioning sync groups, plus Event Stream deliveries fix [\#848](https://github.com/auth0/auth0-PHP/pull/848) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+**Fixed**
+
+- fix: correct backchannel logout cache expiry to use relative duration [\#847](https://github.com/auth0/auth0-PHP/pull/847) ([kishore7snehil](https://github.com/kishore7snehil))
+- fix: prevent caller params from overriding security-critical authorization parameters [\#845](https://github.com/auth0/auth0-PHP/pull/845) ([kishore7snehil](https://github.com/kishore7snehil))
+
+## [9.0.0-beta.5](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.5) (2026-07-22)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.4...9.0.0-beta.5)
+
+**Added**
+
+- feat: add XAA Resource App config, ID-JAG, branding theme identifiers, and session actor metadata [\#843](https://github.com/auth0/auth0-PHP/pull/843) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+## [9.0.0-beta.4](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.4) (2026-07-15)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.3...9.0.0-beta.4)
+
+**Added**
+
+- feat: add Organization Roles, Connection lifecycle events, and Token Vault access grants; rename Connection attribute identifier [\#838](https://github.com/auth0/auth0-PHP/pull/838) ([fern-api[bot]](https://github.com/apps/fern-api))
+- feat: add Network ACL curated-list match and Confirmation prompt partial [\#840](https://github.com/auth0/auth0-PHP/pull/840) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+**Fixed**
+
+- fix: regenerate session ID on login and logout to prevent session fixation [\#837](https://github.com/auth0/auth0-PHP/pull/837) ([kishore7snehil](https://github.com/kishore7snehil))
+
+**Breaking Changes**
+
+- feat!: remove Token Vault v1 federated connections access tokens [\#841](https://github.com/auth0/auth0-PHP/pull/841) ([fern-api[bot]](https://github.com/apps/fern-api))
+- Rename `ConnectionAttributeIdentifier` to `EmailAttributeIdentifier` [\#838](https://github.com/auth0/auth0-PHP/pull/838) ([fern-api[bot]](https://github.com/apps/fern-api))
+- Replace the `None` case on `PhoneProviderProtectionBackoffStrategyEnum` with `Default` [\#838](https://github.com/auth0/auth0-PHP/pull/838) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+## [9.0.0-beta.3](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.3) (2026-06-29)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.2...9.0.0-beta.3)
+
+**Added**
+
+- feat: add Phone Provider Protection endpoints, Token Vault privileged access, and Cross-App Access connection support [\#835](https://github.com/auth0/auth0-PHP/pull/835) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+**Fixed**
+
+- fix: correct offset pagination page-skipping; split Client update FedCM/native-social types [\#833](https://github.com/auth0/auth0-PHP/pull/833) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+## [9.0.0-beta.2](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.2) (2026-06-11)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.1...9.0.0-beta.2)
+
+**Added**
+
+- feat: add Tenant Security Headers and Connection Session Expiry; remove Branding Phone Display [\#830](https://github.com/auth0/auth0-PHP/pull/830) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+## [9.0.0-beta.1](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.1) (2026-05-28)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0-beta.0...9.0.0-beta.1)
+
+**Added**
+
+- feat: add Rate Limit Policies, Events SSE, Token Vault Orgs, and HRI Client Settings [\#820](https://github.com/auth0/auth0-PHP/pull/820) ([fern-api[bot]](https://github.com/apps/fern-api))
+- feat: add SCIM Groups RBAC, User Effective Permissions/Roles, and Tenant Country Codes [\#826](https://github.com/auth0/auth0-PHP/pull/826) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+## [9.0.0-beta.0](https://github.com/auth0/auth0-PHP/tree/9.0.0-beta.0) (2026-04-17)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.19.0...9.0.0-beta.0)
+
+**Breaking Changes**
+
+- Management API client has been completely rewritten using Fern code generation from the Auth0 OpenAPI specification
+- Management API methods now return strongly-typed response objects instead of PSR-7 `ResponseInterface`
+- Management API methods now accept typed request parameter classes instead of associative arrays
+- Management sub-clients are accessed as properties (`->users`) instead of methods (`->users()`)
+- List methods renamed from `getAll()` to `list()`
+- Pagination now uses built-in `Pager<T>` instead of `HttpResponsePaginator`
+- Non-2xx API responses now throw `Auth0ApiException` instead of returning error responses
+
+**Added**
+
+- New `ManagementClient` wrapper with built-in OAuth 2.0 client credentials token management
+- Support for static tokens, automatic client credentials grant, PSR-6 token caching, and custom token providers
+- Strongly-typed request and response objects for all Management API endpoints
+- Built-in `Pager<T>` pagination with automatic page fetching
+- Built-in retry middleware for rate-limited requests
+- Telemetry headers (`Auth0-Client`, `User-Agent`) on Management API requests
+- Complete API coverage auto-generated from the Auth0 OpenAPI specification
+- `UPGRADE.md` v8 to v9 migration guide
+
+**Unchanged**
+
+- Authentication API (`Auth0\SDK\API\Authentication`) — no changes
+- Session handling, token management, and the `Auth0\SDK\Auth0` entry point class — no changes
+
 ## [8.19.0](https://github.com/auth0/auth0-PHP/tree/8.19.0) (2026-04-01)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.18.0...8.19.0)
 

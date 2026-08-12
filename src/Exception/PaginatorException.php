@@ -7,6 +7,8 @@ namespace Auth0\SDK\Exception;
 use Exception;
 use Throwable;
 
+use function sprintf;
+
 /**
  * @codeCoverageIgnore
  */

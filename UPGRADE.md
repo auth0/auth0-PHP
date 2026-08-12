@@ -1,5 +1,45 @@
 # Migration Guide
 
+## Upgrading from v8.x → v9.0
+
+### Authentication API
+
+#### New: Custom Token Exchange
+
+v9 adds support for [Custom Token Exchange](https://auth0.com/docs/authenticate/custom-token-exchange) ([RFC 8693](https://datatracker.ietf.org/doc/html/rfc8693)), which exchanges an external or legacy token for Auth0 tokens without a browser redirect. Two methods are available:
+
+- `Authentication::customTokenExchange()` performs the exchange and returns the raw token response, with no session side effects. Use it for delegation and machine-to-machine scenarios.
+- `Auth0::loginWithCustomTokenExchange()` performs the exchange and persists the result as a session, logging the user in.
+
+Both accept optional `actorToken` and `actorTokenType` parameters for delegation, validate that the token types are valid URIs, and support organizations. This is a new capability, so no changes are required to existing code. See [EXAMPLES.md](EXAMPLES.md#custom-token-exchange) for usage.
+
+#### Reserved authorization parameters
+
+The `$params` argument accepted by `Auth0::login()`, `Auth0::signup()`, `Auth0::handleInvitation()`, `Authentication::getLoginLink()`, and the Pushed Authorization Request flow no longer lets callers override the following keys. They are always resolved from your SDK configuration:
+
+- `client_id`
+- `response_type`
+- `response_mode`
+
+If you previously passed any of these through `$params`, the value was silently used to build the `/authorize` request. It is now ignored in favor of the configured value. Set them via `SdkConfiguration` instead. All other parameters (`scope`, `audience`, `organization`, `redirect_uri`, `prompt`, `login_hint`, etc.) continue to work as before.
+
+> [!WARNING]
+> `redirect_uri` remains overridable via `$params`. Never pass unsanitized user input into `$params`, because a caller-supplied `redirect_uri` is used to build the authorization request. Always source your redirect URI from a trusted, explicit value.
+
+#### Backchannel logout cache expiry
+
+`Auth0::handleBackchannelLogout()` now stores each cache entry with the configured relative expiry (`backchannelLogoutExpires`, default 2592000 / 30 days). Since the feature was introduced in 8.10.0, entries were stored with an absolute timestamp, so they were set to expire far in the future and did not fall off the cache as intended.
+
+`backchannelLogoutExpires` can now also be set through the array configuration form, not just the `SdkConfiguration` constructor.
+
+If you ran any build from 8.10.0 onward with a persistent backchannel logout cache (Redis, filesystem, etc.), those entries still carry the old long expiry and will not be cleaned up automatically. Flush the backchannel logout cache once after upgrading to clear them.
+
+### Management API
+
+The Management API was regenerated using [Fern](https://github.com/fern-api/fern) in v9, with new client initialization, renamed endpoints, typed request/response structures, and updated pagination. See [v9_MIGRATION_GUIDE.md](v9_MIGRATION_GUIDE.md) for the complete details.
+
+---
+
 ## Upgrading from v7.x → v8.0
 
 Our version 8 release includes many significant improvements:

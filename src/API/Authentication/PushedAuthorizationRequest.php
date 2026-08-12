@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Auth0\SDK\API\Authentication;
 
+use Auth0\SDK\API\Authentication;
 use Auth0\SDK\Contract\API\Authentication\PushedAuthorizationRequestInterface;
 use Auth0\SDK\Contract\API\AuthenticationInterface;
 use Auth0\SDK\Exception\Authentication\ParResponseException;
@@ -14,8 +15,9 @@ use Psr\Http\Message\ResponseInterface;
 use function is_array;
 use function is_int;
 use function is_string;
+use function sprintf;
 
-final class PushedAuthorizationRequest implements PushedAuthorizationRequestInterface
+final readonly class PushedAuthorizationRequest implements PushedAuthorizationRequestInterface
 {
     /**
      * @param AuthenticationInterface $authentication A configured instance of the Authentication manager class.
@@ -48,7 +50,7 @@ final class PushedAuthorizationRequest implements PushedAuthorizationRequestInte
             '%s/authorize?%s',
             $this->authentication->getConfiguration()->formatDomain(),
             http_build_query([
-                'client_id' => $parameters['client_id'] ?? $this->authentication->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
+                'client_id' => $this->authentication->getConfiguration()->getClientId(ConfigurationException::requiresClientId()),
                 'request_uri' => $parRequestUri,
             ], '', '&', PHP_QUERY_RFC3986),
         );
@@ -60,6 +62,9 @@ final class PushedAuthorizationRequest implements PushedAuthorizationRequestInte
     ): ResponseInterface {
         [$parameters, $headers] = Toolkit::filter([$parameters, $headers])->array()->trim();
 
+        /** @var array<int|string, mixed> $filtered */
+        $filtered = $parameters;
+
         $parameters = Toolkit::merge([[
             'audience' => $this->authentication->getConfiguration()->defaultAudience(),
             'organization' => $this->authentication->getConfiguration()->defaultOrganization(),
@@ -67,7 +72,7 @@ final class PushedAuthorizationRequest implements PushedAuthorizationRequestInte
             'response_type' => $this->authentication->getConfiguration()->getResponseType(),
             'redirect_uri' => $this->authentication->getConfiguration()->getRedirectUri(),
             'scope' => $this->authentication->getConfiguration()->formatScope(),
-        ], $parameters]);
+        ], Authentication::filterReservedParams($filtered)]);
 
         $parameters = $this->authentication->addClientAuthentication($parameters);
 

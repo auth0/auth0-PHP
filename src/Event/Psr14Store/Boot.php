@@ -9,7 +9,7 @@ use Auth0\SDK\Contract\{Auth0Event, StoreInterface};
 final class Boot implements Auth0Event
 {
     public function __construct(
-        private StoreInterface $store,
+        private readonly StoreInterface $store,
         private string $prefix,
     ) {
     }

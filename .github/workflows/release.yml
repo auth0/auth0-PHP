@@ -26,7 +26,7 @@ jobs:
       PRODSEC_TOOLS_USER: ${{ secrets.PRODSEC_TOOLS_USER }}
       PRODSEC_TOOLS_TOKEN: ${{ secrets.PRODSEC_TOOLS_TOKEN }}
       PRODSEC_TOOLS_ARN: ${{ secrets.PRODSEC_TOOLS_ARN }}
-      
+
   release:
     if: github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/')
     needs: rl-scanner

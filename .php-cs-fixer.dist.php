@@ -148,7 +148,7 @@ return (new PhpCsFixer\Config())
         'ordered_interfaces' => true,
         'ordered_traits' => true,
         'php_unit_fqcn_annotation' => true,
-        'phpdoc_add_missing_param_annotation' => ['only_untyped' => false],
+        'phpdoc_add_missing_param_annotation' => ['only_untyped' => true],
         'phpdoc_align' => ['align' => 'vertical'],
         'phpdoc_indent' => true,
         'phpdoc_inline_tag_normalizer' => true,
@@ -226,6 +226,8 @@ return (new PhpCsFixer\Config())
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->exclude('vendor')
+            ->exclude('API/Management')
+            ->notPath('API/Management.php')
             ->in([__DIR__.'/src/'])
     )
 ;

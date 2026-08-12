@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Auth0\SDK\API\Authentication;
-use Auth0\SDK\API\Management;
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\StoreInterface;
@@ -11,6 +10,8 @@ use Auth0\SDK\Contract\TokenInterface;
 use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Exception\InvalidTokenException;
 use Auth0\SDK\Exception\StateException;
+use Auth0\SDK\Store\CookieStore;
+use Auth0\SDK\Store\SessionStore;
 use Auth0\SDK\Token;
 use Auth0\Tests\Utilities\HttpResponseGenerator;
 use Auth0\Tests\Utilities\TokenGenerator;
@@ -97,11 +98,6 @@ test('authentication() returns an instance of the Authentication class', functio
     expect($auth0->authentication())->toBeInstanceOf(Authentication::class);
 });
 
-test('management() returns an instance of the Management class', function(): void {
-    $auth0 = new Auth0($this->configuration);
-    expect($auth0->management())->toBeInstanceOf(Management::class);
-});
-
 test('configuration() returns the same instance of the SdkConfiguration class that was provided at instantiation', function(): void {
     $configuration = new SdkConfiguration($this->configuration);
     $auth0 = new Auth0($configuration);
@@ -175,13 +171,14 @@ test('getLoginLink() returns expected value when supplying parameters', function
             ->toContain('client_id=' . $this->configuration['clientId']);
 });
 
-test('getLoginLink() returns expected value when overriding defaults', function(): void {
+test('getLoginLink() allows overriding scope but ignores reserved params', function(): void {
     $auth0 = new Auth0($this->configuration);
 
     $params = [
         'scope' => uniqid(),
         'response_type' => uniqid(),
         'response_mode' => 'form_post',
+        'client_id' => uniqid(),
     ];
 
     $url = parse_url($auth0->authentication()->getLoginLink(uniqid(), null, $params));
@@ -192,8 +189,10 @@ test('getLoginLink() returns expected value when overriding defaults', function(
         ->path->toEqual('/authorize')
         ->query
             ->toContain('scope=' . $params['scope'])
-            ->toContain('response_type=' . $params['response_type'])
-            ->toContain('response_mode=form_post')
+            ->not->toContain('response_type=' . $params['response_type'])
+            ->not->toContain('response_mode=form_post')
+            ->not->toContain('client_id=' . $params['client_id'])
+            ->toContain('response_type=code')
             ->toContain('redirect_uri=__test_redirect_uri__')
             ->toContain('client_id=' . $this->configuration['clientId']);
 });
@@ -371,6 +370,21 @@ test('logout() returns a a valid logout url', function(): void {
             ->toContain('rand=' . $randomParam);
 });
 
+test('logout() succeeds when using SessionStore', function(): void {
+    $auth0 = new Auth0($this->configuration);
+    $auth0->configuration()->setSessionStorage(new SessionStore($auth0->configuration()));
+
+    $returnUrl = uniqid();
+
+    $url = parse_url($auth0->logout($returnUrl));
+
+    expect($url)
+        ->scheme->toEqual('https')
+        ->host->toEqual($this->configuration['domain'])
+        ->path->toEqual('/v2/logout')
+        ->query->toContain('returnTo=' . $returnUrl);
+});
+
 test('getBackchannel() retrieves a setBackchannel() assignment', function(): void {
     $auth0 = new \Auth0\SDK\Auth0($this->configuration);
     $backchannel = hash('sha256', uniqid());
@@ -422,6 +436,47 @@ test('handleBackchannelLogout() handles a valid request', function(): void {
 
     $item = $pool->getItem($backchannel);
     expect($item->isHit())->toBeTrue();
+});
+
+test('handleBackchannelLogout() stores the cache entry with the configured relative TTL', function(): void {
+    $sub = 'SUB' . uniqid();
+    $iss = 'https://' . uniqid() . '.ISS';
+    $sid = 'SID' . uniqid();
+
+    $logoutToken = TokenGenerator::create(
+        tokenType: TokenGenerator::TOKEN_LOGOUT,
+        algorithm: TokenGenerator::ALG_RS256,
+        claims: [
+            'sub' => $sub,
+            'iss' => $iss . '/',
+            'sid' => $sid
+        ],
+    );
+
+    $backchannel = hash('sha256', implode('|', [$sub, $iss . '/', $sid]));
+
+    // Non-default value, so a passing assertion cannot just be the 2592000 default.
+    $expires = 12345;
+    $pool = new ArrayAdapter();
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'strategy' => \Auth0\SDK\Configuration\SdkConfiguration::STRATEGY_REGULAR,
+        'domain' => $iss,
+        'tokenJwksUri' => $logoutToken->jwks,
+        'tokenCache' => $logoutToken->cached,
+        'backchannelLogoutCache' => $pool,
+        'backchannelLogoutExpires' => $expires,
+    ]));
+
+    $before = time();
+    $auth0->handleBackchannelLogout($logoutToken->token);
+
+    // expiresAfter() is relative, so the entry must expire $expires out, not time() + $expires.
+    // getMetadata()['expiry'] is a Symfony ArrayAdapter extension, not PSR-6.
+    $expiry = $pool->getItem($backchannel)->getMetadata()['expiry'];
+    expect($expiry)->not->toBeNull();
+    expect($expiry - $before)->toBeGreaterThanOrEqual($expires);
+    expect($expiry - $before)->toBeLessThanOrEqual($expires + 5);
 });
 
 test('decode() uses the configured cache handler', function(
@@ -762,6 +817,28 @@ test('exchange() succeeds with a valid id token', function(): void {
     expect($auth0->getRefreshToken())->toEqual('4.5.6');
 });
 
+test('exchange() succeeds and regenerates the session when using SessionStore', function(): void {
+    $auth0 = new Auth0($this->configuration);
+    $auth0->configuration()->setSessionStorage(new SessionStore($auth0->configuration()));
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6"}'),
+        HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+    expect($auth0->getUser()['sub'])->toEqual('__test_sub__');
+    expect($auth0->getAccessToken())->toEqual('1.2.3');
+});
+
 test('exchange() succeeds with no id token', function(): void {
     $auth0 = new Auth0($this->configuration);
 
@@ -1045,10 +1122,8 @@ test('getCredentials() returns null when matching backchannel request is queued'
     expect($auth0->exchange())->toBeTrue();
 
     $credentials = $auth0->getCredentials();
-    expect($credentials)
-        ->toBeObject()
-        ->toHaveProperty('backchannel')
-            ->not()->toBeEmpty();
+    expect($credentials)->toBeObject();
+    expect($credentials->backchannel)->not()->toBeEmpty();
 
     $logoutToken = TokenGenerator::create(
         tokenType: TokenGenerator::TOKEN_LOGOUT,
@@ -1350,3 +1425,252 @@ test('getBearerToken() correctly silently handles token validation exceptions', 
 })->with(['mocked rs256 bearer token' => [
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
 ]]);
+
+test('loginWithCustomTokenExchange() throws a ConfigurationException if the SDK is not configured with a stateful strategy', function(): void {
+    $auth0 = new Auth0(array_merge($this->configuration, [
+        'audience' => [uniqid()],
+        'strategy' => SdkConfiguration::STRATEGY_API
+    ]));
+    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
+})->throws(ConfigurationException::class, sprintf(ConfigurationException::MSG_SESSION_REQUIRED, 'Auth0->loginWithCustomTokenExchange()'));
+
+test('loginWithCustomTokenExchange() establishes a session from a valid id token', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6","scope":"test:part1 test:part2","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    $this->assertArrayHasKey('sub', $auth0->getUser());
+    expect($auth0->getIdToken())->toEqual($token);
+    expect($auth0->getAccessToken())->toEqual('1.2.3');
+    expect($auth0->getAccessTokenScope())->toEqual(['test:part1', 'test:part2']);
+    expect($auth0->getAccessTokenExpiration())->toBeGreaterThan(time());
+    expect($auth0->getRefreshToken())->toEqual('4.5.6');
+    expect($auth0->getCredentials()->backchannel)->not()->toBeEmpty();
+});
+
+test('loginWithCustomTokenExchange() ignores a stale transient nonce from an abandoned redirect', function(): void {
+    // A CTE id token carries no nonce claim, matching a real token exchange response.
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'nonce' => null,
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    // A prior abandoned login() left a nonce in transient storage. decode() must not validate the CTE token against it.
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__stale_nonce__');
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    $this->assertArrayHasKey('sub', $auth0->getUser());
+});
+
+test('loginWithCustomTokenExchange() skips the auth_time check when tokenMaxAge is configured', function(): void {
+    // A CTE id token has no auth_time claim, so a configured tokenMaxAge must not fail it.
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'auth_time' => null,
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+        'tokenMaxAge' => 3600,
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    $this->assertArrayHasKey('sub', $auth0->getUser());
+});
+
+test('loginWithCustomTokenExchange() surfaces the act claim on the session user', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'act' => ['sub' => '__test_actor__'],
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token', uniqid(), 'urn:acme:actor-token'))->toBeTrue();
+    $this->assertArrayHasKey('act', $auth0->getUser());
+    expect($auth0->getUser()['act']['sub'])->toEqual('__test_actor__');
+});
+
+test('loginWithCustomTokenExchange() establishes a session from an access-token-only response', function(): void {
+    $auth0 = new Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    expect($auth0->getAccessToken())->toEqual('1.2.3');
+    expect($auth0->getIdToken())->toBeNull();
+    // No id token means no sub/iss/sid to build a backchannel key from.
+    expect($auth0->getBackchannel())->toBeNull();
+});
+
+test('loginWithCustomTokenExchange() sends the configured scope when the caller passes none', function(): void {
+    $auth0 = new Auth0($this->configuration + ['scope' => ['openid', 'profile', 'email']]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+    ]);
+
+    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
+
+    $request = $httpClient->getLastRequest()->getLastRequest();
+    $requestBody = explode('&', $request->getBody()->__toString());
+
+    expect($requestBody)->toContain('scope=openid+profile+email');
+});
+
+test('loginWithCustomTokenExchange() honors an explicit scope over the configured one', function(): void {
+    $auth0 = new Auth0($this->configuration + ['scope' => ['openid', 'profile', 'email']]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+    ]);
+
+    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token', null, null, ['scope' => 'openid custom:scope']);
+
+    $request = $httpClient->getLastRequest()->getLastRequest();
+    $requestBody = explode('&', $request->getBody()->__toString());
+
+    expect($requestBody)->toContain('scope=openid+custom%3Ascope');
+    expect($requestBody)->not()->toContain('scope=openid+profile+email');
+});
+
+test('loginWithCustomTokenExchange() throws when the token exchange response has no access token', function(): void {
+    $auth0 = new Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"scope":"read:data"}'),
+    ]);
+
+    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
+})->throws(StateException::class, StateException::MSG_BAD_ACCESS_TOKEN);
+
+test('loginWithCustomTokenExchange() throws when the token exchange request fails', function(): void {
+    $auth0 = new Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"error":"invalid_grant"}', 403),
+    ]);
+
+    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
+})->throws(StateException::class, StateException::MSG_FAILED_TOKEN_EXCHANGE);
+
+test('loginWithCustomTokenExchange() clears state and rethrows when the id token is invalid', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"BAD' . $token . '","expires_in":300}'),
+    ]);
+
+    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
+})->throws(InvalidTokenException::class);
+
+test('loginWithCustomTokenExchange() regenerates the session when using SessionStore', function(): void {
+    $auth0 = new Auth0($this->configuration);
+    $auth0->configuration()->setSessionStorage(new SessionStore($auth0->configuration()));
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    expect($auth0->getAccessToken())->toEqual('1.2.3');
+});
+
+test('loginWithCustomTokenExchange() persists the backchannel key across requests', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+    $sessionStorage = new SessionStore($auth0->configuration());
+    $auth0->configuration()->setSessionStorage($sessionStorage);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    $key = $auth0->getBackchannel();
+    expect($key)->not()->toBeEmpty();
+
+    // A fresh instance rehydrating from the same storage must recover the key, or a queued logout is never enforced.
+    $rehydrated = new Auth0($this->configuration + ['tokenAlgorithm' => 'HS256']);
+    $rehydrated->configuration()->setSessionStorage($sessionStorage);
+    expect($rehydrated->getBackchannel())->toEqual($key);
+});
+
+test('loginWithCustomTokenExchange() persists the backchannel key across requests using CookieStore', function(): void {
+    $_COOKIE = [];
+
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+    $auth0->configuration()->setSessionStorage(new CookieStore($auth0->configuration(), 'cte_test'));
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    $key = $auth0->getBackchannel();
+    expect($key)->not()->toBeEmpty();
+
+    // A fresh CookieStore on the same namespace reads the encrypted cookie back, so the key must survive the round-trip.
+    $rehydrated = new Auth0($this->configuration + ['tokenAlgorithm' => 'HS256']);
+    $rehydrated->configuration()->setSessionStorage(new CookieStore($rehydrated->configuration(), 'cte_test'));
+    expect($rehydrated->getBackchannel())->toEqual($key);
+});

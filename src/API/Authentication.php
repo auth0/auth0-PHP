@@ -7,12 +7,13 @@ namespace Auth0\SDK\API;
 use Auth0\SDK\API\Authentication\PushedAuthorizationRequest;
 use Auth0\SDK\Configuration\SdkConfiguration;
 use Auth0\SDK\Contract\API\AuthenticationInterface;
-use Auth0\SDK\Exception\{ConfigurationException};
+use Auth0\SDK\Exception\ConfigurationException;
 use Auth0\SDK\Token\ClientAssertionGenerator;
 use Auth0\SDK\Utility\{HttpClient, Toolkit};
 use Psr\Http\Message\ResponseInterface;
 
 use function is_array;
+use function sprintf;
 
 final class Authentication extends ClientAbstract implements AuthenticationInterface
 {
@@ -20,6 +21,35 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
      * @var string
      */
     public const CONST_CLIENT_ASSERTION_TYPE = 'urn:ietf:params:oauth:client-assertion-type:jwt-bearer';
+
+    /**
+     * Authorization parameters callers may not override via $params.
+     *
+     * @internal
+     *
+     * @var string[]
+     */
+    public const RESERVED_AUTHORIZE_PARAMS = [
+        'client_id',
+        'response_type',
+        'response_mode',
+    ];
+
+    /**
+     * Token exchange parameters callers may not override via $params.
+     *
+     * @internal
+     *
+     * @var string[]
+     */
+    public const RESERVED_TOKEN_EXCHANGE_PARAMS = [
+        'grant_type',
+        'client_id',
+        'subject_token',
+        'subject_token_type',
+        'actor_token',
+        'actor_token_type',
+    ];
 
     /**
      * Instance of Auth0\SDK\API\Utility\HttpClient.
@@ -41,7 +71,7 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
      * @psalm-suppress DocblockTypeContradiction
      */
     public function __construct(
-        private SdkConfiguration | array $configuration,
+        private readonly SdkConfiguration | array $configuration,
     ) {
         $this->getConfiguration();
     }
@@ -114,6 +144,70 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         /** @var array<null|int|string> $params */
 
         return $this->oauthToken('authorization_code', $params);
+    }
+
+    public function customTokenExchange(
+        string $subjectToken,
+        string $subjectTokenType,
+        ?string $actorToken = null,
+        ?string $actorTokenType = null,
+        ?array $params = null,
+        ?array $headers = null,
+    ): ResponseInterface {
+        [$subjectToken, $subjectTokenType, $actorToken, $actorTokenType] = Toolkit::filter([$subjectToken, $subjectTokenType, $actorToken, $actorTokenType])->string()->trim();
+
+        /** @var array<int|string> $headers */
+        /** @var array<null|int|string> $params */
+        [$params, $headers] = Toolkit::filter([$params, $headers])->array()->trim();
+
+        Toolkit::assert([
+            [$subjectToken, \Auth0\SDK\Exception\ArgumentException::missing('subjectToken')],
+            [$subjectTokenType, \Auth0\SDK\Exception\ArgumentException::missing('subjectTokenType')],
+        ])->isString();
+
+        Toolkit::assert([
+            [$subjectTokenType, \Auth0\SDK\Exception\ArgumentException::invalidUri('subjectTokenType')],
+        ])->isUri();
+
+        // Reject a `Bearer` prefix, a common copy-paste mistake the token endpoint would reject.
+        if (null !== $subjectToken && 1 === preg_match('/^bearer\b/i', $subjectToken)) {
+            throw \Auth0\SDK\Exception\ArgumentException::hasBearerPrefix('subjectToken');
+        }
+
+        // An actor token and its type must be supplied together.
+        if (null !== $actorToken && null === $actorTokenType) {
+            throw \Auth0\SDK\Exception\ArgumentException::missing('actorTokenType');
+        }
+
+        if (null !== $actorTokenType && null === $actorToken) {
+            throw \Auth0\SDK\Exception\ArgumentException::missing('actorToken');
+        }
+
+        if (null !== $actorToken && 1 === preg_match('/^bearer\b/i', $actorToken)) {
+            throw \Auth0\SDK\Exception\ArgumentException::hasBearerPrefix('actorToken');
+        }
+
+        if (null !== $actorTokenType) {
+            Toolkit::assert([
+                [$actorTokenType, \Auth0\SDK\Exception\ArgumentException::invalidUri('actorTokenType')],
+            ])->isUri();
+        }
+
+        // Prevent caller-supplied $params from overriding security-critical values the SDK controls.
+        $params = self::filterReservedTokenExchangeParams($params);
+
+        /** @var array<null|int|string> $params */
+        $parameters = Toolkit::merge([$params, [
+            'subject_token' => $subjectToken,
+            'subject_token_type' => $subjectTokenType,
+            'actor_token' => $actorToken,
+            'actor_token_type' => $actorTokenType,
+        ]]);
+
+        /** @var array<null|int|string> $parameters */
+        /** @var array<int|string> $headers */
+
+        return $this->oauthToken('urn:ietf:params:oauth:grant-type:token-exchange', $parameters, $headers);
     }
 
     public function dbConnectionsChangePassword(
@@ -255,9 +349,13 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             [$state, \Auth0\SDK\Exception\ArgumentException::missing('state')],
         ])->isString();
 
+        // Resolves the default redirect_uri only; $params['redirect_uri'] remains overridable below, so this is not a guard.
         [$redirectUri] = Toolkit::filter([
             [$redirectUri, isset($params['redirect_uri']) ? (string) $params['redirect_uri'] : null, $this->getConfiguration()->getRedirectUri()],
         ])->array()->first(ConfigurationException::requiresRedirectUri());
+
+        // Prevent caller-supplied $params from overriding security-critical values the SDK controls.
+        $params = self::filterReservedParams($params);
 
         return sprintf(
             '%s/authorize?%s',
@@ -288,6 +386,9 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
         [$returnTo] = Toolkit::filter([
             [$returnTo, isset($params['returnTo']) ? (string) $params['returnTo'] : null, $this->getConfiguration()->getRedirectUri()],
         ])->array()->first(ConfigurationException::requiresRedirectUri());
+
+        // Prevent caller-supplied $params from overriding security-critical values the SDK controls.
+        $params = self::filterReservedParams($params);
 
         return sprintf(
             '%s/v2/logout?%s',
@@ -538,5 +639,41 @@ final class Authentication extends ClientAbstract implements AuthenticationInter
             ->addPath(['userinfo'])
             ->withHeader('Authorization', 'Bearer ' . ($accessToken ?? ''))
             ->call();
+    }
+
+    /**
+     * Strip reserved authorization parameters from a caller-supplied $params array.
+     *
+     * @internal
+     *
+     * @param array<int|string, mixed> $params
+     *
+     * @return array<int|string, mixed>
+     */
+    public static function filterReservedParams(array $params): array
+    {
+        foreach (self::RESERVED_AUTHORIZE_PARAMS as $reserved) {
+            unset($params[$reserved]);
+        }
+
+        return $params;
+    }
+
+    /**
+     * Strip reserved token exchange parameters from a caller-supplied $params array.
+     *
+     * @internal
+     *
+     * @param array<int|string, mixed> $params
+     *
+     * @return array<int|string, mixed>
+     */
+    public static function filterReservedTokenExchangeParams(array $params): array
+    {
+        foreach (self::RESERVED_TOKEN_EXCHANGE_PARAMS as $reserved) {
+            unset($params[$reserved]);
+        }
+
+        return $params;
     }
 }

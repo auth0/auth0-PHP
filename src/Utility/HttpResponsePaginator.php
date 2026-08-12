@@ -75,7 +75,7 @@ final class HttpResponsePaginator implements Countable, Iterator
      * @throws \Auth0\SDK\Exception\PaginatorException when an unsupported request type is provided
      */
     public function __construct(
-        private HttpClient $httpClient,
+        private readonly HttpClient $httpClient,
     ) {
         $lastRequest = $this->lastRequest();
         $lastResponse = $this->lastResponse();
@@ -96,12 +96,12 @@ final class HttpResponsePaginator implements Countable, Iterator
         // Get the last request query to check for checkpoint pagination params.
         $requestQuery = '&' . $lastRequest->getUri()->getQuery();
 
-        if (false !== mb_strpos($requestQuery, '&take=') || false !== mb_strpos($requestQuery, '&from=')) {
+        if (str_contains($requestQuery, '&take=') || str_contains($requestQuery, '&from=')) {
             $endpointSupported = false;
 
             // Iterate through SUPPORTED_ENDPOINTS to check if this endpoint will work for pagination.
             foreach (self::SUPPORTED_ENDPOINTS_WITH_CHECKPOINT as $endpoint) {
-                if ('^' === mb_substr($endpoint, 0, 1) && 1 === preg_match('/' . $endpoint . '/', $requestPath)) {
+                if (1 === preg_match('/' . $endpoint . '/', $requestPath)) {
                     // Match! Break out of loop and give this paginator a green light for processing.
                     $endpointSupported = true;
 
@@ -226,6 +226,7 @@ final class HttpResponsePaginator implements Countable, Iterator
                 if (null === $this->nextCheckpoint) {
                     return false;
                 }
+
                 // @codeCoverageIgnoreEnd
 
                 $lastBuilder->withParam('from', $this->nextCheckpoint);
