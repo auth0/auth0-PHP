@@ -28,9 +28,9 @@ $auth0 = new Auth0($configuration);
 
 Available choices are:
 
-- `SdkConfiguration::STRATEGY_REGULAR` (Default) — for stateful applications. Requires `domain`, `clientId` and `cookieSecret` also be configured.
-- `SdkConfiguration::STRATEGY_API` — for stateless applications. Requires `domain` and `audience` also be configured.
-- `SdkConfiguration::STRATEGY_MANAGEMENT_API` — for stateless applications that only interact with the Management API. Requires either `managementToken` or `clientId` and `clientSecret` to also be configured.
+- `SdkConfiguration::STRATEGY_REGULAR` (Default) - for stateful applications. Requires `domain`, `clientId` and `cookieSecret` also be configured.
+- `SdkConfiguration::STRATEGY_API` - for stateless applications. Requires `domain` and `audience` also be configured.
+- `SdkConfiguration::STRATEGY_MANAGEMENT_API` - for stateless applications that only interact with the Management API. Requires either `managementToken` or `clientId` and `clientSecret` to also be configured.
 
 ## Logging out
 
@@ -430,11 +430,11 @@ $auth0 = new Auth0($configuration);
 The following options must also be configured to use a `CookieStore`:
 
 - [`strategy`](#strategy-configuration) must be `SdkConfiguration::STRATEGY_REGULAR`.
-- `cookieSecret` — an encryption key for the session cookie.
-- `cookieDomain` — when sharing session cookies across multiple subdomains, use your FQDN with a dot in front, e.g. `.yourdomain.com`.
-- `cookieExpires` — the expiration time (in seconds) for the session cookie.
-- `cookiePath` — path to use for the session cookie.
-- `cookieSecure` — whether cookies should only be sent over secure connections.
+- `cookieSecret` - an encryption key for the session cookie.
+- `cookieDomain` - when sharing session cookies across multiple subdomains, use your FQDN with a dot in front, e.g. `.yourdomain.com`.
+- `cookieExpires` - the expiration time (in seconds) for the session cookie.
+- `cookiePath` - path to use for the session cookie.
+- `cookieSecure` - whether cookies should only be sent over secure connections.
 
 ## PHP session storage
 
