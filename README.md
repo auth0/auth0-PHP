@@ -11,10 +11,10 @@ PHP SDK for [Auth0](https://auth0.com) Authentication and Management APIs.
 We also have tailored SDKs for [Laravel](https://github.com/auth0/laravel-auth0), [Symfony](https://github.com/auth0/symfony), and [WordPress](https://github.com/auth0/wordpress). If you are using one of these frameworks, use the tailored SDK for the best integration experience.
 
 - Quickstarts
-  - [Application using Sessions (Stateful)](https://auth0.com/docs/quickstart/webapp/php) — Demonstrates a traditional web application that uses sessions and supports logging in, logging out, and querying user profiles. [The completed source code is also available.](https://github.com/auth0-samples/auth0-php-web-app)
-  - [API using Access Tokens (Stateless)](https://auth0.com/docs/quickstart/backend/php) — Demonstrates a backend API that authorizes endpoints using access tokens provided by a frontend client and returns JSON. [The completed source code is also available.](https://github.com/auth0-samples/auth0-php-api-samples)
-- [PHP Examples](./EXAMPLES.md) — Code samples for common scenarios.
-- [Documentation Hub](https://www.auth0.com/docs) — Learn more about integrating Auth0 with your application.
+  - [Application using Sessions (Stateful)](https://auth0.com/docs/quickstart/webapp/php) - Demonstrates a traditional web application that uses sessions and supports logging in, logging out, and querying user profiles. [The completed source code is also available.](https://github.com/auth0-samples/auth0-php-web-app)
+  - [API using Access Tokens (Stateless)](https://auth0.com/docs/quickstart/backend/php) - Demonstrates a backend API that authorizes endpoints using access tokens provided by a frontend client and returns JSON. [The completed source code is also available.](https://github.com/auth0-samples/auth0-php-api-samples)
+- [PHP Examples](./EXAMPLES.md) - Code samples for common scenarios.
+- [Documentation Hub](https://www.auth0.com/docs) - Learn more about integrating Auth0 with your application.
 
 ## Getting Started
 
@@ -36,7 +36,7 @@ We also have tailored SDKs for [Laravel](https://github.com/auth0/laravel-auth0)
 Ensure you have [the necessary dependencies](#requirements) installed, then add the SDK to your application using [Composer](https://getcomposer.org/):
 
 ```
-composer require auth0/auth0-php:9.0.0-beta.2
+composer require auth0/auth0-php:9.0.0-beta.6
 ```
 
 > **Note:** This is a pre-release version. To install it, you must specify the exact version as shown above. Running `composer require auth0/auth0-php` without a version constraint will install the latest stable v8 release.
@@ -171,7 +171,7 @@ $response = $auth->dbConnectionsChangePassword(
 
 ## Management API Client
 
-The `ManagementClient` wrapper provides a convenient way to interact with the Auth0 Management API with automatic token management. It wraps the generated `Management` client and handles authentication transparently — you get the same sub-client access (`->users`, `->roles`, etc.) without managing tokens yourself.
+The `ManagementClient` wrapper provides a convenient way to interact with the Auth0 Management API with automatic token management. It wraps the generated `Management` client and handles authentication transparently - you get the same sub-client access (`->users`, `->roles`, etc.) without managing tokens yourself.
 
 ### Static Token
 
@@ -237,7 +237,7 @@ $client = new ManagementClient(new ManagementClientOptions(
 $user = $client->users->get('auth0|123');
 ```
 
-Any PSR-6 `CacheItemPoolInterface` implementation works — for example `FilesystemAdapter`, `RedisAdapter`, `ApcuAdapter`, or `Memcached` from `symfony/cache`. The token TTL is set automatically based on the `expires_in` value from Auth0.
+Any PSR-6 `CacheItemPoolInterface` implementation works - for example `FilesystemAdapter`, `RedisAdapter`, `ApcuAdapter`, or `Memcached` from `symfony/cache`. The token TTL is set automatically based on the `expires_in` value from Auth0.
 
 ### Custom Token Provider
 
@@ -313,14 +313,14 @@ When updating resources with PATCH endpoints, the SDK distinguishes between **om
 use Auth0\SDK\API\Management\Users\Requests\UpdateUserRequestContent;
 
 // Constructor only: null properties are OMITTED from the request.
-// This sends {"name": "Jane"} — email is not touched.
+// This sends {"name": "Jane"} - email is not touched.
 $request = new UpdateUserRequestContent([
     'name' => 'Jane',
-    'nickname' => null,  // Omitted — nickname is not changed
+    'nickname' => null,  // Omitted - nickname is not changed
 ]);
 
 // Setter: null properties are INCLUDED in the request.
-// This sends {"name": "Jane", "nickname": null} — nickname is cleared.
+// This sends {"name": "Jane", "nickname": null} - nickname is cleared.
 $request = new UpdateUserRequestContent(['name' => 'Jane']);
 $request->setNickname(null);
 ```
@@ -330,8 +330,8 @@ Setters mark the property as explicitly set, so the serializer includes it even 
 ```php
 $request = (new UpdateUserRequestContent())
     ->setName('Jane')
-    ->setNickname(null)    // Will send null — clears nickname
-    ->setUserMetadata(null); // Will send null — clears user_metadata
+    ->setNickname(null)    // Will send null - clears nickname
+    ->setUserMetadata(null); // Will send null - clears user_metadata
 ```
 
 ## Advanced
