@@ -23,7 +23,7 @@ final class Auth0 implements Auth0Interface
     /**
      * @var string
      */
-    public const VERSION = '9.0.0-beta.6';
+    public const VERSION = '9.0.0';
 
     /**
      * Authentication Client.
@@ -581,6 +581,102 @@ final class Auth0 implements Auth0Interface
         }
 
         return $this->authentication()->getLoginLink((string) $state, $redirectUrl, $params);
+    }
+
+    public function loginWithCustomTokenExchange(
+        string $subjectToken,
+        string $subjectTokenType,
+        ?string $actorToken = null,
+        ?string $actorTokenType = null,
+        ?array $params = null,
+    ): bool {
+        if (! $this->configuration()->usingStatefulness()) {
+            throw ConfigurationException::requiresStatefulness('Auth0->loginWithCustomTokenExchange()');
+        }
+
+        // A session needs an ID token to populate the user, so ensure a scope is requested. Fall back to the configured scope when the caller did not pass one.
+        $params ??= [];
+
+        if ((! isset($params['scope']) || '' === $params['scope']) && $this->configuration()->hasScope()) {
+            $params['scope'] = $this->configuration()->formatScope();
+        }
+
+        $response = $this->authentication()->customTokenExchange($subjectToken, $subjectTokenType, $actorToken, $actorTokenType, $params);
+
+        if (! HttpResponse::wasSuccessful($response)) {
+            throw Exception\StateException::failedTokenExchange();
+        }
+
+        $response = HttpResponse::decodeContent($response);
+
+        $this->clear(false);
+        $this->deferStateSaving();
+
+        $user = null;
+
+        /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
+        if (isset($response['id_token'])) {
+            // A token exchange has no redirect, so a transient nonce/max_age is from an unrelated login.
+            // Clear them so decode() does not validate a CTE token against a stale value.
+            $transientStore = $this->getTransientStore();
+
+            if ($transientStore instanceof TransientStoreHandler) {
+                $transientStore->delete('nonce');
+                $transientStore->delete('max_age');
+            }
+
+            try {
+                // A token exchange has no interactive max_age, so skip the auth_time check a configured tokenMaxAge would otherwise apply.
+                $token = $this->decode($response['id_token'], tokenMaxAge: Token::MAX_AGE_SKIP);
+
+                $sub = $token->getSubject() ?? '';
+                $iss = $token->getIssuer() ?? '';
+                $sid = $token->getIdentifier() ?? '';
+                $this->setBackchannel(hash('sha256', implode('|', [$sub, $iss, $sid])));
+
+                $user = $token->toArray();
+                $this->setIdToken($response['id_token']);
+            } catch (Throwable $throwable) {
+                $this->clear();
+
+                throw $throwable;
+            }
+        }
+
+        if (! isset($response['access_token']) || '' === trim($response['access_token'])) {
+            $this->clear();
+
+            throw Exception\StateException::badAccessToken();
+        }
+
+        $this->setAccessToken($response['access_token']);
+
+        if (isset($response['scope'])) {
+            $this->setAccessTokenScope(explode(' ', $response['scope']));
+        }
+
+        if (isset($response['refresh_token'])) {
+            $this->setRefreshToken($response['refresh_token']);
+        }
+
+        if (isset($response['expires_in']) && is_numeric($response['expires_in'])) {
+            $expiresIn = time() + (int) $response['expires_in'];
+            $this->setAccessTokenExpiration($expiresIn);
+        }
+
+        /** @var null|array<array<mixed>|int|string> $user */
+        $this->setUser($user ?? []);
+        $this->deferStateSaving(false);
+
+        // Rotate the session ID now that the auth state has changed, to prevent
+        // session fixation. Only applies when using PHP session-backed storage.
+        $sessionStorage = $this->configuration()->getSessionStorage();
+
+        if ($sessionStorage instanceof SessionStore) {
+            $sessionStorage->regenerate();
+        }
+
+        return true;
     }
 
     public function logout(

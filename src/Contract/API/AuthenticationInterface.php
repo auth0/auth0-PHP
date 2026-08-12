@@ -63,6 +63,34 @@ interface AuthenticationInterface extends ClientInterface
     ): ResponseInterface;
 
     /**
+     * Exchange an external or custom token for Auth0 tokens using the token exchange grant (RFC 8693).
+     * Returns the raw token response and has no session side effects. Use this for delegation and machine-to-machine scenarios.
+     *
+     * @param string                      $subjectToken     the token being exchanged
+     * @param string                      $subjectTokenType a URI identifying the type of `subjectToken`. Any custom URI scheme is accepted (e.g. `urn:acme:token`).
+     * @param null|string                 $actorToken       Optional. A token representing the acting party for delegation. Requires `actorTokenType`.
+     * @param null|string                 $actorTokenType   Optional. A URI identifying the type of `actorToken`. Requires `actorToken`.
+     * @param null|array<null|int|string> $params           Optional. Additional content to include in the body of the API request, such as `audience`, `scope`, and `organization`. The `grant_type`, `client_id`, `subject_token`, `subject_token_type`, `actor_token`, and `actor_token_type` keys are controlled by the SDK and cannot be overridden here.
+     * @param null|array<int|string>      $headers          Optional. Additional headers to send with the API request.
+     *
+     * @throws ArgumentException      when `subjectToken` is blank, `subjectTokenType` is blank or not a valid URI, or the actor token and its type are not supplied together
+     * @throws ConfigurationException when a Client ID is not configured
+     * @throws ConfigurationException when a Client Secret is not configured
+     * @throws NetworkException       when the API request fails due to a network error
+     *
+     * @see https://auth0.com/docs/authenticate/custom-token-exchange
+     * @see https://datatracker.ietf.org/doc/html/rfc8693
+     */
+    public function customTokenExchange(
+        string $subjectToken,
+        string $subjectTokenType,
+        ?string $actorToken = null,
+        ?string $actorTokenType = null,
+        ?array $params = null,
+        ?array $headers = null,
+    ): ResponseInterface;
+
+    /**
      * Send a change password email.
      * This endpoint only works for database connections.
      *

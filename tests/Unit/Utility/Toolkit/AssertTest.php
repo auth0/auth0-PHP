@@ -77,3 +77,32 @@ test('isArray() throws an exception if value is an empty array', function(): voi
         [[], new Exception('foobar')],
     ])->isArray();
 })->throws(Exception::class, 'foobar');
+
+test('isUri() accepts standard URLs and custom URN schemes', function(): void {
+    expect(function(): void {
+        Toolkit::assert([
+            ['https://api.example.com', new Exception('foobar')],
+            ['urn:acme:mcp-token', new Exception('foobar')],
+            ['custom:legacy-token', new Exception('foobar')],
+            ['urn:ietf:params:oauth:token-type:access_token', new Exception('foobar')],
+        ])->isUri();
+    })->not->toThrow(Exception::class);
+});
+
+test('isUri() throws an exception if value is not a string', function(): void {
+    Toolkit::assert([
+        [true, new Exception('foobar')],
+    ])->isUri();
+})->throws(Exception::class, 'foobar');
+
+test('isUri() throws an exception if value is an empty string', function(): void {
+    Toolkit::assert([
+        ['', new Exception('foobar')],
+    ])->isUri();
+})->throws(Exception::class, 'foobar');
+
+test('isUri() throws an exception if value has no scheme', function(): void {
+    Toolkit::assert([
+        ['not-a-uri', new Exception('foobar')],
+    ])->isUri();
+})->throws(Exception::class, 'foobar');

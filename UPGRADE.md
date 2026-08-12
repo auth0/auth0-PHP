@@ -4,6 +4,15 @@
 
 ### Authentication API
 
+#### New: Custom Token Exchange
+
+v9 adds support for [Custom Token Exchange](https://auth0.com/docs/authenticate/custom-token-exchange) ([RFC 8693](https://datatracker.ietf.org/doc/html/rfc8693)), which exchanges an external or legacy token for Auth0 tokens without a browser redirect. Two methods are available:
+
+- `Authentication::customTokenExchange()` performs the exchange and returns the raw token response, with no session side effects. Use it for delegation and machine-to-machine scenarios.
+- `Auth0::loginWithCustomTokenExchange()` performs the exchange and persists the result as a session, logging the user in.
+
+Both accept optional `actorToken` and `actorTokenType` parameters for delegation, validate that the token types are valid URIs, and support organizations. This is a new capability, so no changes are required to existing code. See [EXAMPLES.md](EXAMPLES.md#custom-token-exchange) for usage.
+
 #### Reserved authorization parameters
 
 The `$params` argument accepted by `Auth0::login()`, `Auth0::signup()`, `Auth0::handleInvitation()`, `Authentication::getLoginLink()`, and the Pushed Authorization Request flow no longer lets callers override the following keys. They are always resolved from your SDK configuration:
