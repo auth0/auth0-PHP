@@ -8,11 +8,11 @@ on:
       - synchronize
     branches:
       - main
-      - v9
+      - v8
   push:
     branches:
       - main
-      - v9
+      - v8
   schedule:
     - cron: "30 0 1,15 * *"
   workflow_dispatch:
@@ -33,7 +33,7 @@ env:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/v9' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/v8' }}
 
 jobs:
   configure:

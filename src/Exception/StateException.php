@@ -35,6 +35,11 @@ final class StateException extends Exception implements Auth0Exception
     /**
      * @var string
      */
+    public const MSG_FAILED_TOKEN_EXCHANGE = 'Token exchange was unsuccessful; the endpoint returned an error response';
+
+    /**
+     * @var string
+     */
     public const MSG_INVALID_STATE = 'Invalid state';
 
     /**
@@ -74,6 +79,12 @@ final class StateException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(self::MSG_FAILED_RENEW_TOKEN_MISSING_REFRESH_TOKEN, 0, $previous);
+    }
+
+    public static function failedTokenExchange(
+        ?Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_FAILED_TOKEN_EXCHANGE, 0, $previous);
     }
 
     public static function invalidState(
