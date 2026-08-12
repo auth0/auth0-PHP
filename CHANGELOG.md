@@ -11,7 +11,7 @@ v9.0.0 is the first stable release of the v9 line. The Management API client is 
 
 **Management API**
 
-- Minimum PHP raised to 8.2, with an upper bound of `<8.5`
+- Minimum PHP raised from 8.1 to 8.2
 - Management API client namespace changed and initialization reworked (`new Management(token: ...)` with sub-clients as public properties)
 - `Auth0::management()` removed, use the `ManagementClient` wrapper instead
 - `getAll()` renamed to `list()` across every endpoint, and sub-resource operations moved to dedicated sub-clients
