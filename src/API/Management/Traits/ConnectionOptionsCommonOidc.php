@@ -44,6 +44,7 @@ use Auth0\SDK\API\Management\Core\Types\Union;
  *   |ConnectionUpstreamValue
  * )|null> $upstreamParams
  * @property ?string $userinfoEndpoint
+ * @property ?bool $useOauthSpecScope
  */
 trait ConnectionOptionsCommonOidc
 {
@@ -181,6 +182,12 @@ trait ConnectionOptionsCommonOidc
      */
     #[JsonProperty('userinfo_endpoint')]
     private ?string $userinfoEndpoint;
+
+    /**
+     * @var ?bool $useOauthSpecScope
+     */
+    #[JsonProperty('useOauthSpecScope')]
+    private ?bool $useOauthSpecScope;
 
     /**
      * @return ?string
@@ -581,6 +588,24 @@ trait ConnectionOptionsCommonOidc
     {
         $this->userinfoEndpoint = $value;
         $this->_setField('userinfoEndpoint');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getUseOauthSpecScope(): ?bool
+    {
+        return $this->useOauthSpecScope;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setUseOauthSpecScope(?bool $value = null): self
+    {
+        $this->useOauthSpecScope = $value;
+        $this->_setField('useOauthSpecScope');
         return $this;
     }
 }

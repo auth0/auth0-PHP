@@ -61,6 +61,7 @@ class ConnectionOptionsOkta extends JsonSerializableType
      *   |ConnectionUpstreamValue
      * )|null>,
      *   userinfoEndpoint?: ?string,
+     *   useOauthSpecScope?: ?bool,
      *   attributeMap?: ?ConnectionAttributeMapOkta,
      *   domain?: ?string,
      *   type?: ?value-of<ConnectionTypeEnumOkta>,
@@ -92,6 +93,7 @@ class ConnectionOptionsOkta extends JsonSerializableType
         $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
         $this->upstreamParams = $values['upstreamParams'] ?? null;
         $this->userinfoEndpoint = $values['userinfoEndpoint'] ?? null;
+        $this->useOauthSpecScope = $values['useOauthSpecScope'] ?? null;
         $this->attributeMap = $values['attributeMap'] ?? null;
         $this->domain = $values['domain'] ?? null;
         $this->type = $values['type'] ?? null;
