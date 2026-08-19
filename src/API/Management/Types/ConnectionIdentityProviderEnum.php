@@ -59,4 +59,5 @@ enum ConnectionIdentityProviderEnum: string
     case Wordpress = "wordpress";
     case Yahoo = "yahoo";
     case Yandex = "yandex";
+    case NotionMcp = "notion-mcp";
 }
