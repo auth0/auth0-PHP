@@ -9,6 +9,7 @@ use Auth0\SDK\API\Management\Types\EnabledFeaturesEnum;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Types\ConnectionProfileConfig;
 use Auth0\SDK\API\Management\Types\ConnectionProfileStrategyOverrides;
+use Auth0\SDK\API\Management\Types\ConnectionProfileCrossAppAccessResourceApp;
 
 class CreateConnectionProfileRequestContent extends JsonSerializableType
 {
@@ -49,6 +50,12 @@ class CreateConnectionProfileRequestContent extends JsonSerializableType
     private ?ConnectionProfileStrategyOverrides $strategyOverrides;
 
     /**
+     * @var ?ConnectionProfileCrossAppAccessResourceApp $crossAppAccessResourceApp
+     */
+    #[JsonProperty('cross_app_access_resource_app')]
+    private ?ConnectionProfileCrossAppAccessResourceApp $crossAppAccessResourceApp;
+
+    /**
      * @param array{
      *   name: string,
      *   organization?: ?ConnectionProfileOrganization,
@@ -56,6 +63,7 @@ class CreateConnectionProfileRequestContent extends JsonSerializableType
      *   enabledFeatures?: ?array<value-of<EnabledFeaturesEnum>>,
      *   connectionConfig?: ?ConnectionProfileConfig,
      *   strategyOverrides?: ?ConnectionProfileStrategyOverrides,
+     *   crossAppAccessResourceApp?: ?ConnectionProfileCrossAppAccessResourceApp,
      * } $values
      */
     public function __construct(
@@ -67,6 +75,7 @@ class CreateConnectionProfileRequestContent extends JsonSerializableType
         $this->enabledFeatures = $values['enabledFeatures'] ?? null;
         $this->connectionConfig = $values['connectionConfig'] ?? null;
         $this->strategyOverrides = $values['strategyOverrides'] ?? null;
+        $this->crossAppAccessResourceApp = $values['crossAppAccessResourceApp'] ?? null;
     }
 
     /**
@@ -174,6 +183,24 @@ class CreateConnectionProfileRequestContent extends JsonSerializableType
     {
         $this->strategyOverrides = $value;
         $this->_setField('strategyOverrides');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionProfileCrossAppAccessResourceApp
+     */
+    public function getCrossAppAccessResourceApp(): ?ConnectionProfileCrossAppAccessResourceApp
+    {
+        return $this->crossAppAccessResourceApp;
+    }
+
+    /**
+     * @param ?ConnectionProfileCrossAppAccessResourceApp $value
+     */
+    public function setCrossAppAccessResourceApp(?ConnectionProfileCrossAppAccessResourceApp $value = null): self
+    {
+        $this->crossAppAccessResourceApp = $value;
+        $this->_setField('crossAppAccessResourceApp');
         return $this;
     }
 }

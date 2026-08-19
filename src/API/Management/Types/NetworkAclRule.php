@@ -26,6 +26,12 @@ class NetworkAclRule extends JsonSerializableType
     private ?NetworkAclMatch $notMatch;
 
     /**
+     * @var ?bool $matchAll
+     */
+    #[JsonProperty('match_all')]
+    private ?bool $matchAll;
+
+    /**
      * @var value-of<NetworkAclRuleScopeEnum> $scope
      */
     #[JsonProperty('scope')]
@@ -37,6 +43,7 @@ class NetworkAclRule extends JsonSerializableType
      *   scope: value-of<NetworkAclRuleScopeEnum>,
      *   match?: ?NetworkAclMatch,
      *   notMatch?: ?NetworkAclMatch,
+     *   matchAll?: ?bool,
      * } $values
      */
     public function __construct(
@@ -45,6 +52,7 @@ class NetworkAclRule extends JsonSerializableType
         $this->action = $values['action'];
         $this->match = $values['match'] ?? null;
         $this->notMatch = $values['notMatch'] ?? null;
+        $this->matchAll = $values['matchAll'] ?? null;
         $this->scope = $values['scope'];
     }
 
@@ -99,6 +107,24 @@ class NetworkAclRule extends JsonSerializableType
     {
         $this->notMatch = $value;
         $this->_setField('notMatch');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getMatchAll(): ?bool
+    {
+        return $this->matchAll;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setMatchAll(?bool $value = null): self
+    {
+        $this->matchAll = $value;
+        $this->_setField('matchAll');
         return $this;
     }
 

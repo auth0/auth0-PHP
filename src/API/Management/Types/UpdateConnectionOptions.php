@@ -238,6 +238,12 @@ class UpdateConnectionOptions extends JsonSerializableType
     private ?bool $idTokenSessionExpirySupported;
 
     /**
+     * @var ?bool $useOauthSpecScope
+     */
+    #[JsonProperty('useOauthSpecScope')]
+    private ?bool $useOauthSpecScope;
+
+    /**
      * @var ?string $discoveryUrl
      */
     #[JsonProperty('discovery_url')]
@@ -291,6 +297,7 @@ class UpdateConnectionOptions extends JsonSerializableType
      *   tokenEndpointAuthSigningAlg?: ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum>,
      *   tokenEndpointJwtcaAudFormat?: ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>,
      *   idTokenSessionExpirySupported?: ?bool,
+     *   useOauthSpecScope?: ?bool,
      *   discoveryUrl?: ?string,
      *   oidcMetadata?: ?ConnectionsOidcMetadata,
      * } $values
@@ -335,6 +342,7 @@ class UpdateConnectionOptions extends JsonSerializableType
         $this->tokenEndpointAuthSigningAlg = $values['tokenEndpointAuthSigningAlg'] ?? null;
         $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
         $this->idTokenSessionExpirySupported = $values['idTokenSessionExpirySupported'] ?? null;
+        $this->useOauthSpecScope = $values['useOauthSpecScope'] ?? null;
         $this->discoveryUrl = $values['discoveryUrl'] ?? null;
         $this->oidcMetadata = $values['oidcMetadata'] ?? null;
     }
@@ -1008,6 +1016,24 @@ class UpdateConnectionOptions extends JsonSerializableType
     {
         $this->idTokenSessionExpirySupported = $value;
         $this->_setField('idTokenSessionExpirySupported');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getUseOauthSpecScope(): ?bool
+    {
+        return $this->useOauthSpecScope;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setUseOauthSpecScope(?bool $value = null): self
+    {
+        $this->useOauthSpecScope = $value;
+        $this->_setField('useOauthSpecScope');
         return $this;
     }
 

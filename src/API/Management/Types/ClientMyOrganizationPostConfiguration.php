@@ -30,6 +30,12 @@ class ClientMyOrganizationPostConfiguration extends JsonSerializableType
     private array $allowedStrategies;
 
     /**
+     * @var ?ClientMyOrganizationThirdPartyClientAccessConfiguration $thirdPartyClientAccess
+     */
+    #[JsonProperty('third_party_client_access')]
+    private ?ClientMyOrganizationThirdPartyClientAccessConfiguration $thirdPartyClientAccess;
+
+    /**
      * @var value-of<ClientMyOrganizationDeletionBehaviorEnum> $connectionDeletionBehavior
      */
     #[JsonProperty('connection_deletion_behavior')]
@@ -47,6 +53,7 @@ class ClientMyOrganizationPostConfiguration extends JsonSerializableType
      *   connectionDeletionBehavior: value-of<ClientMyOrganizationDeletionBehaviorEnum>,
      *   connectionProfileId?: ?string,
      *   userAttributeProfileId?: ?string,
+     *   thirdPartyClientAccess?: ?ClientMyOrganizationThirdPartyClientAccessConfiguration,
      *   invitationLandingClientId?: ?string,
      * } $values
      */
@@ -56,6 +63,7 @@ class ClientMyOrganizationPostConfiguration extends JsonSerializableType
         $this->connectionProfileId = $values['connectionProfileId'] ?? null;
         $this->userAttributeProfileId = $values['userAttributeProfileId'] ?? null;
         $this->allowedStrategies = $values['allowedStrategies'];
+        $this->thirdPartyClientAccess = $values['thirdPartyClientAccess'] ?? null;
         $this->connectionDeletionBehavior = $values['connectionDeletionBehavior'];
         $this->invitationLandingClientId = $values['invitationLandingClientId'] ?? null;
     }
@@ -111,6 +119,24 @@ class ClientMyOrganizationPostConfiguration extends JsonSerializableType
     {
         $this->allowedStrategies = $value;
         $this->_setField('allowedStrategies');
+        return $this;
+    }
+
+    /**
+     * @return ?ClientMyOrganizationThirdPartyClientAccessConfiguration
+     */
+    public function getThirdPartyClientAccess(): ?ClientMyOrganizationThirdPartyClientAccessConfiguration
+    {
+        return $this->thirdPartyClientAccess;
+    }
+
+    /**
+     * @param ?ClientMyOrganizationThirdPartyClientAccessConfiguration $value
+     */
+    public function setThirdPartyClientAccess(?ClientMyOrganizationThirdPartyClientAccessConfiguration $value = null): self
+    {
+        $this->thirdPartyClientAccess = $value;
+        $this->_setField('thirdPartyClientAccess');
         return $this;
     }
 
