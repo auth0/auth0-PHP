@@ -189,6 +189,19 @@ it('rejects file paths with protocol separators', function(): void {
         ->toThrow(\InvalidArgumentException::class, 'File paths with protocol separators ("://") are not allowed: "php://filter/convert.base64-encode/resource=/etc/passwd"');
 });
 
+it('rejects the bare data: wrapper, which contains no protocol separator', function(): void {
+    $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'post', '/');
+
+    // PHP's stream wrapper resolution special-cases a bare `data:` with a single colon, so
+    // "data:text/plain,..." is opened as a wrapper by fopen() despite containing no "://".
+    // A separator-based check alone does not catch it.
+    expect(fn() => $client->addFile('test', 'data:text/plain,injected'))
+        ->toThrow(\InvalidArgumentException::class);
+
+    expect(fn() => $client->addFile('test', 'data:text/plain;base64,aW5qZWN0ZWQ='))
+        ->toThrow(\InvalidArgumentException::class);
+});
+
 it('rejects file paths for non-existent or unreadable files', function(): void {
     $client = new HttpRequest($this->configuration, HttpClient::CONTEXT_GENERIC_CLIENT, 'post', '/');
     
