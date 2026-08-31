@@ -148,6 +148,12 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
     private ?string $userinfoEndpoint;
 
     /**
+     * @var ?bool $useOauthSpecScope
+     */
+    #[JsonProperty('useOauthSpecScope')]
+    private ?bool $useOauthSpecScope;
+
+    /**
      * @param array{
      *   clientId: string,
      *   authorizationEndpoint?: ?string,
@@ -174,6 +180,7 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
      *   |ConnectionUpstreamValue
      * )|null>,
      *   userinfoEndpoint?: ?string,
+     *   useOauthSpecScope?: ?bool,
      * } $values
      */
     public function __construct(
@@ -201,6 +208,7 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
         $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
         $this->upstreamParams = $values['upstreamParams'] ?? null;
         $this->userinfoEndpoint = $values['userinfoEndpoint'] ?? null;
+        $this->useOauthSpecScope = $values['useOauthSpecScope'] ?? null;
     }
 
     /**
@@ -602,6 +610,24 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
     {
         $this->userinfoEndpoint = $value;
         $this->_setField('userinfoEndpoint');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getUseOauthSpecScope(): ?bool
+    {
+        return $this->useOauthSpecScope;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setUseOauthSpecScope(?bool $value = null): self
+    {
+        $this->useOauthSpecScope = $value;
+        $this->_setField('useOauthSpecScope');
         return $this;
     }
 

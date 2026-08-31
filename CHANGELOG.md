@@ -1,5 +1,12 @@
 # Change Log
 
+## [9.1.0](https://github.com/auth0/auth0-PHP/tree/9.1.0) (2026-08-19)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0...9.1.0)
+
+**Added**
+
+- feat: add Network ACL Key read/delete, Cross App Access resource app, third-party client access, and useOauthSpecScope [\#859](https://github.com/auth0/auth0-PHP/pull/859) ([fern-api[bot]](https://github.com/apps/fern-api))
+
 ## [9.0.0](https://github.com/auth0/auth0-PHP/tree/9.0.0) (2026-08-12)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/8.19.0...9.0.0)
 
