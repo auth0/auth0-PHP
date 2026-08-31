@@ -224,10 +224,7 @@ final class Parser
 
             // @codeCoverageIgnoreStart
             // This is not currently testable using our JWT encoding test libraries.
-            if (! isset($this->tokenHeaders['typ'])) {
-                $this->tokenHeaders['typ'] = 'JWT';
-            }
-
+            $this->tokenHeaders['typ'] ??= 'JWT';
             // @codeCoverageIgnoreEnd
         }
 
