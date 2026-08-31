@@ -104,9 +104,7 @@ final class HttpTelemetry
         string $name,
         string $version,
     ): void {
-        if (null === self::$environment) {
-            self::$environment = [];
-        }
+        self::$environment ??= [];
 
         self::$environment[$name] = $version;
     }

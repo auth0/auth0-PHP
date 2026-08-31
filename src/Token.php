@@ -361,9 +361,7 @@ final class Token implements TokenInterface
         $tokenCacheTtl ??= $this->configuration->getTokenCacheTtl();
         $tokenCache ??= $this->configuration->getTokenCache() ?? null;
 
-        if (null === $tokenJwksUri) {
-            $tokenJwksUri = $this->configuration->formatDomain() . '/.well-known/jwks.json';
-        }
+        $tokenJwksUri ??= $this->configuration->formatDomain() . '/.well-known/jwks.json';
 
         $this->getParser()->verify(
             $tokenAlgorithm,
