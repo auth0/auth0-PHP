@@ -328,9 +328,7 @@ final class HttpResponsePaginator implements Countable, Iterator
                     throw \Auth0\SDK\Exception\PaginatorException::httpBadResponse();
                 }
 
-                if (null === $start) {
-                    $start = $this->position;
-                }
+                $start ??= $this->position;
 
                 $start = (int) $start;
 
