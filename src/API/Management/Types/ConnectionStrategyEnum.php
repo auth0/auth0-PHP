@@ -59,5 +59,6 @@ enum ConnectionStrategyEnum: string
     case Wordpress = "wordpress";
     case Yahoo = "yahoo";
     case Yandex = "yandex";
+    case NotionMcp = "notion-mcp";
     case Auth0Adldap = "auth0-adldap";
 }

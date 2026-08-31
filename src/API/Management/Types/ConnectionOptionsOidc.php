@@ -60,6 +60,7 @@ class ConnectionOptionsOidc extends JsonSerializableType
      *   |ConnectionUpstreamValue
      * )|null>,
      *   userinfoEndpoint?: ?string,
+     *   useOauthSpecScope?: ?bool,
      *   nonPersistentAttrs?: ?array<string>,
      *   attributeMap?: ?ConnectionAttributeMapOidc,
      *   discoveryUrl?: ?string,
@@ -91,6 +92,7 @@ class ConnectionOptionsOidc extends JsonSerializableType
         $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
         $this->upstreamParams = $values['upstreamParams'] ?? null;
         $this->userinfoEndpoint = $values['userinfoEndpoint'] ?? null;
+        $this->useOauthSpecScope = $values['useOauthSpecScope'] ?? null;
         $this->nonPersistentAttrs = $values['nonPersistentAttrs'] ?? null;
         $this->attributeMap = $values['attributeMap'] ?? null;
         $this->discoveryUrl = $values['discoveryUrl'] ?? null;

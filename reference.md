@@ -1518,7 +1518,7 @@ For more information, read [Applications in Auth0](https://www.auth0.com/docs/ge
     `jwt_configuration.lifetime_in_seconds`, `jwt_configuration.secret_encoded`,
     `jwt_configuration.scopes`, `jwt_configuration.alg`, `api_type`,
     `logo_uri`, `allowed_clients`, `owners`, `custom_login_page`,
-    `custom_login_page_off`, `sso`, `addons`, `form_template`,
+    `custom_login_page_on`, `sso`, `addons`, `form_template`,
     `custom_login_page_codeview`, `resource_servers`, `client_metadata`,
     `mobile`, `mobile.android`, `mobile.ios`, `allowed_logout_urls`,
     `token_endpoint_auth_method`, `is_first_party`, `oidc_conformant`,
@@ -2326,7 +2326,7 @@ For more information, read [Applications in Auth0](https://www.auth0.com/docs/ge
     `jwt_configuration.lifetime_in_seconds`, `jwt_configuration.secret_encoded`,
     `jwt_configuration.scopes`, `jwt_configuration.alg`, `api_type`,
     `logo_uri`, `allowed_clients`, `owners`, `custom_login_page`,
-    `custom_login_page_off`, `sso`, `addons`, `form_template`,
+    `custom_login_page_on`, `sso`, `addons`, `form_template`,
     `custom_login_page_codeview`, `resource_servers`, `client_metadata`,
     `mobile`, `mobile.android`, `mobile.ios`, `allowed_logout_urls`,
     `token_endpoint_auth_method`, `is_first_party`, `oidc_conformant`,
@@ -3191,6 +3191,14 @@ $client->connectionProfiles->create(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**$crossAppAccessResourceApp:** `?ConnectionProfileCrossAppAccessResourceApp` 
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -3500,6 +3508,14 @@ $client->connectionProfiles->update(
 <dd>
 
 **$strategyOverrides:** `?ConnectionProfileStrategyOverrides` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$crossAppAccessResourceApp:** `?ConnectionProfileCrossAppAccessResourceApp` 
     
 </dd>
 </dl>
@@ -3947,7 +3963,7 @@ $client->connections->delete(
 
 Update details for a specific [connection](https://auth0.com/docs/authenticate/identity-providers), including option properties for identity provider configuration.
 
-**Note**: If you use the `options` parameter, the entire `options` object is overridden. To avoid partial data or other issues, ensure all parameters are present when using this option.
+**Note**: If you use the `options` parameter, the entire `options` object is overridden. To avoid partial data or other issues, ensure all parameters are present when using this option. If any options are unspecified, the default will be used, even if it differs from the existing value.
 </dd>
 </dl>
 </dd>
@@ -25170,6 +25186,45 @@ $client->keys->encryption->createPublicWrappingKey(
 </details>
 
 ## Keys NetworkAcls
+<details><summary><code>$client-&gt;keys-&gt;networkAcls-&gt;list() -> ?GetAllKeysNetworkAclsResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieve all keys used to verify HTTP Message Signatures on Network ACL rules, ordered by creation time descending.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->keys->networkAcls->list();
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>$client-&gt;keys-&gt;networkAcls-&gt;create($request) -> ?CreateKeysNetworkAclsResponseContent</code></summary>
 <dl>
 <dd>
@@ -25235,6 +25290,118 @@ $client->keys->networkAcls->create(
 <dd>
 
 **$value:** `string` — Base64-encoded raw key material. Constraints on the decoded value depend on the algorithm specified. Currently only HMAC-SHA256 is supported.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;keys-&gt;networkAcls-&gt;get($id) -> ?NetworkAclKey</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieve a specific key used to verify HTTP Message Signatures on Network ACL rules.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->keys->networkAcls->get(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — ID of the Network ACL Key to retrieve.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;keys-&gt;networkAcls-&gt;delete($id)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Delete a key used to verify HTTP Message Signatures on Network ACL rules
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->keys->networkAcls->delete(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — ID of the Network ACL Key to delete.
     
 </dd>
 </dl>
