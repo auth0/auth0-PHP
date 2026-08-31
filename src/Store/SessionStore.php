@@ -151,13 +151,16 @@ final readonly class SessionStore implements StoreInterface
         if ('' === $sessionId || false === $sessionId) {
             // @codeCoverageIgnoreStart
             if (! defined('AUTH0_TESTS_DIR')) {
+                $sameSite = 'form_post' === $this->configuration->getResponseMode() ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax';
+
                 session_set_cookie_params([
                     'lifetime' => $this->configuration->getCookieExpires(),
                     'domain' => $this->configuration->getCookieDomain(),
                     'path' => $this->configuration->getCookiePath(),
-                    'secure' => $this->configuration->getCookieSecure(),
+                    // Browsers reject SameSite=None cookies without Secure, so force it on.
+                    'secure' => 'None' === $sameSite ? true : $this->configuration->getCookieSecure(),
                     'httponly' => true,
-                    'samesite' => 'form_post' === $this->configuration->getResponseMode() ? 'None' : $this->configuration->getCookieSameSite() ?? 'Lax',
+                    'samesite' => $sameSite,
                 ]);
             }
 

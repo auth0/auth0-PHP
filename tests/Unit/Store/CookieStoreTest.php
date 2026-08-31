@@ -222,6 +222,16 @@ test('unsupported configured SameSite() is overwritten by default of `lax`', fun
     expect($options['samesite'])->toEqual('Lax');
 });
 
+test('SameSite=None forces the Secure flag on even when cookieSecure is false', function(): void {
+    $this->configuration->setResponseMode('form_post');
+    $this->configuration->setCookieSecure(false);
+
+    $options = $this->store->getCookieOptions();
+
+    expect($options['samesite'])->toEqual('None');
+    expect($options['secure'])->toBeTrue();
+});
+
 test('toggling encryption works', function(array $state): void {
     expect($this->store->getEncrypted())->toEqual(true);
 
