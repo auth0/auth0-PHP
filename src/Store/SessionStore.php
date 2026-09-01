@@ -97,7 +97,10 @@ final readonly class SessionStore implements StoreInterface
     {
         $this->start();
 
-        $_SESSION ??= [];
+        if (! isset($_SESSION)) {
+            return;
+        }
+
         $prefix = $this->sessionPrefix . '_';
 
         // Snapshot keys first so a falsy key (0 or "") cannot terminate iteration early.
