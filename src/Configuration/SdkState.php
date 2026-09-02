@@ -248,6 +248,8 @@ final class SdkState implements ConfigurableContract
             'refreshToken' => null,
             'user' => null,
             'accessTokenExpiration' => null,
+            // Required for applyConfiguration() to rehydrate the key.
+            // Removing it silently drops backchannel and reopens the logout bypass.
             'backchannel' => null,
         ];
     }

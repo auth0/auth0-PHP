@@ -367,15 +367,13 @@ final class Auth0 implements Auth0Interface
         $refreshToken = $state->getRefreshToken();
         $backchannel = $state->getBackchannel();
 
-        // If this is an authenticated pseudo-stateful session (i.e. not authorizing an access token) ...
-        if (null !== $idToken) {
+        // A backchannel key is only ever set for a real session via exchange(), never for a bearer token.
+        // Gating on it (not the id token) enforces revocation independently of the persistIdToken option.
+        if (null !== $backchannel) {
             $cache = $this->configuration()->getBackchannelLogoutCache();
 
-            // Does the session have a backchannel key available for lookup?
-            $backchannel = $state->getBackchannel();
-
             // Is there a pending logout?
-            if (null !== $backchannel && $cache instanceof \Psr\Cache\CacheItemPoolInterface && $cache->getItem($backchannel)->isHit()) {
+            if ($cache instanceof \Psr\Cache\CacheItemPoolInterface && $cache->getItem($backchannel)->isHit()) {
                 // Reset the client-side session state
                 $this->clear(true);
 
