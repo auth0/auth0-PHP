@@ -1,5 +1,17 @@
 # Change Log
 
+## [9.2.0](https://github.com/auth0/auth0-PHP/tree/9.2.0) (2026-09-02)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.1.0...9.2.0)
+
+**Added**
+
+- feat: add Organization Templates, Connection Profile SCIM provisioning, and Network ACL HTTP message signatures [\#863](https://github.com/auth0/auth0-PHP/pull/863) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+**Fixed**
+
+- fix: enforce back-channel logout on subsequent requests by rehydrating session state [\#852](https://github.com/auth0/auth0-PHP/pull/852) ([kishore7snehil](https://github.com/kishore7snehil))
+- fix: clear all session entries in SessionStore::purge() regardless of key order [\#851](https://github.com/auth0/auth0-PHP/pull/851) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [9.1.0](https://github.com/auth0/auth0-PHP/tree/9.1.0) (2026-08-19)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.0.0...9.1.0)
 
