@@ -1141,6 +1141,147 @@ test('getCredentials() returns null when matching backchannel request is queued'
     expect($credentials)->toBeNull();
 });
 
+test('getCredentials() enforces a queued backchannel logout on a subsequent request', function(): void {
+    $issuer = 'https://' . $this->configuration['domain'] . '/';
+    $sid = uniqid();
+
+    $token = (new TokenGenerator())->withHs256([
+        'sid' => $sid,
+        'iss' => $issuer,
+    ]);
+
+    $config = array_merge($this->configuration, [
+        'tokenAlgorithm' => 'HS256',
+        'backchannelLogoutCache' => new ArrayAdapter(),
+        'sessionStorage' => new SessionStore(new SdkConfiguration($this->configuration), uniqid()),
+    ]);
+
+    $auth0 = new Auth0($config);
+    $auth0->authentication()->getHttpClient()->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6","scope":"test:part1,test:part2","expires_in":300}'),
+        HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    expect((new Auth0($config))->getCredentials())->not()->toBeNull();
+
+    $logoutToken = TokenGenerator::create(
+        tokenType: TokenGenerator::TOKEN_LOGOUT,
+        algorithm: TokenGenerator::ALG_HS256,
+        claims: [
+            'sub' => '__test_sub__',
+            'iss' => $issuer,
+            'sid' => $sid,
+        ],
+    );
+
+    $auth0->handleBackchannelLogout($logoutToken->token);
+
+    expect((new Auth0($config))->getCredentials())->toBeNull();
+});
+
+test('getCredentials() enforces a queued backchannel logout on a subsequent request using CookieStore', function(): void {
+    $issuer = 'https://' . $this->configuration['domain'] . '/';
+    $sid = uniqid();
+
+    $token = (new TokenGenerator())->withHs256([
+        'sid' => $sid,
+        'iss' => $issuer,
+    ]);
+
+    $config = array_merge($this->configuration, [
+        'tokenAlgorithm' => 'HS256',
+        'backchannelLogoutCache' => new ArrayAdapter(),
+        'sessionStorage' => new CookieStore(new SdkConfiguration($this->configuration), uniqid()),
+    ]);
+
+    $auth0 = new Auth0($config);
+    $auth0->authentication()->getHttpClient()->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6","scope":"test:part1,test:part2","expires_in":300}'),
+        HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    expect((new Auth0($config))->getCredentials())->not()->toBeNull();
+
+    $logoutToken = TokenGenerator::create(
+        tokenType: TokenGenerator::TOKEN_LOGOUT,
+        algorithm: TokenGenerator::ALG_HS256,
+        claims: [
+            'sub' => '__test_sub__',
+            'iss' => $issuer,
+            'sid' => $sid,
+        ],
+    );
+
+    $auth0->handleBackchannelLogout($logoutToken->token);
+
+    expect((new Auth0($config))->getCredentials())->toBeNull();
+});
+
+test('getCredentials() enforces a queued backchannel logout when persistIdToken is disabled', function(): void {
+    $issuer = 'https://' . $this->configuration['domain'] . '/';
+    $sid = uniqid();
+
+    $token = (new TokenGenerator())->withHs256([
+        'sid' => $sid,
+        'iss' => $issuer,
+    ]);
+
+    // With persistIdToken off the id token is not rehydrated, so enforcement must
+    // rely on the backchannel key alone rather than the id token.
+    $config = array_merge($this->configuration, [
+        'tokenAlgorithm' => 'HS256',
+        'persistIdToken' => false,
+        'backchannelLogoutCache' => new ArrayAdapter(),
+        'sessionStorage' => new SessionStore(new SdkConfiguration($this->configuration), uniqid()),
+    ]);
+
+    $auth0 = new Auth0($config);
+    $auth0->authentication()->getHttpClient()->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6","scope":"test:part1,test:part2","expires_in":300}'),
+        HttpResponseGenerator::create('{"sub":"__test_sub__"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    expect((new Auth0($config))->getCredentials())->not()->toBeNull();
+
+    $logoutToken = TokenGenerator::create(
+        tokenType: TokenGenerator::TOKEN_LOGOUT,
+        algorithm: TokenGenerator::ALG_HS256,
+        claims: [
+            'sub' => '__test_sub__',
+            'iss' => $issuer,
+            'sid' => $sid,
+        ],
+    );
+
+    $auth0->handleBackchannelLogout($logoutToken->token);
+
+    expect((new Auth0($config))->getCredentials())->toBeNull();
+});
+
 test('setIdToken() properly stores data', function(): void {
     $token = (new TokenGenerator())->withHs256();
     $auth0 = new Auth0($this->configuration + [
