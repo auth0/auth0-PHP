@@ -22,6 +22,16 @@ class EventStreamCloudEventGroupUpdatedData extends JsonSerializableType
     private EventStreamCloudEventGroupUpdatedObject0|EventStreamCloudEventGroupUpdatedObject1|EventStreamCloudEventGroupUpdatedObject2 $object;
 
     /**
+     * @var (
+     *    EventStreamCloudEventGroupUpdatedPreviousObject0
+     *   |EventStreamCloudEventGroupUpdatedPreviousObject1
+     *   |EventStreamCloudEventGroupUpdatedPreviousObject2
+     * )|null $previousObject
+     */
+    #[JsonProperty('previous_object'), Union(EventStreamCloudEventGroupUpdatedPreviousObject0::class, EventStreamCloudEventGroupUpdatedPreviousObject1::class, EventStreamCloudEventGroupUpdatedPreviousObject2::class, 'null')]
+    private EventStreamCloudEventGroupUpdatedPreviousObject0|EventStreamCloudEventGroupUpdatedPreviousObject1|EventStreamCloudEventGroupUpdatedPreviousObject2|null $previousObject;
+
+    /**
      * @var ?EventStreamCloudEventContext $context
      */
     #[JsonProperty('context')]
@@ -34,6 +44,11 @@ class EventStreamCloudEventGroupUpdatedData extends JsonSerializableType
      *   |EventStreamCloudEventGroupUpdatedObject1
      *   |EventStreamCloudEventGroupUpdatedObject2
      * ),
+     *   previousObject?: (
+     *    EventStreamCloudEventGroupUpdatedPreviousObject0
+     *   |EventStreamCloudEventGroupUpdatedPreviousObject1
+     *   |EventStreamCloudEventGroupUpdatedPreviousObject2
+     * )|null,
      *   context?: ?EventStreamCloudEventContext,
      * } $values
      */
@@ -41,6 +56,7 @@ class EventStreamCloudEventGroupUpdatedData extends JsonSerializableType
         array $values,
     ) {
         $this->object = $values['object'];
+        $this->previousObject = $values['previousObject'] ?? null;
         $this->context = $values['context'] ?? null;
     }
 
@@ -67,6 +83,32 @@ class EventStreamCloudEventGroupUpdatedData extends JsonSerializableType
     {
         $this->object = $value;
         $this->_setField('object');
+        return $this;
+    }
+
+    /**
+     * @return (
+     *    EventStreamCloudEventGroupUpdatedPreviousObject0
+     *   |EventStreamCloudEventGroupUpdatedPreviousObject1
+     *   |EventStreamCloudEventGroupUpdatedPreviousObject2
+     * )|null
+     */
+    public function getPreviousObject(): EventStreamCloudEventGroupUpdatedPreviousObject0|EventStreamCloudEventGroupUpdatedPreviousObject1|EventStreamCloudEventGroupUpdatedPreviousObject2|null
+    {
+        return $this->previousObject;
+    }
+
+    /**
+     * @param (
+     *    EventStreamCloudEventGroupUpdatedPreviousObject0
+     *   |EventStreamCloudEventGroupUpdatedPreviousObject1
+     *   |EventStreamCloudEventGroupUpdatedPreviousObject2
+     * )|null $value
+     */
+    public function setPreviousObject(EventStreamCloudEventGroupUpdatedPreviousObject0|EventStreamCloudEventGroupUpdatedPreviousObject1|EventStreamCloudEventGroupUpdatedPreviousObject2|null $value = null): self
+    {
+        $this->previousObject = $value;
+        $this->_setField('previousObject');
         return $this;
     }
 
