@@ -2151,6 +2151,14 @@ See https://auth0.com/docs/secure/security-guidance/measures-against-app-imperso
 <dl>
 <dd>
 
+**$b2BIntegrationConfiguration:** `?B2BIntegrationConfiguration` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$myOrganizationConfiguration:** `?ClientMyOrganizationPostConfiguration` 
     
 </dd>
@@ -2937,6 +2945,14 @@ See https://auth0.com/docs/secure/security-guidance/measures-against-app-imperso
 <dl>
 <dd>
 
+**$b2BIntegrationConfiguration:** `?B2BIntegrationConfiguration` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$myOrganizationConfiguration:** `?ClientMyOrganizationPatchConfiguration` 
     
 </dd>
@@ -3188,6 +3204,14 @@ $client->connectionProfiles->create(
 <dd>
 
 **$strategyOverrides:** `?ConnectionProfileStrategyOverrides` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$provisioning:** `?ConnectionProfileProvisioning` 
     
 </dd>
 </dl>
@@ -3508,6 +3532,14 @@ $client->connectionProfiles->update(
 <dd>
 
 **$strategyOverrides:** `?ConnectionProfileStrategyOverrides` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$provisioning:** `?ConnectionProfileProvisioning` 
     
 </dd>
 </dl>
@@ -8974,6 +9006,524 @@ $client->networkAcls->update(
 <dd>
 
 **$rule:** `?NetworkAclRule` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+## OrganizationTemplates
+<details><summary><code>$client-&gt;organizationTemplates-&gt;list($request) -> ?ListOrganizationTemplatesPaginatedResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieve a list of Organization Templates. This endpoint supports Checkpoint pagination. Results are returned in a stable order, sorted by their identifier (`id`) in ascending order.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizationTemplates->list(
+    new ListOrganizationTemplatesRequestParameters([
+        'from' => 'from',
+        'take' => 1,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$from:** `?string` — Optional Id from which to start selection.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$take:** `?int` — Number of results per page. Defaults to 5. Values greater than 10 are capped at 10.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;organizationTemplates-&gt;create($request) -> ?OrganizationTemplate</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Create an Organization Template.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizationTemplates->create(
+    new CreateOrganizationTemplateRequestContent([
+        'name' => 'name',
+        'organizationDeletionBehavior' => OrganizationDeletionBehaviorEnum::Allow->value,
+        'enforcePermissionCeiling' => true,
+        'enforceSelfAssignmentRestriction' => true,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$name:** `string` — The name of the organization template.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isDefault:** `?bool` — Whether this is the default template applied to new organizations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$organizationDeletionBehavior:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$connectionDeletionBehavior:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$enforcePermissionCeiling:** `bool` — Whether to enforce permission ceiling for organizations using this template.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$enforceSelfAssignmentRestriction:** `bool` — Whether to enforce self-assignment restrictions for organizations using this template.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$connectionProfileId:** `?string` — The connection profile to apply to new connections.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$userAttributeProfileId:** `?string` — The user attribute profile to apply to organizations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$allowedStrategies:** `?array` — List of allowed connection strategies for this template.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$invitationLandingClientId:** `?string` — The client ID for the invitation landing page.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$adminRolesAssignment:** `?array` — Default admin roles to assign to organization creators.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$useForOrganizationDiscovery:** `?OrganizationTemplateUseForOrganizationDiscovery` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$roleVisibilityPolicy:** `?OrganizationTemplateRoleVisibilityPolicy` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;organizationTemplates-&gt;get($id) -> ?OrganizationTemplate</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieve details about a single Organization Template specified by ID.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizationTemplates->get(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — Organization Template identifier.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;organizationTemplates-&gt;update($id, $request) -> ?OrganizationTemplate</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Update the details of a specific Organization Template.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizationTemplates->update(
+    'id',
+    new UpdateOrganizationTemplateRequestContent([]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — Organization Template identifier.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` — The name of the organization template.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$isDefault:** `?bool` — Whether this is the default template applied to new organizations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$organizationDeletionBehavior:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$connectionDeletionBehavior:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$enforcePermissionCeiling:** `?bool` — Whether to enforce permission ceiling for organizations using this template.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$enforceSelfAssignmentRestriction:** `?bool` — Whether to enforce self-assignment restrictions for organizations using this template.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$connectionProfileId:** `?string` — The connection profile to apply to new connections.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$userAttributeProfileId:** `?string` — The user attribute profile to apply to organizations.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$allowedStrategies:** `?array` — List of allowed connection strategies for this template.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$invitationLandingClientId:** `?string` — The client ID for the invitation landing page.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$adminRolesAssignment:** `?array` — Default admin roles to assign to organization creators.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$useForOrganizationDiscovery:** `?OrganizationTemplateUseForOrganizationDiscovery` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$roleVisibilityPolicy:** `?OrganizationTemplateRoleVisibilityPolicy` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;organizationTemplates-&gt;listOrganizations($id, $request) -> ?ListTemplateOrganizationsPaginatedResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieve a list of organizations assigned to an Organization Template. This endpoint supports Checkpoint pagination. Results are returned in a stable order, sorted by their identifier (`id`) in ascending order.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizationTemplates->listOrganizations(
+    'id',
+    new ListTemplateOrganizationsRequestParameters([
+        'from' => 'from',
+        'take' => 1,
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The ID of the organization template.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$from:** `?string` — Optional Id from which to start selection.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$take:** `?int` — Number of results per page. Defaults to 5. Values greater than 10 are capped at 10.
     
 </dd>
 </dl>
@@ -28013,6 +28563,193 @@ $client->organizations->members->delete(
 </dl>
 </details>
 
+## Organizations OrganizationTemplate
+<details><summary><code>$client-&gt;organizations-&gt;organizationTemplate-&gt;get($id) -> ?OrganizationTemplate</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieve the organization template assigned to a specific organization. Returns the template object if one is explicitly assigned, or a 404 if no template is assigned.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizations->organizationTemplate->get(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — ID of the organization.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;organizations-&gt;organizationTemplate-&gt;assignOrganizationTemplate($id, $templateId)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Assign an Organization Template to an organization.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizations->organizationTemplate->assignOrganizationTemplate(
+    'id',
+    'template_id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The ID of the organization.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$templateId:** `string` — The ID of the organization template to assign.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;organizations-&gt;organizationTemplate-&gt;unassignOrganizationTemplate($id, $templateId)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Remove an Organization Template assignment from an organization.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->organizations->organizationTemplate->unassignOrganizationTemplate(
+    'id',
+    'template_id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The ID of the organization.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$templateId:** `string` — The ID of the organization template to unassign.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Organizations Groups
 <details><summary><code>$client-&gt;organizations-&gt;groups-&gt;list($organizationId, $request) -> ?ListOrganizationGroupsResponseContent</code></summary>
 <dl>
@@ -32728,6 +33465,22 @@ $client->users->multifactor->deleteProvider(
 <dd>
 
 Retrieve list of the specified user's current Organization memberships. User must be specified by user ID. For more information, review [Auth0 Organizations](https://auth0.com/docs/manage-users/organizations).
+
+This endpoint supports two types of pagination:
+
+- Offset pagination
+- Checkpoint pagination
+
+Checkpoint pagination must be used if you need to retrieve more than 1000 organizations.
+
+**Checkpoint Pagination**
+
+To search by checkpoint, use the following parameters:
+
+- `from`: Optional id from which to start selection.
+- `take`: The total number of entries to retrieve when using the `from` parameter. Defaults to 50.
+
+**Note**: The first time you call this endpoint using checkpoint pagination, omit the `from` parameter. If there are more results, a `next` value is included in the response. You can use this for subsequent API calls. When `next` is no longer included in the response, no pages are remaining.
 </dd>
 </dl>
 </dd>

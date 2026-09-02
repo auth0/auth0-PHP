@@ -228,6 +228,18 @@ class ConnectionsOidcMetadata extends JsonSerializableType
     private ?string $endSessionEndpoint;
 
     /**
+     * @var ?string $pushedAuthorizationRequestEndpoint URL of the identity provider's Pushed Authorization Request (PAR) endpoint, as per https://datatracker.ietf.org/doc/html/rfc9126. Must use HTTPS scheme.
+     */
+    #[JsonProperty('pushed_authorization_request_endpoint')]
+    private ?string $pushedAuthorizationRequestEndpoint;
+
+    /**
+     * @var ?bool $requirePushedAuthorizationRequests Boolean parameter indicating whether the identity provider requires Pushed Authorization Requests (PAR), as per https://datatracker.ietf.org/doc/html/rfc9126. Discovered from the identity provider's metadata; not used to decide whether the server performs PAR.
+     */
+    #[JsonProperty('require_pushed_authorization_requests')]
+    private ?bool $requirePushedAuthorizationRequests;
+
+    /**
      * @var ?array<string> $dpopSigningAlgValuesSupported JSON array containing a list of the JWS signing algorithms (alg values) supported for DPoP proof JWT signing.
      */
     #[JsonProperty('dpop_signing_alg_values_supported'), ArrayType(['string'])]
@@ -271,6 +283,8 @@ class ConnectionsOidcMetadata extends JsonSerializableType
      *   opPolicyUri?: ?string,
      *   opTosUri?: ?string,
      *   endSessionEndpoint?: ?string,
+     *   pushedAuthorizationRequestEndpoint?: ?string,
+     *   requirePushedAuthorizationRequests?: ?bool,
      *   dpopSigningAlgValuesSupported?: ?array<string>,
      * } $values
      */
@@ -313,6 +327,8 @@ class ConnectionsOidcMetadata extends JsonSerializableType
         $this->opPolicyUri = $values['opPolicyUri'] ?? null;
         $this->opTosUri = $values['opTosUri'] ?? null;
         $this->endSessionEndpoint = $values['endSessionEndpoint'] ?? null;
+        $this->pushedAuthorizationRequestEndpoint = $values['pushedAuthorizationRequestEndpoint'] ?? null;
+        $this->requirePushedAuthorizationRequests = $values['requirePushedAuthorizationRequests'] ?? null;
         $this->dpopSigningAlgValuesSupported = $values['dpopSigningAlgValuesSupported'] ?? null;
     }
 
@@ -961,6 +977,42 @@ class ConnectionsOidcMetadata extends JsonSerializableType
     {
         $this->endSessionEndpoint = $value;
         $this->_setField('endSessionEndpoint');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getPushedAuthorizationRequestEndpoint(): ?string
+    {
+        return $this->pushedAuthorizationRequestEndpoint;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setPushedAuthorizationRequestEndpoint(?string $value = null): self
+    {
+        $this->pushedAuthorizationRequestEndpoint = $value;
+        $this->_setField('pushedAuthorizationRequestEndpoint');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getRequirePushedAuthorizationRequests(): ?bool
+    {
+        return $this->requirePushedAuthorizationRequests;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setRequirePushedAuthorizationRequests(?bool $value = null): self
+    {
+        $this->requirePushedAuthorizationRequests = $value;
+        $this->_setField('requirePushedAuthorizationRequests');
         return $this;
     }
 

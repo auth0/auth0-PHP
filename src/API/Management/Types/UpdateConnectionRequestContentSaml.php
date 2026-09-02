@@ -20,6 +20,12 @@ class UpdateConnectionRequestContentSaml extends JsonSerializableType
     private ?ConnectionOptionsSaml $options;
 
     /**
+     * @var ?ConnectionCrossAppAccessResourceApp $crossAppAccessResourceApp
+     */
+    #[JsonProperty('cross_app_access_resource_app')]
+    private ?ConnectionCrossAppAccessResourceApp $crossAppAccessResourceApp;
+
+    /**
      * @var ?bool $showAsButton
      */
     #[JsonProperty('show_as_button')]
@@ -32,6 +38,7 @@ class UpdateConnectionRequestContentSaml extends JsonSerializableType
      *   isDomainConnection?: ?bool,
      *   metadata?: ?array<string, ?string>,
      *   options?: ?ConnectionOptionsSaml,
+     *   crossAppAccessResourceApp?: ?ConnectionCrossAppAccessResourceApp,
      *   showAsButton?: ?bool,
      * } $values
      */
@@ -43,6 +50,7 @@ class UpdateConnectionRequestContentSaml extends JsonSerializableType
         $this->isDomainConnection = $values['isDomainConnection'] ?? null;
         $this->metadata = $values['metadata'] ?? null;
         $this->options = $values['options'] ?? null;
+        $this->crossAppAccessResourceApp = $values['crossAppAccessResourceApp'] ?? null;
         $this->showAsButton = $values['showAsButton'] ?? null;
     }
 
@@ -61,6 +69,24 @@ class UpdateConnectionRequestContentSaml extends JsonSerializableType
     {
         $this->options = $value;
         $this->_setField('options');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionCrossAppAccessResourceApp
+     */
+    public function getCrossAppAccessResourceApp(): ?ConnectionCrossAppAccessResourceApp
+    {
+        return $this->crossAppAccessResourceApp;
+    }
+
+    /**
+     * @param ?ConnectionCrossAppAccessResourceApp $value
+     */
+    public function setCrossAppAccessResourceApp(?ConnectionCrossAppAccessResourceApp $value = null): self
+    {
+        $this->crossAppAccessResourceApp = $value;
+        $this->_setField('crossAppAccessResourceApp');
         return $this;
     }
 

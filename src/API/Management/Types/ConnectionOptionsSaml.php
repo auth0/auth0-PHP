@@ -42,6 +42,12 @@ class ConnectionOptionsSaml extends JsonSerializableType
     private ?bool $disableSignout;
 
     /**
+     * @var ?string $discoveryUrl
+     */
+    #[JsonProperty('discovery_url')]
+    private ?string $discoveryUrl;
+
+    /**
      * @var ?array<string, (
      *    string
      *   |array<string>
@@ -73,6 +79,12 @@ class ConnectionOptionsSaml extends JsonSerializableType
      */
     #[JsonProperty('metadataXml')]
     private ?string $metadataXml;
+
+    /**
+     * @var ?ConnectionOptionsOidcMetadata $oidcMetadata
+     */
+    #[JsonProperty('oidc_metadata')]
+    private ?ConnectionOptionsOidcMetadata $oidcMetadata;
 
     /**
      * @var ?string $recipientUrl
@@ -139,6 +151,7 @@ class ConnectionOptionsSaml extends JsonSerializableType
      *   deflate?: ?bool,
      *   destinationUrl?: ?string,
      *   disableSignout?: ?bool,
+     *   discoveryUrl?: ?string,
      *   fieldsMap?: ?array<string, (
      *    string
      *   |array<string>
@@ -147,6 +160,7 @@ class ConnectionOptionsSaml extends JsonSerializableType
      *   globalTokenRevocationJwtSub?: ?string,
      *   metadataUrl?: ?string,
      *   metadataXml?: ?string,
+     *   oidcMetadata?: ?ConnectionOptionsOidcMetadata,
      *   recipientUrl?: ?string,
      *   requestTemplate?: ?string,
      *   signingCert?: ?string,
@@ -179,11 +193,13 @@ class ConnectionOptionsSaml extends JsonSerializableType
         $this->deflate = $values['deflate'] ?? null;
         $this->destinationUrl = $values['destinationUrl'] ?? null;
         $this->disableSignout = $values['disableSignout'] ?? null;
+        $this->discoveryUrl = $values['discoveryUrl'] ?? null;
         $this->fieldsMap = $values['fieldsMap'] ?? null;
         $this->globalTokenRevocationJwtIss = $values['globalTokenRevocationJwtIss'] ?? null;
         $this->globalTokenRevocationJwtSub = $values['globalTokenRevocationJwtSub'] ?? null;
         $this->metadataUrl = $values['metadataUrl'] ?? null;
         $this->metadataXml = $values['metadataXml'] ?? null;
+        $this->oidcMetadata = $values['oidcMetadata'] ?? null;
         $this->recipientUrl = $values['recipientUrl'] ?? null;
         $this->requestTemplate = $values['requestTemplate'] ?? null;
         $this->signingCert = $values['signingCert'] ?? null;
@@ -261,6 +277,24 @@ class ConnectionOptionsSaml extends JsonSerializableType
     {
         $this->disableSignout = $value;
         $this->_setField('disableSignout');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getDiscoveryUrl(): ?string
+    {
+        return $this->discoveryUrl;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setDiscoveryUrl(?string $value = null): self
+    {
+        $this->discoveryUrl = $value;
+        $this->_setField('discoveryUrl');
         return $this;
     }
 
@@ -357,6 +391,24 @@ class ConnectionOptionsSaml extends JsonSerializableType
     {
         $this->metadataXml = $value;
         $this->_setField('metadataXml');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionOptionsOidcMetadata
+     */
+    public function getOidcMetadata(): ?ConnectionOptionsOidcMetadata
+    {
+        return $this->oidcMetadata;
+    }
+
+    /**
+     * @param ?ConnectionOptionsOidcMetadata $value
+     */
+    public function setOidcMetadata(?ConnectionOptionsOidcMetadata $value = null): self
+    {
+        $this->oidcMetadata = $value;
+        $this->_setField('oidcMetadata');
         return $this;
     }
 

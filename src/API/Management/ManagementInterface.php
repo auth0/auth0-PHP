@@ -23,6 +23,7 @@ use Auth0\SDK\API\Management\Jobs\JobsClientInterface;
 use Auth0\SDK\API\Management\LogStreams\LogStreamsClientInterface;
 use Auth0\SDK\API\Management\Logs\LogsClientInterface;
 use Auth0\SDK\API\Management\NetworkAcls\NetworkAclsClientInterface;
+use Auth0\SDK\API\Management\OrganizationTemplates\OrganizationTemplatesClientInterface;
 use Auth0\SDK\API\Management\Organizations\OrganizationsClientInterface;
 use Auth0\SDK\API\Management\Prompts\PromptsClientInterface;
 use Auth0\SDK\API\Management\RateLimitPolicies\RateLimitPoliciesClientInterface;
@@ -155,6 +156,11 @@ interface ManagementInterface
      * @return NetworkAclsClientInterface
      */
     public function getNetworkAcls(): NetworkAclsClientInterface;
+
+    /**
+     * @return OrganizationTemplatesClientInterface
+     */
+    public function getOrganizationTemplates(): OrganizationTemplatesClientInterface;
 
     /**
      * @return OrganizationsClientInterface

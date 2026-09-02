@@ -150,6 +150,12 @@ class EventStreamCloudEventConnectionDeletedObject0Options extends JsonSerializa
     private ?array $upstreamParams;
 
     /**
+     * @var ?bool $useOauthSpecScope When true, uses space-delimited scopes (per OAuth 2.0 spec) instead of comma-delimited when calling the identity provider's authorization endpoint. Only relevant when using the connection_scope parameter. See https://auth0.com/docs/authenticate/identity-providers/adding-scopes-for-an-external-idp#pass-scopes-to-authorize-endpoint
+     */
+    #[JsonProperty('useOauthSpecScope')]
+    private ?bool $useOauthSpecScope;
+
+    /**
      * @var ?string $userinfoEndpoint Optional URL of the identity provider's UserInfo endpoint. When configured with attribute mapping, Auth0 calls this endpoint to retrieve additional user profile claims using the access token.
      */
     #[JsonProperty('userinfo_endpoint')]
@@ -198,6 +204,7 @@ class EventStreamCloudEventConnectionDeletedObject0Options extends JsonSerializa
      *   tokenEndpointAuthSigningAlg?: ?value-of<EventStreamCloudEventConnectionDeletedObject0OptionsTokenEndpointAuthSigningAlgEnum>,
      *   tokenEndpointJwtcaAudFormat?: ?value-of<EventStreamCloudEventConnectionDeletedObject0OptionsTokenEndpointJwtcaAudFormatEnum>,
      *   upstreamParams?: ?array<string, mixed>,
+     *   useOauthSpecScope?: ?bool,
      *   userinfoEndpoint?: ?string,
      *   attributeMap?: ?EventStreamCloudEventConnectionDeletedObject0OptionsAttributeMap,
      *   discoveryUrl?: ?string,
@@ -230,6 +237,7 @@ class EventStreamCloudEventConnectionDeletedObject0Options extends JsonSerializa
         $this->tokenEndpointAuthSigningAlg = $values['tokenEndpointAuthSigningAlg'] ?? null;
         $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
         $this->upstreamParams = $values['upstreamParams'] ?? null;
+        $this->useOauthSpecScope = $values['useOauthSpecScope'] ?? null;
         $this->userinfoEndpoint = $values['userinfoEndpoint'] ?? null;
         $this->attributeMap = $values['attributeMap'] ?? null;
         $this->discoveryUrl = $values['discoveryUrl'] ?? null;
@@ -647,6 +655,24 @@ class EventStreamCloudEventConnectionDeletedObject0Options extends JsonSerializa
     {
         $this->upstreamParams = $value;
         $this->_setField('upstreamParams');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getUseOauthSpecScope(): ?bool
+    {
+        return $this->useOauthSpecScope;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setUseOauthSpecScope(?bool $value = null): self
+    {
+        $this->useOauthSpecScope = $value;
+        $this->_setField('useOauthSpecScope');
         return $this;
     }
 

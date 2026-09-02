@@ -49,6 +49,12 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
     private ?string $dpopSigningAlg;
 
     /**
+     * @var ?bool $enablePushedAuthorizationRequests
+     */
+    #[JsonProperty('enable_pushed_authorization_requests')]
+    private ?bool $enablePushedAuthorizationRequests;
+
+    /**
      * @var ?string $iconUrl
      */
     #[JsonProperty('icon_url')]
@@ -83,6 +89,12 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
      */
     #[JsonProperty('oidc_metadata')]
     private ?ConnectionOptionsOidcMetadata $oidcMetadata;
+
+    /**
+     * @var ?string $pushedAuthorizationRequestEndpoint
+     */
+    #[JsonProperty('pushed_authorization_request_endpoint')]
+    private ?string $pushedAuthorizationRequestEndpoint;
 
     /**
      * @var ?string $scope
@@ -161,12 +173,14 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
      *   connectionSettings?: ?ConnectionConnectionSettings,
      *   domainAliases?: ?array<string>,
      *   dpopSigningAlg?: ?value-of<ConnectionDpopSigningAlgEnum>,
+     *   enablePushedAuthorizationRequests?: ?bool,
      *   iconUrl?: ?string,
      *   idTokenSessionExpirySupported?: ?bool,
      *   idTokenSignedResponseAlgs?: ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>>,
      *   issuer?: ?string,
      *   jwksUri?: ?string,
      *   oidcMetadata?: ?ConnectionOptionsOidcMetadata,
+     *   pushedAuthorizationRequestEndpoint?: ?string,
      *   scope?: ?string,
      *   sendBackChannelNonce?: ?bool,
      *   setUserRootAttributes?: ?value-of<ConnectionSetUserRootAttributesEnum>,
@@ -192,12 +206,14 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
         $this->connectionSettings = $values['connectionSettings'] ?? null;
         $this->domainAliases = $values['domainAliases'] ?? null;
         $this->dpopSigningAlg = $values['dpopSigningAlg'] ?? null;
+        $this->enablePushedAuthorizationRequests = $values['enablePushedAuthorizationRequests'] ?? null;
         $this->iconUrl = $values['iconUrl'] ?? null;
         $this->idTokenSessionExpirySupported = $values['idTokenSessionExpirySupported'] ?? null;
         $this->idTokenSignedResponseAlgs = $values['idTokenSignedResponseAlgs'] ?? null;
         $this->issuer = $values['issuer'] ?? null;
         $this->jwksUri = $values['jwksUri'] ?? null;
         $this->oidcMetadata = $values['oidcMetadata'] ?? null;
+        $this->pushedAuthorizationRequestEndpoint = $values['pushedAuthorizationRequestEndpoint'] ?? null;
         $this->scope = $values['scope'] ?? null;
         $this->sendBackChannelNonce = $values['sendBackChannelNonce'] ?? null;
         $this->setUserRootAttributes = $values['setUserRootAttributes'] ?? null;
@@ -320,6 +336,24 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
     }
 
     /**
+     * @return ?bool
+     */
+    public function getEnablePushedAuthorizationRequests(): ?bool
+    {
+        return $this->enablePushedAuthorizationRequests;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setEnablePushedAuthorizationRequests(?bool $value = null): self
+    {
+        $this->enablePushedAuthorizationRequests = $value;
+        $this->_setField('enablePushedAuthorizationRequests');
+        return $this;
+    }
+
+    /**
      * @return ?string
      */
     public function getIconUrl(): ?string
@@ -424,6 +458,24 @@ class ConnectionOptionsCommonOidc extends JsonSerializableType
     {
         $this->oidcMetadata = $value;
         $this->_setField('oidcMetadata');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getPushedAuthorizationRequestEndpoint(): ?string
+    {
+        return $this->pushedAuthorizationRequestEndpoint;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setPushedAuthorizationRequestEndpoint(?string $value = null): self
+    {
+        $this->pushedAuthorizationRequestEndpoint = $value;
+        $this->_setField('pushedAuthorizationRequestEndpoint');
         return $this;
     }
 

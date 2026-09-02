@@ -114,6 +114,12 @@ class ConnectionOptionsOidcMetadata extends JsonSerializableType
     private ?string $opTosUri;
 
     /**
+     * @var ?string $pushedAuthorizationRequestEndpoint
+     */
+    #[JsonProperty('pushed_authorization_request_endpoint')]
+    private ?string $pushedAuthorizationRequestEndpoint;
+
+    /**
      * @var ?string $registrationEndpoint
      */
     #[JsonProperty('registration_endpoint')]
@@ -148,6 +154,12 @@ class ConnectionOptionsOidcMetadata extends JsonSerializableType
      */
     #[JsonProperty('request_uri_parameter_supported')]
     private ?bool $requestUriParameterSupported;
+
+    /**
+     * @var ?bool $requirePushedAuthorizationRequests
+     */
+    #[JsonProperty('require_pushed_authorization_requests')]
+    private ?bool $requirePushedAuthorizationRequests;
 
     /**
      * @var ?bool $requireRequestUriRegistration
@@ -252,12 +264,14 @@ class ConnectionOptionsOidcMetadata extends JsonSerializableType
      *   idTokenEncryptionEncValuesSupported?: ?array<string>,
      *   opPolicyUri?: ?string,
      *   opTosUri?: ?string,
+     *   pushedAuthorizationRequestEndpoint?: ?string,
      *   registrationEndpoint?: ?string,
      *   requestObjectEncryptionAlgValuesSupported?: ?array<string>,
      *   requestObjectEncryptionEncValuesSupported?: ?array<string>,
      *   requestObjectSigningAlgValuesSupported?: ?array<string>,
      *   requestParameterSupported?: ?bool,
      *   requestUriParameterSupported?: ?bool,
+     *   requirePushedAuthorizationRequests?: ?bool,
      *   requireRequestUriRegistration?: ?bool,
      *   responseModesSupported?: ?array<string>,
      *   responseTypesSupported?: ?array<string>,
@@ -294,12 +308,14 @@ class ConnectionOptionsOidcMetadata extends JsonSerializableType
         $this->jwksUri = $values['jwksUri'];
         $this->opPolicyUri = $values['opPolicyUri'] ?? null;
         $this->opTosUri = $values['opTosUri'] ?? null;
+        $this->pushedAuthorizationRequestEndpoint = $values['pushedAuthorizationRequestEndpoint'] ?? null;
         $this->registrationEndpoint = $values['registrationEndpoint'] ?? null;
         $this->requestObjectEncryptionAlgValuesSupported = $values['requestObjectEncryptionAlgValuesSupported'] ?? null;
         $this->requestObjectEncryptionEncValuesSupported = $values['requestObjectEncryptionEncValuesSupported'] ?? null;
         $this->requestObjectSigningAlgValuesSupported = $values['requestObjectSigningAlgValuesSupported'] ?? null;
         $this->requestParameterSupported = $values['requestParameterSupported'] ?? null;
         $this->requestUriParameterSupported = $values['requestUriParameterSupported'] ?? null;
+        $this->requirePushedAuthorizationRequests = $values['requirePushedAuthorizationRequests'] ?? null;
         $this->requireRequestUriRegistration = $values['requireRequestUriRegistration'] ?? null;
         $this->responseModesSupported = $values['responseModesSupported'] ?? null;
         $this->responseTypesSupported = $values['responseTypesSupported'] ?? null;
@@ -625,6 +641,24 @@ class ConnectionOptionsOidcMetadata extends JsonSerializableType
     /**
      * @return ?string
      */
+    public function getPushedAuthorizationRequestEndpoint(): ?string
+    {
+        return $this->pushedAuthorizationRequestEndpoint;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setPushedAuthorizationRequestEndpoint(?string $value = null): self
+    {
+        $this->pushedAuthorizationRequestEndpoint = $value;
+        $this->_setField('pushedAuthorizationRequestEndpoint');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
     public function getRegistrationEndpoint(): ?string
     {
         return $this->registrationEndpoint;
@@ -727,6 +761,24 @@ class ConnectionOptionsOidcMetadata extends JsonSerializableType
     {
         $this->requestUriParameterSupported = $value;
         $this->_setField('requestUriParameterSupported');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getRequirePushedAuthorizationRequests(): ?bool
+    {
+        return $this->requirePushedAuthorizationRequests;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setRequirePushedAuthorizationRequests(?bool $value = null): self
+    {
+        $this->requirePushedAuthorizationRequests = $value;
+        $this->_setField('requirePushedAuthorizationRequests');
         return $this;
     }
 

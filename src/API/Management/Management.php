@@ -23,6 +23,7 @@ use Auth0\SDK\API\Management\Jobs\JobsClient;
 use Auth0\SDK\API\Management\LogStreams\LogStreamsClient;
 use Auth0\SDK\API\Management\Logs\LogsClient;
 use Auth0\SDK\API\Management\NetworkAcls\NetworkAclsClient;
+use Auth0\SDK\API\Management\OrganizationTemplates\OrganizationTemplatesClient;
 use Auth0\SDK\API\Management\Organizations\OrganizationsClient;
 use Auth0\SDK\API\Management\Prompts\PromptsClient;
 use Auth0\SDK\API\Management\RateLimitPolicies\RateLimitPoliciesClient;
@@ -71,6 +72,7 @@ use Auth0\SDK\API\Management\Jobs\JobsClientInterface;
 use Auth0\SDK\API\Management\LogStreams\LogStreamsClientInterface;
 use Auth0\SDK\API\Management\Logs\LogsClientInterface;
 use Auth0\SDK\API\Management\NetworkAcls\NetworkAclsClientInterface;
+use Auth0\SDK\API\Management\OrganizationTemplates\OrganizationTemplatesClientInterface;
 use Auth0\SDK\API\Management\Organizations\OrganizationsClientInterface;
 use Auth0\SDK\API\Management\Prompts\PromptsClientInterface;
 use Auth0\SDK\API\Management\RateLimitPolicies\RateLimitPoliciesClientInterface;
@@ -203,6 +205,11 @@ class Management implements ManagementInterface
      * @var NetworkAclsClient $networkAcls
      */
     public NetworkAclsClient $networkAcls;
+
+    /**
+     * @var OrganizationTemplatesClient $organizationTemplates
+     */
+    public OrganizationTemplatesClient $organizationTemplates;
 
     /**
      * @var OrganizationsClient $organizations
@@ -365,8 +372,8 @@ class Management implements ManagementInterface
             'Authorization' => "Bearer $token",
             'X-Fern-Language' => 'PHP',
             'X-Fern-SDK-Name' => 'Auth0\SDK\API\Management',
-            'X-Fern-SDK-Version' => '9.0.0',
-            'User-Agent' => 'auth0/auth0-php/9.0.0',
+            'X-Fern-SDK-Version' => '9.1.0',
+            'User-Agent' => 'auth0/auth0-php/9.1.0',
         ];
 
         $this->options = $options ?? [];
@@ -408,6 +415,7 @@ class Management implements ManagementInterface
         $this->logStreams = new LogStreamsClient($this->client, $this->options);
         $this->logs = new LogsClient($this->client, $this->options);
         $this->networkAcls = new NetworkAclsClient($this->client, $this->options);
+        $this->organizationTemplates = new OrganizationTemplatesClient($this->client, $this->options);
         $this->organizations = new OrganizationsClient($this->client, $this->options);
         $this->prompts = new PromptsClient($this->client, $this->options);
         $this->rateLimitPolicies = new RateLimitPoliciesClient($this->client, $this->options);
@@ -601,6 +609,14 @@ class Management implements ManagementInterface
     public function getNetworkAcls(): NetworkAclsClientInterface
     {
         return $this->networkAcls;
+    }
+
+    /**
+     * @return OrganizationTemplatesClientInterface
+     */
+    public function getOrganizationTemplates(): OrganizationTemplatesClientInterface
+    {
+        return $this->organizationTemplates;
     }
 
     /**
