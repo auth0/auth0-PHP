@@ -11,7 +11,7 @@ use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 class CrossAppAccessRequestingApp extends JsonSerializableType
 {
     /**
-     * @var bool $active Set to `true` to enable the connection as a Requesting Application for Cross App Access.
+     * @var bool $active Set to `true` to enable the connection as a Requesting Application for Cross App Access. On `oidc` connections this requires `options.type` to be `back_channel`. Setting `false` is always accepted, so the role can be turned off even if the tenant or connection no longer supports it.
      */
     #[JsonProperty('active')]
     private bool $active;

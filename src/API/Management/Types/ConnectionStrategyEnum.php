@@ -60,5 +60,22 @@ enum ConnectionStrategyEnum: string
     case Yahoo = "yahoo";
     case Yandex = "yandex";
     case NotionMcp = "notion-mcp";
+    case AsanaMcp = "asana-mcp";
+    case AtlassianMcp = "atlassian-mcp";
+    case CloudflareMcp = "cloudflare-mcp";
+    case DocusignMcp = "docusign-mcp";
+    case FigmaMcp = "figma-mcp";
+    case GitlabMcp = "gitlab-mcp";
+    case GustoMcp = "gusto-mcp";
+    case HerokuMcp = "heroku-mcp";
+    case HubspotMcp = "hubspot-mcp";
+    case IntercomMcp = "intercom-mcp";
+    case LinearMcp = "linear-mcp";
+    case PagerdutyMcp = "pagerduty-mcp";
+    case SentryMcp = "sentry-mcp";
+    case SlackMcp = "slack-mcp";
+    case SupabaseMcp = "supabase-mcp";
+    case VercelMcp = "vercel-mcp";
+    case XeroMcp = "xero-mcp";
     case Auth0Adldap = "auth0-adldap";
 }

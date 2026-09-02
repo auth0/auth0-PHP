@@ -25,12 +25,14 @@ use Auth0\SDK\API\Management\Core\Types\Union;
  * @property ?ConnectionConnectionSettings $connectionSettings
  * @property ?array<string> $domainAliases
  * @property ?value-of<ConnectionDpopSigningAlgEnum> $dpopSigningAlg
+ * @property ?bool $enablePushedAuthorizationRequests
  * @property ?string $iconUrl
  * @property ?bool $idTokenSessionExpirySupported
  * @property ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>> $idTokenSignedResponseAlgs
  * @property ?string $issuer
  * @property ?string $jwksUri
  * @property ?ConnectionOptionsOidcMetadata $oidcMetadata
+ * @property ?string $pushedAuthorizationRequestEndpoint
  * @property ?string $scope
  * @property ?bool $sendBackChannelNonce
  * @property ?value-of<ConnectionSetUserRootAttributesEnum> $setUserRootAttributes
@@ -85,6 +87,12 @@ trait ConnectionOptionsCommonOidc
     private ?string $dpopSigningAlg;
 
     /**
+     * @var ?bool $enablePushedAuthorizationRequests
+     */
+    #[JsonProperty('enable_pushed_authorization_requests')]
+    private ?bool $enablePushedAuthorizationRequests;
+
+    /**
      * @var ?string $iconUrl
      */
     #[JsonProperty('icon_url')]
@@ -119,6 +127,12 @@ trait ConnectionOptionsCommonOidc
      */
     #[JsonProperty('oidc_metadata')]
     private ?ConnectionOptionsOidcMetadata $oidcMetadata;
+
+    /**
+     * @var ?string $pushedAuthorizationRequestEndpoint
+     */
+    #[JsonProperty('pushed_authorization_request_endpoint')]
+    private ?string $pushedAuthorizationRequestEndpoint;
 
     /**
      * @var ?string $scope
@@ -298,6 +312,24 @@ trait ConnectionOptionsCommonOidc
     }
 
     /**
+     * @return ?bool
+     */
+    public function getEnablePushedAuthorizationRequests(): ?bool
+    {
+        return $this->enablePushedAuthorizationRequests;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setEnablePushedAuthorizationRequests(?bool $value = null): self
+    {
+        $this->enablePushedAuthorizationRequests = $value;
+        $this->_setField('enablePushedAuthorizationRequests');
+        return $this;
+    }
+
+    /**
      * @return ?string
      */
     public function getIconUrl(): ?string
@@ -402,6 +434,24 @@ trait ConnectionOptionsCommonOidc
     {
         $this->oidcMetadata = $value;
         $this->_setField('oidcMetadata');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getPushedAuthorizationRequestEndpoint(): ?string
+    {
+        return $this->pushedAuthorizationRequestEndpoint;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setPushedAuthorizationRequestEndpoint(?string $value = null): self
+    {
+        $this->pushedAuthorizationRequestEndpoint = $value;
+        $this->_setField('pushedAuthorizationRequestEndpoint');
         return $this;
     }
 

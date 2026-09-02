@@ -17,6 +17,12 @@ class EventStreamCloudEventGroupRoleAssignedData extends JsonSerializableType
     private EventStreamCloudEventGroupRoleAssignedObject $object;
 
     /**
+     * @var ?EventStreamCloudEventGroupRoleAssignedPreviousObject $previousObject
+     */
+    #[JsonProperty('previous_object')]
+    private ?EventStreamCloudEventGroupRoleAssignedPreviousObject $previousObject;
+
+    /**
      * @var ?EventStreamCloudEventContext $context
      */
     #[JsonProperty('context')]
@@ -25,6 +31,7 @@ class EventStreamCloudEventGroupRoleAssignedData extends JsonSerializableType
     /**
      * @param array{
      *   object: EventStreamCloudEventGroupRoleAssignedObject,
+     *   previousObject?: ?EventStreamCloudEventGroupRoleAssignedPreviousObject,
      *   context?: ?EventStreamCloudEventContext,
      * } $values
      */
@@ -32,6 +39,7 @@ class EventStreamCloudEventGroupRoleAssignedData extends JsonSerializableType
         array $values,
     ) {
         $this->object = $values['object'];
+        $this->previousObject = $values['previousObject'] ?? null;
         $this->context = $values['context'] ?? null;
     }
 
@@ -50,6 +58,24 @@ class EventStreamCloudEventGroupRoleAssignedData extends JsonSerializableType
     {
         $this->object = $value;
         $this->_setField('object');
+        return $this;
+    }
+
+    /**
+     * @return ?EventStreamCloudEventGroupRoleAssignedPreviousObject
+     */
+    public function getPreviousObject(): ?EventStreamCloudEventGroupRoleAssignedPreviousObject
+    {
+        return $this->previousObject;
+    }
+
+    /**
+     * @param ?EventStreamCloudEventGroupRoleAssignedPreviousObject $value
+     */
+    public function setPreviousObject(?EventStreamCloudEventGroupRoleAssignedPreviousObject $value = null): self
+    {
+        $this->previousObject = $value;
+        $this->_setField('previousObject');
         return $this;
     }
 

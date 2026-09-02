@@ -18,4 +18,5 @@ enum ActionTriggerTypeEnum: string
     case PasswordHashMigration = "password-hash-migration";
     case LoginPostIdentifier = "login-post-identifier";
     case SignupPostIdentifier = "signup-post-identifier";
+    case PostCredentialValidation = "post-credential-validation";
 }

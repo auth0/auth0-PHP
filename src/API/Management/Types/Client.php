@@ -337,6 +337,12 @@ class Client extends JsonSerializableType
     private ?ExpressConfiguration $expressConfiguration;
 
     /**
+     * @var ?B2BIntegrationConfiguration $b2BIntegrationConfiguration
+     */
+    #[JsonProperty('b2b_integration_configuration')]
+    private ?B2BIntegrationConfiguration $b2BIntegrationConfiguration;
+
+    /**
      * @var ?ClientMyOrganizationResponseConfiguration $myOrganizationConfiguration
      */
     #[JsonProperty('my_organization_configuration')]
@@ -452,6 +458,7 @@ class Client extends JsonSerializableType
      *   parRequestExpiry?: ?int,
      *   tokenQuota?: ?TokenQuota,
      *   expressConfiguration?: ?ExpressConfiguration,
+     *   b2BIntegrationConfiguration?: ?B2BIntegrationConfiguration,
      *   myOrganizationConfiguration?: ?ClientMyOrganizationResponseConfiguration,
      *   identityAssertionAuthorizationGrant?: ?IdentityAssertionAuthorizationGrant,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
@@ -521,6 +528,7 @@ class Client extends JsonSerializableType
         $this->parRequestExpiry = $values['parRequestExpiry'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
+        $this->b2BIntegrationConfiguration = $values['b2BIntegrationConfiguration'] ?? null;
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
         $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
@@ -1502,6 +1510,24 @@ class Client extends JsonSerializableType
     {
         $this->expressConfiguration = $value;
         $this->_setField('expressConfiguration');
+        return $this;
+    }
+
+    /**
+     * @return ?B2BIntegrationConfiguration
+     */
+    public function getB2BIntegrationConfiguration(): ?B2BIntegrationConfiguration
+    {
+        return $this->b2BIntegrationConfiguration;
+    }
+
+    /**
+     * @param ?B2BIntegrationConfiguration $value
+     */
+    public function setB2BIntegrationConfiguration(?B2BIntegrationConfiguration $value = null): self
+    {
+        $this->b2BIntegrationConfiguration = $value;
+        $this->_setField('b2BIntegrationConfiguration');
         return $this;
     }
 

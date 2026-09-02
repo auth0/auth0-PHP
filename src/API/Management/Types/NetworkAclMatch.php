@@ -81,6 +81,12 @@ class NetworkAclMatch extends JsonSerializableType
     private ?array $connectingIpv6Cidrs;
 
     /**
+     * @var ?NetworkAclHttpMessageSignature $httpMessageSignature
+     */
+    #[JsonProperty('http_message_signature')]
+    private ?NetworkAclHttpMessageSignature $httpMessageSignature;
+
+    /**
      * @param array{
      *   asns?: ?array<int>,
      *   auth0Managed?: ?array<string>,
@@ -94,6 +100,7 @@ class NetworkAclMatch extends JsonSerializableType
      *   hostnames?: ?array<string>,
      *   connectingIpv4Cidrs?: ?array<string>,
      *   connectingIpv6Cidrs?: ?array<string>,
+     *   httpMessageSignature?: ?NetworkAclHttpMessageSignature,
      * } $values
      */
     public function __construct(
@@ -111,6 +118,7 @@ class NetworkAclMatch extends JsonSerializableType
         $this->hostnames = $values['hostnames'] ?? null;
         $this->connectingIpv4Cidrs = $values['connectingIpv4Cidrs'] ?? null;
         $this->connectingIpv6Cidrs = $values['connectingIpv6Cidrs'] ?? null;
+        $this->httpMessageSignature = $values['httpMessageSignature'] ?? null;
     }
 
     /**
@@ -326,6 +334,24 @@ class NetworkAclMatch extends JsonSerializableType
     {
         $this->connectingIpv6Cidrs = $value;
         $this->_setField('connectingIpv6Cidrs');
+        return $this;
+    }
+
+    /**
+     * @return ?NetworkAclHttpMessageSignature
+     */
+    public function getHttpMessageSignature(): ?NetworkAclHttpMessageSignature
+    {
+        return $this->httpMessageSignature;
+    }
+
+    /**
+     * @param ?NetworkAclHttpMessageSignature $value
+     */
+    public function setHttpMessageSignature(?NetworkAclHttpMessageSignature $value = null): self
+    {
+        $this->httpMessageSignature = $value;
+        $this->_setField('httpMessageSignature');
         return $this;
     }
 

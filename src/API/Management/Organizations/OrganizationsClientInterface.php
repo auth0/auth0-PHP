@@ -18,6 +18,7 @@ use Auth0\SDK\API\Management\Organizations\DiscoveryDomains\DiscoveryDomainsClie
 use Auth0\SDK\API\Management\Organizations\EnabledConnections\EnabledConnectionsClientInterface;
 use Auth0\SDK\API\Management\Organizations\Invitations\InvitationsClientInterface;
 use Auth0\SDK\API\Management\Organizations\Members\MembersClientInterface;
+use Auth0\SDK\API\Management\Organizations\OrganizationTemplate\OrganizationTemplateClientInterface;
 use Auth0\SDK\API\Management\Organizations\Groups\GroupsClientInterface;
 use Auth0\SDK\API\Management\Organizations\Roles\RolesClientInterface;
 
@@ -222,6 +223,11 @@ interface OrganizationsClientInterface
      * @return MembersClientInterface
      */
     public function getMembers(): MembersClientInterface;
+
+    /**
+     * @return OrganizationTemplateClientInterface
+     */
+    public function getOrganizationTemplate(): OrganizationTemplateClientInterface;
 
     /**
      * @return GroupsClientInterface

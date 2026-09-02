@@ -84,6 +84,12 @@ class EventStreamCloudEventConnectionCreatedObject5Options extends JsonSerializa
     private ?bool $kerberos;
 
     /**
+     * @var ?bool $kerberosOnly When true, restricts the connection to Kerberos-only authentication, disallowing username/password fallback.
+     */
+    #[JsonProperty('kerberos_only')]
+    private ?bool $kerberosOnly;
+
+    /**
      * @var ?array<string> $nonPersistentAttrs An array of user fields that should not be stored in the Auth0 database (https://auth0.com/docs/security/data-security/denylist)
      */
     #[JsonProperty('non_persistent_attrs'), ArrayType(['string'])]
@@ -133,6 +139,7 @@ class EventStreamCloudEventConnectionCreatedObject5Options extends JsonSerializa
      *   iconUrl?: ?string,
      *   ips?: ?array<string>,
      *   kerberos?: ?bool,
+     *   kerberosOnly?: ?bool,
      *   nonPersistentAttrs?: ?array<string>,
      *   setUserRootAttributes?: ?value-of<EventStreamCloudEventConnectionCreatedObject5OptionsSetUserRootAttributesEnum>,
      *   signInEndpoint?: ?string,
@@ -156,6 +163,7 @@ class EventStreamCloudEventConnectionCreatedObject5Options extends JsonSerializa
         $this->iconUrl = $values['iconUrl'] ?? null;
         $this->ips = $values['ips'] ?? null;
         $this->kerberos = $values['kerberos'] ?? null;
+        $this->kerberosOnly = $values['kerberosOnly'] ?? null;
         $this->nonPersistentAttrs = $values['nonPersistentAttrs'] ?? null;
         $this->setUserRootAttributes = $values['setUserRootAttributes'] ?? null;
         $this->signInEndpoint = $values['signInEndpoint'] ?? null;
@@ -377,6 +385,24 @@ class EventStreamCloudEventConnectionCreatedObject5Options extends JsonSerializa
     {
         $this->kerberos = $value;
         $this->_setField('kerberos');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getKerberosOnly(): ?bool
+    {
+        return $this->kerberosOnly;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setKerberosOnly(?bool $value = null): self
+    {
+        $this->kerberosOnly = $value;
+        $this->_setField('kerberosOnly');
         return $this;
     }
 

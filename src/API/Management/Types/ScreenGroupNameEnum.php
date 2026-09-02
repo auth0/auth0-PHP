@@ -33,6 +33,7 @@ enum ScreenGroupNameEnum: string
     case ResetPasswordMfaWebauthnRoamingChallenge = "reset-password-mfa-webauthn-roaming-challenge";
     case CustomForm = "custom-form";
     case Consent = "consent";
+    case ConsentTenantScopes = "consent-tenant-scopes";
     case CustomizedConsent = "customized-consent";
     case Logout = "logout";
     case LogoutComplete = "logout-complete";
