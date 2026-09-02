@@ -13,6 +13,9 @@ beforeEach(function(): void {
         session_destroy();
     }
 
+    // session_destroy() leaves $_SESSION populated, so reset it to isolate tests.
+    $_SESSION = [];
+
     $this->configuration = new SdkConfiguration([
         'domain' => MockDomain::valid(),
         'clientId' => uniqid(),
@@ -70,6 +73,44 @@ test('purge() clears values as expected', function(string $key, string $value): 
 
     expect($this->store->get($key))->toBeNull();
     expect(isset($_SESSION[$this->namespace . '_' . $key]))->toBeFalse();
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
+
+test('purge() clears values when a falsy key precedes them in the session', function(string $key, string $value): void {
+    // A falsy key positioned before the prefixed keys must not stop the purge early.
+    $_SESSION = ['' => 'falsy-string'] + $_SESSION;
+    $_SESSION[0] = 'falsy-int';
+    $_SESSION[$this->namespace . '_' . $key] = $value;
+    expect(isset($_SESSION[$this->namespace . '_' . $key]))->toBeTrue();
+
+    $this->store->purge();
+
+    expect($this->store->get($key))->toBeNull();
+    expect(isset($_SESSION[$this->namespace . '_' . $key]))->toBeFalse();
+
+    // Non-Auth0 entries must be left untouched.
+    expect($_SESSION[''])->toEqual('falsy-string');
+    expect($_SESSION[0])->toEqual('falsy-int');
+})->with(['mocked data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
+
+test('purge() clears values when a falsy integer key precedes them in the session', function(string $key, string $value): void {
+    // The php_serialize handler leaves a leading integer key. It must not stop the purge early.
+    $_SESSION = [0 => 'falsy-int'];
+    $_SESSION[$this->namespace . '_' . $key] = $value;
+    expect(isset($_SESSION[$this->namespace . '_' . $key]))->toBeTrue();
+
+    $this->store->purge();
+
+    expect($this->store->get($key))->toBeNull();
+    expect(isset($_SESSION[$this->namespace . '_' . $key]))->toBeFalse();
+
+    // The non-Auth0 integer key must survive.
+    expect($_SESSION[0])->toEqual('falsy-int');
 })->with(['mocked data' => [
     fn() => uniqid(),
     fn() => uniqid(),
