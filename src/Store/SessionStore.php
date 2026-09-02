@@ -9,6 +9,7 @@ use Auth0\SDK\Contract\StoreInterface;
 use Auth0\SDK\Utility\Toolkit;
 
 use function defined;
+use function is_string;
 
 /**
  * This class provides a layer to persist data using PHP Sessions.
@@ -96,16 +97,16 @@ final readonly class SessionStore implements StoreInterface
     {
         $this->start();
 
-        $session = $_SESSION ?? [];
+        if (! isset($_SESSION)) {
+            return;
+        }
+
         $prefix = $this->sessionPrefix . '_';
 
-        if ([] !== $session) {
-            while ($sessionKey = key($session)) {
-                if (mb_substr((string) $sessionKey, 0, mb_strlen($prefix)) === $prefix) {
-                    unset($_SESSION[$sessionKey]);
-                }
-
-                next($session);
+        // Snapshot keys first so a falsy key (0 or "") cannot terminate iteration early.
+        foreach (array_keys($_SESSION) as $sessionKey) {
+            if (is_string($sessionKey) && str_starts_with($sessionKey, $prefix)) {
+                unset($_SESSION[$sessionKey]);
             }
         }
     }
