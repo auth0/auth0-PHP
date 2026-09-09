@@ -6,11 +6,14 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/template.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css" integrity="sha256-ybRkN9dBjhcS2qrW1z+hfCxq+1aBdwyQM5wlQoQVt/0=" crossorigin="anonymous" />
@@ -19,6 +22,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-highlight/prism-line-highlight.css">
                 <script src="https://cdn.jsdelivr.net/npm/fuse.js@3.4.6"></script>
         <script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2"></script>
+        <script src="js/template.js"></script>
         <script src="js/search.js"></script>
         <script defer src="js/searchIndex.js"></script>
     </head>
@@ -52,8 +56,8 @@
 <label class="phpdocumentor-sidebar__menu-icon" for="sidebar-button">
     Menu
 </label>
-<aside class="phpdocumentor-column -four phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+<aside class="phpdocumentor-column -three phpdocumentor-sidebar">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/auth0.html" class="">Auth0</a>
@@ -66,7 +70,7 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Auth0.html" class="">Auth0</a>
@@ -80,21 +84,22 @@
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
 </aside>
 
-            <div class="phpdocumentor-column -eight phpdocumentor-content">
-                    <ul class="phpdocumentor-breadcrumbs">
+            <div class="phpdocumentor-column -nine phpdocumentor-content">
+                                <section>
+                                        <ul class="phpdocumentor-breadcrumbs">
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0.html">Auth0</a></li>
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0-sdk.html">SDK</a></li>
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0-sdk-utility.html">Utility</a></li>
@@ -117,93 +122,117 @@
     
     </h2>
 
+<div class="phpdocumentor-label-line">
+
+    <div class="phpdocumentor-label phpdocumentor-label--success"><span>Final</span><span>Yes</span></div>
+
+
+</div>
+
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Utility/Request/FilteredRequest.php"><a href="files/src-utility-request-filteredrequest.html"><abbr title="src/Utility/Request/FilteredRequest.php">FilteredRequest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">10</span>
+    <span class="phpdocumentor-element-found-in__line">9</span>
 
     </aside>
 
-            <p class="phpdocumentor-summary">Class FilteredRequest.</p>
+        
 
 
 
 
-
-
-
-
-
+    
+    
 <h3 id="toc">
     Table of Contents
-    <a href="#toc" class="headerlink"><i class="fas fa-link"></i></a>
+    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
+
 </h3>
 
+
+
+
+
+
+
+
+
+<h4 id="toc-properties">
+    Properties
+    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#toc-properties" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
 <dl class="phpdocumentor-table-of-contents">
-                    <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#property_fields">$fields</a>
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#property_fields">$fields</a>
     <span>
                         &nbsp;: array&lt;string|int, mixed&gt;|null            </span>
 </dt>
-<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#property_includeFields">$includeFields</a>
+    <a class="" href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#property_includeFields">$includeFields</a>
     <span>
                         &nbsp;: bool|null            </span>
 </dt>
-<dd></dd>
 
-                <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method___construct">__construct()</a>
+    </dl>
+
+<h4 id="toc-methods">
+    Methods
+    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#toc-methods" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method___construct">__construct()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>FilteredRequest constructor.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_build">build()</a>
+    <a class="" href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_build">build()</a>
     <span>
                                 &nbsp;: array&lt;string|int, int|string&gt;    </span>
 </dt>
 <dd>Return an array representing the field-filtered request.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_clearFields">clearFields()</a>
+    <a class="" href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_clearFields">clearFields()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Clear the `fields` for the filtered request.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_getFields">getFields()</a>
+    <a class="" href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_getFields">getFields()</a>
     <span>
-                                &nbsp;: array&lt;string|int, string&gt;|null    </span>
+                                &nbsp;: null|array&lt;string|int, string&gt;    </span>
 </dt>
 <dd>Retrieve the `fields` for the filtered request.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_getIncludeFields">getIncludeFields()</a>
+    <a class="" href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_getIncludeFields">getIncludeFields()</a>
     <span>
                                 &nbsp;: bool|null    </span>
 </dt>
 <dd>Retrieve the `include_fields` for the filtered request.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_setFields">setFields()</a>
+    <a class="" href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_setFields">setFields()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Set the `fields` for the filtered request.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_setIncludeFields">setIncludeFields()</a>
+    <a class="" href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_setIncludeFields">setIncludeFields()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Set the `include_fields` for the paginated request.</dd>
 
-        </dl>
+    </dl>
 
 
 
@@ -214,19 +243,58 @@
         <h3 class="phpdocumentor-elements__header" id="properties">
             Properties
             <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#properties" class="headerlink"><i class="fas fa-link"></i></a>
+
         </h3>
                     <article
         class="
             phpdocumentor-element
             -property
             -private
-                                                        "
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_fields">
         $fields
         <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#property_fields" class="headerlink"><i class="fas fa-link"></i></a>
+
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Utility/Request/FilteredRequest.php"><a href="files/src-utility-request-filteredrequest.html"><abbr title="src/Utility/Request/FilteredRequest.php">FilteredRequest.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">18</span>
+
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;|null</span>
+    <span class="phpdocumentor-signature__name">$fields</span>
+     = <span class="phpdocumentor-signature__default-value">null</span></code>
+
+    
+    
+    
+
+        
+        
+
+</article>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_includeFields">
+        $includeFields
+        <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#property_includeFields" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Utility/Request/FilteredRequest.php"><a href="files/src-utility-request-filteredrequest.html"><abbr title="src/Utility/Request/FilteredRequest.php">FilteredRequest.php</abbr></a></abbr>
@@ -236,51 +304,19 @@
     </aside>
 
     
-    <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;|null</span>
-    <span class="phpdocumentor-signature__name">$fields</span>
-     = <span class="phpdocumentor-signature__default-value">null</span></code>
-
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
-
-    
-
-</article>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="property_includeFields">
-        $includeFields
-        <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#property_includeFields" class="headerlink"><i class="fas fa-link"></i></a>
-        <span class="phpdocumentor-element__modifiers">
-                                </span>
-    </h4>
-    <aside class="phpdocumentor-element-found-in">
-    <abbr class="phpdocumentor-element-found-in__file" title="src/Utility/Request/FilteredRequest.php"><a href="files/src-utility-request-filteredrequest.html"><abbr title="src/Utility/Request/FilteredRequest.php">FilteredRequest.php</abbr></a></abbr>
-    :
-    <span class="phpdocumentor-element-found-in__line">20</span>
-
-    </aside>
-
     
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">bool|null</span>
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">bool|null</span>
     <span class="phpdocumentor-signature__name">$includeFields</span>
      = <span class="phpdocumentor-signature__default-value">null</span></code>
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
-
     
+    
+    
+
+        
+        
 
 </article>
             </section>
@@ -289,6 +325,7 @@
         <h3 class="phpdocumentor-elements__header" id="methods">
             Methods
             <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#methods" class="headerlink"><i class="fas fa-link"></i></a>
+
         </h3>
                     <article
         class="phpdocumentor-element
@@ -299,11 +336,12 @@
     <h4 class="phpdocumentor-element__name" id="method___construct">
         __construct()
         <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method___construct" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Utility/Request/FilteredRequest.php"><a href="files/src-utility-request-filteredrequest.html"><abbr title="src/Utility/Request/FilteredRequest.php">FilteredRequest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">18</span>
+    <span class="phpdocumentor-element-found-in__line">17</span>
 
     </aside>
 
@@ -311,24 +349,27 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fields</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">bool|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$includeFields</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fields</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$includeFields</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$fields</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$fields</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>fields to include or exclude from API responses</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$includeFields</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$includeFields</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>true to include $fields, false to exclude $fields</p>
 </section>
@@ -338,10 +379,8 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">mixed</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -353,11 +392,12 @@
     <h4 class="phpdocumentor-element__name" id="method_build">
         build()
         <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_build" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Utility/Request/FilteredRequest.php"><a href="files/src-utility-request-filteredrequest.html"><abbr title="src/Utility/Request/FilteredRequest.php">FilteredRequest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">28</span>
 
     </aside>
 
@@ -367,15 +407,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">build</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, int|string&gt;</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">array&lt;string|int, int|string&gt;</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, int|string&gt;</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -386,11 +431,12 @@
     <h4 class="phpdocumentor-element__name" id="method_clearFields">
         clearFields()
         <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_clearFields" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Utility/Request/FilteredRequest.php"><a href="files/src-utility-request-filteredrequest.html"><abbr title="src/Utility/Request/FilteredRequest.php">FilteredRequest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
     </aside>
 
@@ -400,15 +446,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">clearFields</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -419,11 +470,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getFields">
         getFields()
         <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_getFields" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Utility/Request/FilteredRequest.php"><a href="files/src-utility-request-filteredrequest.html"><abbr title="src/Utility/Request/FilteredRequest.php">FilteredRequest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">52</span>
+    <span class="phpdocumentor-element-found-in__line">58</span>
 
     </aside>
 
@@ -431,17 +483,22 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getFields</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;|null</span></code>
+                    <span class="phpdocumentor-signature__name">getFields</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, string&gt;</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, string&gt;</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -452,11 +509,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getIncludeFields">
         getIncludeFields()
         <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_getIncludeFields" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Utility/Request/FilteredRequest.php"><a href="files/src-utility-request-filteredrequest.html"><abbr title="src/Utility/Request/FilteredRequest.php">FilteredRequest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">73</span>
+    <span class="phpdocumentor-element-found-in__line">66</span>
 
     </aside>
 
@@ -466,15 +524,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getIncludeFields</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool|null</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">bool|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool|null</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -485,11 +548,12 @@
     <h4 class="phpdocumentor-element__name" id="method_setFields">
         setFields()
         <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_setFields" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Utility/Request/FilteredRequest.php"><a href="files/src-utility-request-filteredrequest.html"><abbr title="src/Utility/Request/FilteredRequest.php">FilteredRequest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">29</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
     </aside>
 
@@ -497,14 +561,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setFields</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fields</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">setFields</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$fields</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$fields</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;</span>
+                <span class="phpdocumentor-argument-list__argument__name">$fields</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, string&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>value of <code class="prettyprint">fields</code> parameter for the filtered request</p>
@@ -515,11 +582,13 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -530,11 +599,12 @@
     <h4 class="phpdocumentor-element__name" id="method_setIncludeFields">
         setIncludeFields()
         <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_setIncludeFields" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Utility/Request/FilteredRequest.php"><a href="files/src-utility-request-filteredrequest.html"><abbr title="src/Utility/Request/FilteredRequest.php">FilteredRequest.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">62</span>
+    <span class="phpdocumentor-element-found-in__line">89</span>
 
     </aside>
 
@@ -542,14 +612,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setIncludeFields</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">bool|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$includeFields</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">setIncludeFields</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">bool|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$includeFields</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$includeFields</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool|null</span>
+                <span class="phpdocumentor-argument-list__argument__name">$includeFields</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool|null</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>value of <code class="prettyprint">include_fields</code> parameter for the filtered request</p>
@@ -560,78 +633,59 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
             </section>
 
         
-    <script type="text/javascript">
-        function loadExternalCodeSnippets(line) {
-            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach((pre) => {
-                var src = pre.getAttribute('data-src').replace( /\\/g, '/');
-                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
-                var language = 'php';
-
-                var code = document.createElement('code');
-                code.className = 'language-' + language;
-
-                pre.textContent = '';
-
-                pre.setAttribute('data-line', line)
-                code.textContent = 'Loading…';
-
-                pre.appendChild(code);
-
-                var xhr = new XMLHttpRequest();
-
-                xhr.open('GET', src, true);
-
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
-
-                        if (xhr.status < 400 && xhr.responseText) {
-                            code.textContent = xhr.responseText;
-
-                            Prism.highlightElement(code);
-                        }
-                        else if (xhr.status >= 400) {
-                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
-                        }
-                        else {
-                            code.textContent = '✖ Error: File does not exist, is empty or trying to view from localhost';
-                        }
-                    }
-                };
-
-                xhr.send(null);
-            });
-        }
-
-        var modals = document.querySelectorAll("[data-modal]");
-
-        modals.forEach(function (trigger) {
-            trigger.addEventListener("click", function (event) {
-                //event.preventDefault();
-                const modal = document.getElementById(trigger.dataset.modal);
-                modal.classList.add("phpdocumentor-modal__open");
-                loadExternalCodeSnippets(trigger.dataset.line)
-                const exits = modal.querySelectorAll("[data-exit-button]");
-                exits.forEach(function (exit) {
-                    exit.addEventListener("click", function (event) {
-                        event.preventDefault();
-                        modal.classList.remove("phpdocumentor-modal__open");
-                    });
-                });
-            });
-        });
-    </script>
-
     </article>
-                <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
+                                </section>
+                <section class="phpdocumentor-on-this-page__sidebar">
+                                
+    <section class="phpdocumentor-on-this-page__content">
+        <strong class="phpdocumentor-on-this-page__title">On this page</strong>
+
+        <ul class="phpdocumentor-list -clean">
+            <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
+            <li>
+                <ul class="phpdocumentor-list -clean">
+                                                            <li><a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#toc-properties">Properties</a></li>
+                                                            <li><a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#toc-methods">Methods</a></li>
+                                    </ul>
+            </li>
+            
+                            <li class="phpdocumentor-on-this-page-section__title">Properties</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#property_fields">$fields</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#property_includeFields">$includeFields</a></li>
+                                            </ul>
+                </li>
+            
+                        <li class="phpdocumentor-on-this-page-section__title">Methods</li>
+            <li>
+                <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method___construct">__construct()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_build">build()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_clearFields">clearFields()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_getFields">getFields()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_getIncludeFields">getIncludeFields()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_setFields">setFields()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#method_setIncludeFields">setIncludeFields()</a></li>
+                                    </ul>
+            </li>
+                    </ul>
+    </section>
+
+                </section>
+                            </div>
+            <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
     <section class="phpdocumentor-search-results__dialog">
         <header class="phpdocumentor-search-results__header">
             <h2 class="phpdocumentor-search-results__title">Search results</h2>
@@ -642,7 +696,6 @@
         </section>
     </section>
 </section>
-            </div>
         </div>
         <a href="classes/Auth0-SDK-Utility-Request-FilteredRequest.html#top" class="phpdocumentor-back-to-top"><i class="fas fa-chevron-circle-up"></i></a>
 

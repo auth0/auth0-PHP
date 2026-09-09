@@ -6,11 +6,14 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/template.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css" integrity="sha256-ybRkN9dBjhcS2qrW1z+hfCxq+1aBdwyQM5wlQoQVt/0=" crossorigin="anonymous" />
@@ -19,6 +22,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-highlight/prism-line-highlight.css">
                 <script src="https://cdn.jsdelivr.net/npm/fuse.js@3.4.6"></script>
         <script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2"></script>
+        <script src="js/template.js"></script>
         <script src="js/search.js"></script>
         <script defer src="js/searchIndex.js"></script>
     </head>
@@ -52,8 +56,8 @@
 <label class="phpdocumentor-sidebar__menu-icon" for="sidebar-button">
     Menu
 </label>
-<aside class="phpdocumentor-column -four phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+<aside class="phpdocumentor-column -three phpdocumentor-sidebar">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/auth0.html" class="">Auth0</a>
@@ -66,7 +70,7 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Auth0.html" class="">Auth0</a>
@@ -80,21 +84,22 @@
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
 </aside>
 
-            <div class="phpdocumentor-column -eight phpdocumentor-content">
-                    <ul class="phpdocumentor-breadcrumbs">
+            <div class="phpdocumentor-column -nine phpdocumentor-content">
+                                <section>
+                                        <ul class="phpdocumentor-breadcrumbs">
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0.html">Auth0</a></li>
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0-sdk.html">SDK</a></li>
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0-sdk-store.html">Store</a></li>
@@ -119,113 +124,141 @@
     
     </h2>
 
+<div class="phpdocumentor-label-line">
+    <div class="phpdocumentor-label phpdocumentor-label--success"><span>Read only</span><span>Yes</span></div>
+
+
+    <div class="phpdocumentor-label phpdocumentor-label--success"><span>Final</span><span>Yes</span></div>
+
+
+</div>
+
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">15</span>
+    <span class="phpdocumentor-element-found-in__line">17</span>
 
     </aside>
 
-            <p class="phpdocumentor-summary">Class SessionStore
-This class provides a layer to persist data using PHP Sessions.</p>
+            <p class="phpdocumentor-summary">This class provides a layer to persist data using PHP Sessions.</p>
 
 
 
 
 
-
-
-<h3 id="interfaces_class_traits">
-    Interfaces, Classes, Traits and Enums
-    <a href="#interfaces_class_traits" class="headerlink"><i class="fas fa-link"></i></a>
-</h3>
-
-<dl class="phpdocumentor-table-of-contents">
-            <dt class="phpdocumentor-table-of-contents__entry -interface"><a href="classes/Auth0-SDK-Contract-StoreInterface.html"><abbr title="\Auth0\SDK\Contract\StoreInterface">StoreInterface</abbr></a></dt>
-        <dd>Interface StoreInterface.</dd>
     
     
-    
-    </dl>
-
-
 <h3 id="toc">
     Table of Contents
-    <a href="#toc" class="headerlink"><i class="fas fa-link"></i></a>
+    <a href="classes/Auth0-SDK-Store-SessionStore.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
+
 </h3>
 
+
+
+    <h4 id="toc-interfaces">
+        Interfaces
+        <a href="classes/Auth0-SDK-Store-SessionStore.html#toc-interfaces" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <dl class="phpdocumentor-table-of-contents">
+                    <dt class="phpdocumentor-table-of-contents__entry -interface"><a href="classes/Auth0-SDK-Contract-StoreInterface.html"><abbr title="\Auth0\SDK\Contract\StoreInterface">StoreInterface</abbr></a></dt>    </dl>
+
+
+
+
+
+
+<h4 id="toc-properties">
+    Properties
+    <a href="classes/Auth0-SDK-Store-SessionStore.html#toc-properties" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
 <dl class="phpdocumentor-table-of-contents">
-                    <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/Auth0-SDK-Store-SessionStore.html#property_configuration">$configuration</a>
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/Auth0-SDK-Store-SessionStore.html#property_configuration">$configuration</a>
     <span>
                         &nbsp;: <a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a>            </span>
 </dt>
-<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/Auth0-SDK-Store-SessionStore.html#property_sessionPrefix">$sessionPrefix</a>
+    <a class="" href="classes/Auth0-SDK-Store-SessionStore.html#property_sessionPrefix">$sessionPrefix</a>
     <span>
                         &nbsp;: string            </span>
 </dt>
-<dd></dd>
 
-                <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-SessionStore.html#method___construct">__construct()</a>
+    </dl>
+
+<h4 id="toc-methods">
+    Methods
+    <a href="classes/Auth0-SDK-Store-SessionStore.html#toc-methods" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Auth0-SDK-Store-SessionStore.html#method___construct">__construct()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>SessionStore constructor.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-SessionStore.html#method_defer">defer()</a>
+    <a class="" href="classes/Auth0-SDK-Store-SessionStore.html#method_defer">defer()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>This has no effect when using sessions as the storage medium.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-SessionStore.html#method_delete">delete()</a>
+    <a class="" href="classes/Auth0-SDK-Store-SessionStore.html#method_delete">delete()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Removes a persisted value identified by $key.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-SessionStore.html#method_get">get()</a>
+    <a class="" href="classes/Auth0-SDK-Store-SessionStore.html#method_get">get()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>Gets persisted values identified by $key.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-SessionStore.html#method_getSessionName">getSessionName()</a>
+    <a class="" href="classes/Auth0-SDK-Store-SessionStore.html#method_getSessionName">getSessionName()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Constructs a session key name.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-SessionStore.html#method_purge">purge()</a>
+    <a class="" href="classes/Auth0-SDK-Store-SessionStore.html#method_purge">purge()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Removes all persisted values.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-SessionStore.html#method_set">set()</a>
+    <a class="" href="classes/Auth0-SDK-Store-SessionStore.html#method_regenerate">regenerate()</a>
+    <span>
+                                &nbsp;: void    </span>
+</dt>
+<dd>Regenerate the session ID while preserving session data.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Auth0-SDK-Store-SessionStore.html#method_set">set()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Persists $value on $_SESSION, identified by $key.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-SessionStore.html#method_start">start()</a>
+    <a class="" href="classes/Auth0-SDK-Store-SessionStore.html#method_start">start()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>This basic implementation of BaseAuth0 SDK uses PHP Sessions to store volatile data.</dd>
 
-        </dl>
+    </dl>
 
 
 
@@ -236,39 +269,43 @@ This class provides a layer to persist data using PHP Sessions.</p>
         <h3 class="phpdocumentor-elements__header" id="properties">
             Properties
             <a href="classes/Auth0-SDK-Store-SessionStore.html#properties" class="headerlink"><i class="fas fa-link"></i></a>
+
         </h3>
                     <article
         class="
             phpdocumentor-element
             -property
             -private
-                                                        "
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_configuration">
         $configuration
         <a href="classes/Auth0-SDK-Store-SessionStore.html#property_configuration" class="headerlink"><i class="fas fa-link"></i></a>
+
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">24</span>
+    <span class="phpdocumentor-element-found-in__line">26</span>
 
     </aside>
 
     
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
     <span class="phpdocumentor-signature__name">$configuration</span>
     </code>
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
-
     
+    
+    
+
+        
+        
 
 </article>
                     <article
@@ -276,33 +313,36 @@ This class provides a layer to persist data using PHP Sessions.</p>
             phpdocumentor-element
             -property
             -private
-                                                        "
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_sessionPrefix">
         $sessionPrefix
         <a href="classes/Auth0-SDK-Store-SessionStore.html#property_sessionPrefix" class="headerlink"><i class="fas fa-link"></i></a>
+
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">25</span>
+    <span class="phpdocumentor-element-found-in__line">27</span>
 
     </aside>
 
     
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">string</span>
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$sessionPrefix</span>
      = <span class="phpdocumentor-signature__default-value">&#039;auth0&#039;</span></code>
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
-
     
+    
+    
+
+        
+        
 
 </article>
             </section>
@@ -311,6 +351,7 @@ This class provides a layer to persist data using PHP Sessions.</p>
         <h3 class="phpdocumentor-elements__header" id="methods">
             Methods
             <a href="classes/Auth0-SDK-Store-SessionStore.html#methods" class="headerlink"><i class="fas fa-link"></i></a>
+
         </h3>
                     <article
         class="phpdocumentor-element
@@ -321,11 +362,12 @@ This class provides a layer to persist data using PHP Sessions.</p>
     <h4 class="phpdocumentor-element__name" id="method___construct">
         __construct()
         <a href="classes/Auth0-SDK-Store-SessionStore.html#method___construct" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">23</span>
+    <span class="phpdocumentor-element-found-in__line">25</span>
 
     </aside>
 
@@ -333,14 +375,17 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$configuration</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sessionPrefix</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">&#039;auth0&#039;</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$configuration</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$sessionPrefix</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">'auth0'</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$configuration</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
+                <span class="phpdocumentor-argument-list__argument__name">$configuration</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Base configuration options for the SDK. See the SdkConfiguration class constructor for options.</p>
@@ -348,9 +393,9 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$sessionPrefix</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">&#039;auth0&#039;</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$sessionPrefix</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">'auth0'</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>a string to prefix session keys with</p>
 </section>
@@ -360,10 +405,8 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">mixed</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -375,11 +418,12 @@ This class provides a layer to persist data using PHP Sessions.</p>
     <h4 class="phpdocumentor-element__name" id="method_defer">
         defer()
         <a href="classes/Auth0-SDK-Store-SessionStore.html#method_defer" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">36</span>
+    <span class="phpdocumentor-element-found-in__line">38</span>
 
     </aside>
 
@@ -387,14 +431,17 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">defer</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$deferring</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">defer</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$deferring</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$deferring</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                <span class="phpdocumentor-argument-list__argument__name">$deferring</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>whether to defer persisting the storage state</p>
@@ -404,24 +451,22 @@ This class provides a layer to persist data using PHP Sessions.</p>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_defer_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Store-SessionStore.html#method_defer_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">codeCoverageIgnore</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                             
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">codeCoverageIgnore</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                        
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">void</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -433,11 +478,12 @@ This class provides a layer to persist data using PHP Sessions.</p>
     <h4 class="phpdocumentor-element__name" id="method_delete">
         delete()
         <a href="classes/Auth0-SDK-Store-SessionStore.html#method_delete" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">105</span>
+    <span class="phpdocumentor-element-found-in__line">48</span>
 
     </aside>
 
@@ -445,14 +491,17 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">delete</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">delete</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$key</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>session key to delete</p>
@@ -463,10 +512,8 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">void</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -478,11 +525,12 @@ This class provides a layer to persist data using PHP Sessions.</p>
     <h4 class="phpdocumentor-element__name" id="method_get">
         get()
         <a href="classes/Auth0-SDK-Store-SessionStore.html#method_get" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">64</span>
+    <span class="phpdocumentor-element-found-in__line">65</span>
 
     </aside>
 
@@ -490,16 +538,19 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">get</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$default</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">get</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$default</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
         <section class="phpdocumentor-description"><p>If the value is not set, returns $default.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$key</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>session key to set</p>
@@ -507,9 +558,9 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$default</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$default</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>default to return if nothing was found</p>
 </section>
@@ -519,10 +570,8 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">mixed</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -534,11 +583,12 @@ This class provides a layer to persist data using PHP Sessions.</p>
     <h4 class="phpdocumentor-element__name" id="method_getSessionName">
         getSessionName()
         <a href="classes/Auth0-SDK-Store-SessionStore.html#method_getSessionName" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">118</span>
+    <span class="phpdocumentor-element-found-in__line">81</span>
 
     </aside>
 
@@ -546,14 +596,17 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getSessionName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">getSessionName</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$key</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>session key name to prefix and return</p>
@@ -564,11 +617,13 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">string</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -579,11 +634,12 @@ This class provides a layer to persist data using PHP Sessions.</p>
     <h4 class="phpdocumentor-element__name" id="method_purge">
         purge()
         <a href="classes/Auth0-SDK-Store-SessionStore.html#method_purge" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">82</span>
+    <span class="phpdocumentor-element-found-in__line">96</span>
 
     </aside>
 
@@ -593,14 +649,52 @@ This class provides a layer to persist data using PHP Sessions.</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">purge</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">void</span>
-            &mdash;
         
+    
+    
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_regenerate">
+        regenerate()
+        <a href="classes/Auth0-SDK-Store-SessionStore.html#method_regenerate" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">118</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Regenerate the session ID while preserving session data.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">regenerate</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+        <section class="phpdocumentor-description"><p>Called on authentication state changes to prevent session fixation.</p>
+</section>
+
+    
+    
+
+        
+    
     
 </article>
                     <article
@@ -612,11 +706,12 @@ This class provides a layer to persist data using PHP Sessions.</p>
     <h4 class="phpdocumentor-element__name" id="method_set">
         set()
         <a href="classes/Auth0-SDK-Store-SessionStore.html#method_set" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">47</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
     </aside>
 
@@ -624,14 +719,17 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">set</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">set</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$key</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>session key to set</p>
@@ -639,8 +737,8 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$value</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>value to use</p>
@@ -651,10 +749,8 @@ This class provides a layer to persist data using PHP Sessions.</p>
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">void</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -666,11 +762,12 @@ This class provides a layer to persist data using PHP Sessions.</p>
     <h4 class="phpdocumentor-element__name" id="method_start">
         start()
         <a href="classes/Auth0-SDK-Store-SessionStore.html#method_start" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/SessionStore.php"><a href="files/src-store-sessionstore.html"><abbr title="src/Store/SessionStore.php">SessionStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">133</span>
+    <span class="phpdocumentor-element-found-in__line">148</span>
 
     </aside>
 
@@ -680,82 +777,64 @@ This class provides a layer to persist data using PHP Sessions.</p>
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">start</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">void</span>
-            &mdash;
         
+    
     
 </article>
             </section>
 
         
-    <script type="text/javascript">
-        function loadExternalCodeSnippets(line) {
-            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach((pre) => {
-                var src = pre.getAttribute('data-src').replace( /\\/g, '/');
-                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
-                var language = 'php';
-
-                var code = document.createElement('code');
-                code.className = 'language-' + language;
-
-                pre.textContent = '';
-
-                pre.setAttribute('data-line', line)
-                code.textContent = 'Loading…';
-
-                pre.appendChild(code);
-
-                var xhr = new XMLHttpRequest();
-
-                xhr.open('GET', src, true);
-
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
-
-                        if (xhr.status < 400 && xhr.responseText) {
-                            code.textContent = xhr.responseText;
-
-                            Prism.highlightElement(code);
-                        }
-                        else if (xhr.status >= 400) {
-                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
-                        }
-                        else {
-                            code.textContent = '✖ Error: File does not exist, is empty or trying to view from localhost';
-                        }
-                    }
-                };
-
-                xhr.send(null);
-            });
-        }
-
-        var modals = document.querySelectorAll("[data-modal]");
-
-        modals.forEach(function (trigger) {
-            trigger.addEventListener("click", function (event) {
-                //event.preventDefault();
-                const modal = document.getElementById(trigger.dataset.modal);
-                modal.classList.add("phpdocumentor-modal__open");
-                loadExternalCodeSnippets(trigger.dataset.line)
-                const exits = modal.querySelectorAll("[data-exit-button]");
-                exits.forEach(function (exit) {
-                    exit.addEventListener("click", function (event) {
-                        event.preventDefault();
-                        modal.classList.remove("phpdocumentor-modal__open");
-                    });
-                });
-            });
-        });
-    </script>
-
     </article>
-                <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
+                                </section>
+                <section class="phpdocumentor-on-this-page__sidebar">
+                                
+    <section class="phpdocumentor-on-this-page__content">
+        <strong class="phpdocumentor-on-this-page__title">On this page</strong>
+
+        <ul class="phpdocumentor-list -clean">
+            <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
+            <li>
+                <ul class="phpdocumentor-list -clean">
+                                                            <li><a href="classes/Auth0-SDK-Store-SessionStore.html#toc-properties">Properties</a></li>
+                                                            <li><a href="classes/Auth0-SDK-Store-SessionStore.html#toc-methods">Methods</a></li>
+                                    </ul>
+            </li>
+            
+                            <li class="phpdocumentor-on-this-page-section__title">Properties</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-SessionStore.html#property_configuration">$configuration</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-SessionStore.html#property_sessionPrefix">$sessionPrefix</a></li>
+                                            </ul>
+                </li>
+            
+                        <li class="phpdocumentor-on-this-page-section__title">Methods</li>
+            <li>
+                <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/Auth0-SDK-Store-SessionStore.html#method___construct">__construct()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-SessionStore.html#method_defer">defer()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-SessionStore.html#method_delete">delete()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-SessionStore.html#method_get">get()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-SessionStore.html#method_getSessionName">getSessionName()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-SessionStore.html#method_purge">purge()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-SessionStore.html#method_regenerate">regenerate()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-SessionStore.html#method_set">set()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-SessionStore.html#method_start">start()</a></li>
+                                    </ul>
+            </li>
+                    </ul>
+    </section>
+
+                </section>
+                            </div>
+            <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
     <section class="phpdocumentor-search-results__dialog">
         <header class="phpdocumentor-search-results__header">
             <h2 class="phpdocumentor-search-results__title">Search results</h2>
@@ -766,7 +845,6 @@ This class provides a layer to persist data using PHP Sessions.</p>
         </section>
     </section>
 </section>
-            </div>
         </div>
         <a href="classes/Auth0-SDK-Store-SessionStore.html#top" class="phpdocumentor-back-to-top"><i class="fas fa-chevron-circle-up"></i></a>
 

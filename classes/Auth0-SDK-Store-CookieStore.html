@@ -6,11 +6,14 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/template.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css" integrity="sha256-ybRkN9dBjhcS2qrW1z+hfCxq+1aBdwyQM5wlQoQVt/0=" crossorigin="anonymous" />
@@ -19,6 +22,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-highlight/prism-line-highlight.css">
                 <script src="https://cdn.jsdelivr.net/npm/fuse.js@3.4.6"></script>
         <script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2"></script>
+        <script src="js/template.js"></script>
         <script src="js/search.js"></script>
         <script defer src="js/searchIndex.js"></script>
     </head>
@@ -52,8 +56,8 @@
 <label class="phpdocumentor-sidebar__menu-icon" for="sidebar-button">
     Menu
 </label>
-<aside class="phpdocumentor-column -four phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+<aside class="phpdocumentor-column -three phpdocumentor-sidebar">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/auth0.html" class="">Auth0</a>
@@ -66,7 +70,7 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Auth0.html" class="">Auth0</a>
@@ -80,21 +84,22 @@
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
 </aside>
 
-            <div class="phpdocumentor-column -eight phpdocumentor-content">
-                    <ul class="phpdocumentor-breadcrumbs">
+            <div class="phpdocumentor-column -nine phpdocumentor-content">
+                                <section>
+                                        <ul class="phpdocumentor-breadcrumbs">
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0.html">Auth0</a></li>
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0-sdk.html">SDK</a></li>
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0-sdk-store.html">Store</a></li>
@@ -119,212 +124,276 @@
     
     </h2>
 
+<div class="phpdocumentor-label-line">
+
+    <div class="phpdocumentor-label phpdocumentor-label--success"><span>Final</span><span>Yes</span></div>
+
+
+</div>
+
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">15</span>
+    <span class="phpdocumentor-element-found-in__line">21</span>
 
     </aside>
 
-            <p class="phpdocumentor-summary">Class CookieStore.</p>
-
-    <section class="phpdocumentor-description"><p>This class provides a layer to persist transient auth data using cookies.</p>
-</section>
+            <p class="phpdocumentor-summary">This class provides a layer to persist transient auth data using cookies.</p>
 
 
 
 
 
+    
+    
+<h3 id="toc">
+    Table of Contents
+    <a href="classes/Auth0-SDK-Store-CookieStore.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
 
-<h3 id="interfaces_class_traits">
-    Interfaces, Classes, Traits and Enums
-    <a href="#interfaces_class_traits" class="headerlink"><i class="fas fa-link"></i></a>
 </h3>
 
+
+
+    <h4 id="toc-interfaces">
+        Interfaces
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#toc-interfaces" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <dl class="phpdocumentor-table-of-contents">
+                    <dt class="phpdocumentor-table-of-contents__entry -interface"><a href="classes/Auth0-SDK-Contract-StoreInterface.html"><abbr title="\Auth0\SDK\Contract\StoreInterface">StoreInterface</abbr></a></dt>    </dl>
+
+
+
+
+<h4 id="toc-constants">
+    Constants
+    <a href="classes/Auth0-SDK-Store-CookieStore.html#toc-constants" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
 <dl class="phpdocumentor-table-of-contents">
-            <dt class="phpdocumentor-table-of-contents__entry -interface"><a href="classes/Auth0-SDK-Contract-StoreInterface.html"><abbr title="\Auth0\SDK\Contract\StoreInterface">StoreInterface</abbr></a></dt>
-        <dd>Interface StoreInterface.</dd>
-    
-    
-    
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_CHUNKING_THRESHOLD">KEY_CHUNKING_THRESHOLD</a>
+    <span>
+        &nbsp;: int&nbsp;= 2048                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_HASHING_ALGO">KEY_HASHING_ALGO</a>
+    <span>
+        &nbsp;: string&nbsp;= &#039;sha256&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_SEPARATOR">KEY_SEPARATOR</a>
+    <span>
+        &nbsp;: string&nbsp;= &#039;_&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_ALGO">VAL_CRYPTO_ALGO</a>
+    <span>
+        &nbsp;: string&nbsp;= &#039;aes-128-gcm&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_ALGO_V2">VAL_CRYPTO_ALGO_V2</a>
+    <span>
+        &nbsp;: string&nbsp;= &#039;aes-256-gcm&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_KEY_LENGTH">VAL_CRYPTO_KEY_LENGTH</a>
+    <span>
+        &nbsp;: int&nbsp;= 32                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_TAG_LENGTH_BYTES">VAL_CRYPTO_TAG_LENGTH_BYTES</a>
+    <span>
+        &nbsp;: int&nbsp;= 16                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_VERSION">VAL_CRYPTO_VERSION</a>
+    <span>
+        &nbsp;: int&nbsp;= 2                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_DERIVATION_ALGO">KEY_DERIVATION_ALGO</a>
+    <span>
+        &nbsp;: string&nbsp;= &#039;sha256&#039;                            </span>
+</dt>
+
+            <dt class="phpdocumentor-table-of-contents__entry -constant -private">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_DERIVATION_INFO">KEY_DERIVATION_INFO</a>
+    <span>
+        &nbsp;: string&nbsp;= &#039;auth0-php-cookie-encryption&#039;                            </span>
+</dt>
+
     </dl>
 
 
-<h3 id="toc">
-    Table of Contents
-    <a href="#toc" class="headerlink"><i class="fas fa-link"></i></a>
-</h3>
+<h4 id="toc-properties">
+    Properties
+    <a href="classes/Auth0-SDK-Store-CookieStore.html#toc-properties" class="headerlink"><i class="fas fa-link"></i></a>
 
+</h4>
 <dl class="phpdocumentor-table-of-contents">
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_CHUNKING_THRESHOLD">KEY_CHUNKING_THRESHOLD</a>
-    <span>
-        &nbsp;= 2048                            </span>
-</dt>
-<dd></dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_HASHING_ALGO">KEY_HASHING_ALGO</a>
-    <span>
-        &nbsp;= &#039;sha256&#039;                            </span>
-</dt>
-<dd></dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_SEPARATOR">KEY_SEPARATOR</a>
-    <span>
-        &nbsp;= &#039;_&#039;                            </span>
-</dt>
-<dd></dd>
-
-            <dt class="phpdocumentor-table-of-contents__entry -constant -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_ALGO">VAL_CRYPTO_ALGO</a>
-    <span>
-        &nbsp;= &#039;aes-128-gcm&#039;                            </span>
-</dt>
-<dd></dd>
-
-                    <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#property_configuration">$configuration</a>
+            <dt class="phpdocumentor-table-of-contents__entry -property -private">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#property_configuration">$configuration</a>
     <span>
                         &nbsp;: <a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a>            </span>
 </dt>
-<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#property_deferring">$deferring</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#property_deferring">$deferring</a>
     <span>
                         &nbsp;: bool            </span>
 </dt>
 <dd>When true, CookieStore will not setState() itself. You will need manually call the method to persist state to storage.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#property_dirty">$dirty</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#property_dirty">$dirty</a>
     <span>
                         &nbsp;: bool            </span>
 </dt>
 <dd>Determine if changes have been made since the last setState.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#property_encrypt">$encrypt</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#property_encrypt">$encrypt</a>
     <span>
                         &nbsp;: bool            </span>
 </dt>
 <dd>Determine if changes have been made since the last setState.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#property_namespace">$namespace</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#property_namespace">$namespace</a>
     <span>
                         &nbsp;: string            </span>
 </dt>
-<dd></dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -property -private">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#property_store">$store</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#property_store">$store</a>
     <span>
                         &nbsp;: array&lt;string|int, mixed&gt;            </span>
 </dt>
 <dd>Internal cache of the storage state.</dd>
 
-                <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method___construct">__construct()</a>
+    </dl>
+
+<h4 id="toc-methods">
+    Methods
+    <a href="classes/Auth0-SDK-Store-CookieStore.html#toc-methods" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
+<dl class="phpdocumentor-table-of-contents">
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method___construct">__construct()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>CookieStore constructor.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_decrypt">decrypt()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_decrypt">decrypt()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;|null    </span>
+                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
 </dt>
 <dd>Decrypt data from a stored cookie string.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_defer">defer()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_defer">defer()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Defer saving state changes to destination to improve performance during blocks of changes.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_delete">delete()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_delete">delete()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Removes a persisted value identified by $key.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_encrypt">encrypt()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_encrypt">encrypt()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Encrypt data for safe storage format for a cookie.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_get">get()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_get">get()</a>
     <span>
                                 &nbsp;: mixed    </span>
 </dt>
 <dd>Gets persisted values identified by $key.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_getCookieOptions">getCookieOptions()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_getCookieOptions">getCookieOptions()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;    </span>
+                                &nbsp;: array{expires: int, path: string, domain?: string, secure: bool, httponly: bool, samesite: string, url_encode?: int}    </span>
 </dt>
 <dd>Build options array for use with setcookie().</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_getEncrypted">getEncrypted()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_getEncrypted">getEncrypted()</a>
     <span>
                                 &nbsp;: bool    </span>
 </dt>
 <dd>Returns the current encryption state.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_getNamespace">getNamespace()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_getNamespace">getNamespace()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Returns the current namespace identifier.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_getState">getState()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_getState">getState()</a>
     <span>
                                 &nbsp;: array&lt;string|int, mixed&gt;    </span>
 </dt>
 <dd>Setup our storage state by pulling from persistence source.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_purge">purge()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_purge">purge()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Removes all persisted values.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_set">set()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_set">set()</a>
     <span>
                                 &nbsp;: void    </span>
 </dt>
 <dd>Persists $value on cookies, identified by $key.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_setEncrypted">setEncrypted()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_setEncrypted">setEncrypted()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Toggle the encryption state.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Store-CookieStore.html#method_setState">setState()</a>
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_setState">setState()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Push our storage state to the source for persistence.</dd>
 
-        </dl>
+            <dt class="phpdocumentor-table-of-contents__entry -method -private">
+    <a class="" href="classes/Auth0-SDK-Store-CookieStore.html#method_deriveKey">deriveKey()</a>
+    <span>
+                                &nbsp;: string    </span>
+</dt>
+<dd>Derive an encryption key from the cookie secret using HKDF.</dd>
+
+    </dl>
 
 
 
@@ -333,144 +402,135 @@
         <h3 class="phpdocumentor-elements__header" id="constants">
             Constants
             <a href="classes/Auth0-SDK-Store-CookieStore.html#constants" class="headerlink"><i class="fas fa-link"></i></a>
+
         </h3>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_KEY_CHUNKING_THRESHOLD">
         KEY_CHUNKING_THRESHOLD
         <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_CHUNKING_THRESHOLD" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">19</span>
+    <span class="phpdocumentor-element-found-in__line">36</span>
 
     </aside>
 
     
+    
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
+        <span class="phpdocumentor-signature__type">int</span>
     <span class="phpdocumentor-signature__name">KEY_CHUNKING_THRESHOLD</span>
     = <span class="phpdocumentor-signature__default-value">2048</span>
 </code>
 
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
-
+    
+    
     
 
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_KEY_HASHING_ALGO">
         KEY_HASHING_ALGO
         <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_HASHING_ALGO" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">17</span>
+    <span class="phpdocumentor-element-found-in__line">41</span>
 
     </aside>
 
     
+    
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
+        <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">KEY_HASHING_ALGO</span>
     = <span class="phpdocumentor-signature__default-value">&#039;sha256&#039;</span>
 </code>
 
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
-
+    
+    
     
 
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_KEY_SEPARATOR">
         KEY_SEPARATOR
         <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_SEPARATOR" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">21</span>
+    <span class="phpdocumentor-element-found-in__line">46</span>
 
     </aside>
 
     
+    
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
+        <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">KEY_SEPARATOR</span>
     = <span class="phpdocumentor-signature__default-value">&#039;_&#039;</span>
 </code>
 
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
-
+    
+    
     
 
-</article>
+        
+    </article>
                     <article class="phpdocumentor-element -constant -public ">
     <h4 class="phpdocumentor-element__name" id="constant_VAL_CRYPTO_ALGO">
         VAL_CRYPTO_ALGO
         <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_ALGO" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
 
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">23</span>
+    <span class="phpdocumentor-element-found-in__line">51</span>
 
     </aside>
 
     
+    
     <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">public</span>
-        <span class="phpdocumentor-signature__type">mixed</span>
+        <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">VAL_CRYPTO_ALGO</span>
     = <span class="phpdocumentor-signature__default-value">&#039;aes-128-gcm&#039;</span>
 </code>
 
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
-
+    
+    
     
 
-</article>
-            </section>
-
         
-    <section class="phpdocumentor-properties">
-        <h3 class="phpdocumentor-elements__header" id="properties">
-            Properties
-            <a href="classes/Auth0-SDK-Store-CookieStore.html#properties" class="headerlink"><i class="fas fa-link"></i></a>
-        </h3>
-                    <article
-        class="
-            phpdocumentor-element
-            -property
-            -private
-                                                        "
->
-    <h4 class="phpdocumentor-element__name" id="property_configuration">
-        $configuration
-        <a href="classes/Auth0-SDK-Store-CookieStore.html#property_configuration" class="headerlink"><i class="fas fa-link"></i></a>
-        <span class="phpdocumentor-element__modifiers">
-                                </span>
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_VAL_CRYPTO_ALGO_V2">
+        VAL_CRYPTO_ALGO_V2
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_ALGO_V2" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
+
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
@@ -479,17 +539,215 @@
     </aside>
 
     
-    <code class="phpdocumentor-code phpdocumentor-signature ">
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">string</span>
+    <span class="phpdocumentor-signature__name">VAL_CRYPTO_ALGO_V2</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;aes-256-gcm&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_VAL_CRYPTO_KEY_LENGTH">
+        VAL_CRYPTO_KEY_LENGTH
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_KEY_LENGTH" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">61</span>
+
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">int</span>
+    <span class="phpdocumentor-signature__name">VAL_CRYPTO_KEY_LENGTH</span>
+    = <span class="phpdocumentor-signature__default-value">32</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_VAL_CRYPTO_TAG_LENGTH_BYTES">
+        VAL_CRYPTO_TAG_LENGTH_BYTES
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_TAG_LENGTH_BYTES" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">66</span>
+
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">int</span>
+    <span class="phpdocumentor-signature__name">VAL_CRYPTO_TAG_LENGTH_BYTES</span>
+    = <span class="phpdocumentor-signature__default-value">16</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -public ">
+    <h4 class="phpdocumentor-element__name" id="constant_VAL_CRYPTO_VERSION">
+        VAL_CRYPTO_VERSION
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_VERSION" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">71</span>
+
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+        <span class="phpdocumentor-signature__type">int</span>
+    <span class="phpdocumentor-signature__name">VAL_CRYPTO_VERSION</span>
+    = <span class="phpdocumentor-signature__default-value">2</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_KEY_DERIVATION_ALGO">
+        KEY_DERIVATION_ALGO
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_DERIVATION_ALGO" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">26</span>
+
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
     <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
+        <span class="phpdocumentor-signature__type">string</span>
+    <span class="phpdocumentor-signature__name">KEY_DERIVATION_ALGO</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;sha256&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+                    <article class="phpdocumentor-element -constant -private ">
+    <h4 class="phpdocumentor-element__name" id="constant_KEY_DERIVATION_INFO">
+        KEY_DERIVATION_INFO
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_DERIVATION_INFO" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">31</span>
+
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-signature phpdocumentor-code ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+        <span class="phpdocumentor-signature__type">string</span>
+    <span class="phpdocumentor-signature__name">KEY_DERIVATION_INFO</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;auth0-php-cookie-encryption&#039;</span>
+</code>
+
+
+    
+    
+    
+
+        
+    </article>
+            </section>
+
+        
+    <section class="phpdocumentor-properties">
+        <h3 class="phpdocumentor-elements__header" id="properties">
+            Properties
+            <a href="classes/Auth0-SDK-Store-CookieStore.html#properties" class="headerlink"><i class="fas fa-link"></i></a>
+
+        </h3>
+                    <article
+        class="
+            phpdocumentor-element
+            -property
+            -private
+                                                -read-only                    "
+>
+    <h4 class="phpdocumentor-element__name" id="property_configuration">
+        $configuration
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#property_configuration" class="headerlink"><i class="fas fa-link"></i></a>
+
+        <span class="phpdocumentor-element__modifiers">
+                        <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">104</span>
+
+    </aside>
+
+    
+    
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
     <span class="phpdocumentor-signature__name">$configuration</span>
     </code>
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
-
     
+    
+    
+
+        
+        
 
 </article>
                     <article
@@ -497,33 +755,37 @@
             phpdocumentor-element
             -property
             -private
-                                                        "
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_deferring">
         $deferring
         <a href="classes/Auth0-SDK-Store-CookieStore.html#property_deferring" class="headerlink"><i class="fas fa-link"></i></a>
+
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">35</span>
+    <span class="phpdocumentor-element-found-in__line">76</span>
 
     </aside>
 
         <p class="phpdocumentor-summary">When true, CookieStore will not setState() itself. You will need manually call the method to persist state to storage.</p>
 
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">bool</span>
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">bool</span>
     <span class="phpdocumentor-signature__name">$deferring</span>
      = <span class="phpdocumentor-signature__default-value">false</span></code>
 
     
-        <section class="phpdocumentor-description"></section>
-
     
+    
+
+        
+        
 
 </article>
                     <article
@@ -531,33 +793,37 @@
             phpdocumentor-element
             -property
             -private
-                                                        "
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_dirty">
         $dirty
         <a href="classes/Auth0-SDK-Store-CookieStore.html#property_dirty" class="headerlink"><i class="fas fa-link"></i></a>
+
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">40</span>
+    <span class="phpdocumentor-element-found-in__line">81</span>
 
     </aside>
 
         <p class="phpdocumentor-summary">Determine if changes have been made since the last setState.</p>
 
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">bool</span>
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">bool</span>
     <span class="phpdocumentor-signature__name">$dirty</span>
      = <span class="phpdocumentor-signature__default-value">false</span></code>
 
     
-        <section class="phpdocumentor-description"></section>
-
     
+    
+
+        
+        
 
 </article>
                     <article
@@ -565,33 +831,37 @@
             phpdocumentor-element
             -property
             -private
-                                                        "
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_encrypt">
         $encrypt
         <a href="classes/Auth0-SDK-Store-CookieStore.html#property_encrypt" class="headerlink"><i class="fas fa-link"></i></a>
+
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">45</span>
+    <span class="phpdocumentor-element-found-in__line">86</span>
 
     </aside>
 
         <p class="phpdocumentor-summary">Determine if changes have been made since the last setState.</p>
 
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">bool</span>
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">bool</span>
     <span class="phpdocumentor-signature__name">$encrypt</span>
      = <span class="phpdocumentor-signature__default-value">true</span></code>
 
     
-        <section class="phpdocumentor-description"></section>
-
     
+    
+
+        
+        
 
 </article>
                     <article
@@ -599,33 +869,36 @@
             phpdocumentor-element
             -property
             -private
-                                                        "
+                                                -read-only                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_namespace">
         $namespace
         <a href="classes/Auth0-SDK-Store-CookieStore.html#property_namespace" class="headerlink"><i class="fas fa-link"></i></a>
+
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                        <small class="phpdocumentor-element__modifier">read-only</small>                    </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">57</span>
+    <span class="phpdocumentor-element-found-in__line">105</span>
 
     </aside>
 
     
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">string</span>
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">$namespace</span>
      = <span class="phpdocumentor-signature__default-value">&#039;auth0&#039;</span></code>
 
-        <section class="phpdocumentor-description"></section>
-
-        <section class="phpdocumentor-description"></section>
-
     
+    
+    
+
+        
+        
 
 </article>
                     <article
@@ -633,32 +906,37 @@
             phpdocumentor-element
             -property
             -private
-                                                        "
+                                                                    "
 >
     <h4 class="phpdocumentor-element__name" id="property_store">
         $store
         <a href="classes/Auth0-SDK-Store-CookieStore.html#property_store" class="headerlink"><i class="fas fa-link"></i></a>
+
         <span class="phpdocumentor-element__modifiers">
-                                </span>
+                                            </span>
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">30</span>
+    <span class="phpdocumentor-element-found-in__line">93</span>
 
     </aside>
 
         <p class="phpdocumentor-summary">Internal cache of the storage state.</p>
 
+    
     <code class="phpdocumentor-code phpdocumentor-signature ">
-    <span class="phpdocumentor-signature__visibility">private</span>
-        <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
+        <span class="phpdocumentor-signature__visibility">private</span>
+            <span class="phpdocumentor-signature__type">array&lt;string|int, mixed&gt;</span>
     <span class="phpdocumentor-signature__name">$store</span>
-     = <span class="phpdocumentor-signature__default-value">[]</span></code>
+    </code>
 
     
     
     
+
+        
+        
 
 </article>
             </section>
@@ -667,6 +945,7 @@
         <h3 class="phpdocumentor-elements__header" id="methods">
             Methods
             <a href="classes/Auth0-SDK-Store-CookieStore.html#methods" class="headerlink"><i class="fas fa-link"></i></a>
+
         </h3>
                     <article
         class="phpdocumentor-element
@@ -677,11 +956,12 @@
     <h4 class="phpdocumentor-element__name" id="method___construct">
         __construct()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method___construct" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">55</span>
+    <span class="phpdocumentor-element-found-in__line">103</span>
 
     </aside>
 
@@ -689,14 +969,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$configuration</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$namespace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">&#039;auth0&#039;</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">__construct</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$configuration</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$namespace</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">'auth0'</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$configuration</span>
-                : <span class="phpdocumentor-signature__argument__return-type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
+                <span class="phpdocumentor-argument-list__argument__name">$configuration</span>
+                : <span class="phpdocumentor-argument-list__argument__type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Base configuration options for the SDK. See the SdkConfiguration class constructor for options.</p>
@@ -704,9 +987,9 @@
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$namespace</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">&#039;auth0&#039;</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$namespace</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">'auth0'</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>a string in which to store cookies under on devices</p>
 </section>
@@ -715,26 +998,24 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method___construct_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#method___construct_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">psalm-suppress</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>RedundantCondition</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">psalm-suppress</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>RedundantCondition</p>
 </section>
 
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">mixed</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -746,11 +1027,12 @@
     <h4 class="phpdocumentor-element__name" id="method_decrypt">
         decrypt()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_decrypt" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">451</span>
+    <span class="phpdocumentor-element-found-in__line">120</span>
 
     </aside>
 
@@ -758,14 +1040,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">decrypt</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;|null</span></code>
+                    <span class="phpdocumentor-signature__name">decrypt</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$data</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$data</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>string representing an encrypted data structure</p>
@@ -775,27 +1060,29 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_decrypt_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#method_decrypt_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">psalm-suppress</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>TypeDoesNotContainType</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">psalm-suppress</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>TypeDoesNotContainType</p>
 </section>
 
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -806,11 +1093,12 @@
     <h4 class="phpdocumentor-element__name" id="method_defer">
         defer()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_defer" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">95</span>
+    <span class="phpdocumentor-element-found-in__line">186</span>
 
     </aside>
 
@@ -818,14 +1106,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">defer</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$deferring</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">defer</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$deferring</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$deferring</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
+                <span class="phpdocumentor-argument-list__argument__name">$deferring</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>whether to defer persisting the storage state</p>
@@ -836,10 +1127,8 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">void</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -851,11 +1140,12 @@
     <h4 class="phpdocumentor-element__name" id="method_delete">
         delete()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_delete" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">304</span>
+    <span class="phpdocumentor-element-found-in__line">203</span>
 
     </aside>
 
@@ -863,14 +1153,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">delete</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">delete</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$key</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>cookie to delete</p>
@@ -881,10 +1174,8 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">void</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -896,11 +1187,12 @@
     <h4 class="phpdocumentor-element__name" id="method_encrypt">
         encrypt()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_encrypt" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">382</span>
+    <span class="phpdocumentor-element-found-in__line">230</span>
 
     </aside>
 
@@ -908,14 +1200,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">encrypt</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">encrypt</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$data</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$options</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$data</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
+                <span class="phpdocumentor-argument-list__argument__name">$data</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>data to encrypt</p>
@@ -923,9 +1218,9 @@
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$options</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">[]</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$options</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>additional configuration options</p>
 </section>
@@ -934,27 +1229,29 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_encrypt_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#method_encrypt_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">psalm-suppress</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>TypeDoesNotContainType</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">psalm-suppress</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>TypeDoesNotContainType</p>
 </section>
 
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">string</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -965,11 +1262,12 @@
     <h4 class="phpdocumentor-element__name" id="method_get">
         get()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_get" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">286</span>
+    <span class="phpdocumentor-element-found-in__line">303</span>
 
     </aside>
 
@@ -977,16 +1275,19 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">get</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$default</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
+                    <span class="phpdocumentor-signature__name">get</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$default</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">mixed</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
         <section class="phpdocumentor-description"><p>If the value is not set, returns $default.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$key</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>cookie to set</p>
@@ -994,9 +1295,9 @@
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$default</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$default</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>default to return if nothing was found</p>
 </section>
@@ -1006,10 +1307,8 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">mixed</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -1021,11 +1320,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getCookieOptions">
         getCookieOptions()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_getCookieOptions" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">343</span>
+    <span class="phpdocumentor-element-found-in__line">321</span>
 
     </aside>
 
@@ -1033,28 +1333,32 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getCookieOptions</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$expires</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">getCookieOptions</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$expires</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array{expires: int, path: string, domain?: string, secure: bool, httponly: bool, samesite: string, url_encode?: int}</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$expires</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$expires</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"></section>
-
+                
             </dd>
             </dl>
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array{expires: int, path: string, domain?: string, secure: bool, httponly: bool, samesite: string, url_encode?: int}</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1065,11 +1369,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getEncrypted">
         getEncrypted()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_getEncrypted" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">73</span>
+    <span class="phpdocumentor-element-found-in__line">355</span>
 
     </aside>
 
@@ -1079,15 +1384,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getEncrypted</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">bool</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1098,11 +1408,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getNamespace">
         getNamespace()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_getNamespace" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">65</span>
+    <span class="phpdocumentor-element-found-in__line">363</span>
 
     </aside>
 
@@ -1112,15 +1423,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getNamespace</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">string</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1131,11 +1447,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getState">
         getState()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_getState" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">113</span>
+    <span class="phpdocumentor-element-found-in__line">375</span>
 
     </aside>
 
@@ -1143,15 +1460,18 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getState</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
+                    <span class="phpdocumentor-signature__name">getState</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, mixed&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$state</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, mixed&gt;</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$state</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, mixed&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>skip loading any persistent source state and inject a custom state</p>
 </section>
@@ -1161,11 +1481,13 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1176,11 +1498,12 @@
     <h4 class="phpdocumentor-element__name" id="method_purge">
         purge()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_purge" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">326</span>
+    <span class="phpdocumentor-element-found-in__line">429</span>
 
     </aside>
 
@@ -1190,14 +1513,15 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">purge</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">void</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -1209,11 +1533,12 @@
     <h4 class="phpdocumentor-element__name" id="method_set">
         set()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_set" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">258</span>
+    <span class="phpdocumentor-element-found-in__line">447</span>
 
     </aside>
 
@@ -1221,14 +1546,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">set</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__return-type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
+                    <span class="phpdocumentor-signature__name">set</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$key</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">mixed&nbsp;</span><span class="phpdocumentor-signature__argument__name">$value</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">void</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$key</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$key</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>cookie to set</p>
@@ -1236,8 +1564,8 @@
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$value</span>
-                : <span class="phpdocumentor-signature__argument__return-type">mixed</span>
+                <span class="phpdocumentor-argument-list__argument__name">$value</span>
+                : <span class="phpdocumentor-argument-list__argument__type">mixed</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>value to use</p>
@@ -1248,10 +1576,8 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">void</span>
-            &mdash;
         
+    
     
 </article>
                     <article
@@ -1263,11 +1589,12 @@
     <h4 class="phpdocumentor-element__name" id="method_setEncrypted">
         setEncrypted()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_setEncrypted" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">83</span>
+    <span class="phpdocumentor-element-found-in__line">472</span>
 
     </aside>
 
@@ -1275,15 +1602,18 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setEncrypted</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$encrypt</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">setEncrypted</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$encrypt</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$encrypt</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">true</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$encrypt</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">true</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>enable or disable cookie encryption</p>
 </section>
@@ -1293,11 +1623,13 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1308,11 +1640,12 @@
     <h4 class="phpdocumentor-element__name" id="method_setState">
         setState()
         <a href="classes/Auth0-SDK-Store-CookieStore.html#method_setState" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">169</span>
+    <span class="phpdocumentor-element-found-in__line">484</span>
 
     </aside>
 
@@ -1320,110 +1653,176 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setState</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$force</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">setState</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$force</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">false</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$force</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">false</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$force</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"></section>
-
+                
             </dd>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_setState_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#method_setState_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">psalm-suppress</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                
-                                                 <section class="phpdocumentor-description"><p>UnusedFunctionCall</p>
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">psalm-suppress</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                                            <section class="phpdocumentor-description"><p>UnusedFunctionCall,DocblockTypeContradiction,NoValue,InvalidCast</p>
 </section>
 
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -private
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_deriveKey">
+        deriveKey()
+        <a href="classes/Auth0-SDK-Store-CookieStore.html#method_deriveKey" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Store/CookieStore.php"><a href="files/src-store-cookiestore.html"><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">580</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Derive an encryption key from the cookie secret using HKDF.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">private</span>
+                    <span class="phpdocumentor-signature__name">deriveKey</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$secret</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$secret</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>the raw cookie secret</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+                    &mdash;
+                <section class="phpdocumentor-description"><p>the derived key bytes</p>
+</section>
+
+            </section>
+
 </article>
             </section>
 
         
-    <script type="text/javascript">
-        function loadExternalCodeSnippets(line) {
-            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach((pre) => {
-                var src = pre.getAttribute('data-src').replace( /\\/g, '/');
-                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
-                var language = 'php';
-
-                var code = document.createElement('code');
-                code.className = 'language-' + language;
-
-                pre.textContent = '';
-
-                pre.setAttribute('data-line', line)
-                code.textContent = 'Loading…';
-
-                pre.appendChild(code);
-
-                var xhr = new XMLHttpRequest();
-
-                xhr.open('GET', src, true);
-
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
-
-                        if (xhr.status < 400 && xhr.responseText) {
-                            code.textContent = xhr.responseText;
-
-                            Prism.highlightElement(code);
-                        }
-                        else if (xhr.status >= 400) {
-                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
-                        }
-                        else {
-                            code.textContent = '✖ Error: File does not exist, is empty or trying to view from localhost';
-                        }
-                    }
-                };
-
-                xhr.send(null);
-            });
-        }
-
-        var modals = document.querySelectorAll("[data-modal]");
-
-        modals.forEach(function (trigger) {
-            trigger.addEventListener("click", function (event) {
-                //event.preventDefault();
-                const modal = document.getElementById(trigger.dataset.modal);
-                modal.classList.add("phpdocumentor-modal__open");
-                loadExternalCodeSnippets(trigger.dataset.line)
-                const exits = modal.querySelectorAll("[data-exit-button]");
-                exits.forEach(function (exit) {
-                    exit.addEventListener("click", function (event) {
-                        event.preventDefault();
-                        modal.classList.remove("phpdocumentor-modal__open");
-                    });
-                });
-            });
-        });
-    </script>
-
     </article>
-                <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
+                                </section>
+                <section class="phpdocumentor-on-this-page__sidebar">
+                                
+    <section class="phpdocumentor-on-this-page__content">
+        <strong class="phpdocumentor-on-this-page__title">On this page</strong>
+
+        <ul class="phpdocumentor-list -clean">
+            <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
+            <li>
+                <ul class="phpdocumentor-list -clean">
+                                        <li><a href="classes/Auth0-SDK-Store-CookieStore.html#toc-constants">Constants</a></li>
+                                                            <li><a href="classes/Auth0-SDK-Store-CookieStore.html#toc-properties">Properties</a></li>
+                                                            <li><a href="classes/Auth0-SDK-Store-CookieStore.html#toc-methods">Methods</a></li>
+                                    </ul>
+            </li>
+                            <li class="phpdocumentor-on-this-page-section__title">Constants</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_CHUNKING_THRESHOLD">KEY_CHUNKING_THRESHOLD</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_HASHING_ALGO">KEY_HASHING_ALGO</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_SEPARATOR">KEY_SEPARATOR</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_ALGO">VAL_CRYPTO_ALGO</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_ALGO_V2">VAL_CRYPTO_ALGO_V2</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_KEY_LENGTH">VAL_CRYPTO_KEY_LENGTH</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_TAG_LENGTH_BYTES">VAL_CRYPTO_TAG_LENGTH_BYTES</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#constant_VAL_CRYPTO_VERSION">VAL_CRYPTO_VERSION</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_DERIVATION_ALGO">KEY_DERIVATION_ALGO</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#constant_KEY_DERIVATION_INFO">KEY_DERIVATION_INFO</a></li>
+                                            </ul>
+                </li>
+            
+                            <li class="phpdocumentor-on-this-page-section__title">Properties</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#property_configuration">$configuration</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#property_deferring">$deferring</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#property_dirty">$dirty</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#property_encrypt">$encrypt</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#property_namespace">$namespace</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#property_store">$store</a></li>
+                                            </ul>
+                </li>
+            
+                        <li class="phpdocumentor-on-this-page-section__title">Methods</li>
+            <li>
+                <ul class="phpdocumentor-list -clean">
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method___construct">__construct()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_decrypt">decrypt()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_defer">defer()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_delete">delete()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_encrypt">encrypt()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_get">get()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_getCookieOptions">getCookieOptions()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_getEncrypted">getEncrypted()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_getNamespace">getNamespace()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_getState">getState()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_purge">purge()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_set">set()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_setEncrypted">setEncrypted()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_setState">setState()</a></li>
+                                            <li class=""><a href="classes/Auth0-SDK-Store-CookieStore.html#method_deriveKey">deriveKey()</a></li>
+                                    </ul>
+            </li>
+                    </ul>
+    </section>
+
+                </section>
+                            </div>
+            <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
     <section class="phpdocumentor-search-results__dialog">
         <header class="phpdocumentor-search-results__header">
             <h2 class="phpdocumentor-search-results__title">Search results</h2>
@@ -1434,7 +1833,6 @@
         </section>
     </section>
 </section>
-            </div>
         </div>
         <a href="classes/Auth0-SDK-Store-CookieStore.html#top" class="phpdocumentor-back-to-top"><i class="fas fa-chevron-circle-up"></i></a>
 

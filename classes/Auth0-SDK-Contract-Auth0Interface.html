@@ -6,11 +6,14 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/template.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css" integrity="sha256-ybRkN9dBjhcS2qrW1z+hfCxq+1aBdwyQM5wlQoQVt/0=" crossorigin="anonymous" />
@@ -19,6 +22,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-highlight/prism-line-highlight.css">
                 <script src="https://cdn.jsdelivr.net/npm/fuse.js@3.4.6"></script>
         <script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2"></script>
+        <script src="js/template.js"></script>
         <script src="js/search.js"></script>
         <script defer src="js/searchIndex.js"></script>
     </head>
@@ -52,8 +56,8 @@
 <label class="phpdocumentor-sidebar__menu-icon" for="sidebar-button">
     Menu
 </label>
-<aside class="phpdocumentor-column -four phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+<aside class="phpdocumentor-column -three phpdocumentor-sidebar">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/auth0.html" class="">Auth0</a>
@@ -66,7 +70,7 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Auth0.html" class="">Auth0</a>
@@ -80,21 +84,22 @@
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
 </aside>
 
-            <div class="phpdocumentor-column -eight phpdocumentor-content">
-                    <ul class="phpdocumentor-breadcrumbs">
+            <div class="phpdocumentor-column -nine phpdocumentor-content">
+                                <section>
+                                        <ul class="phpdocumentor-breadcrumbs">
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0.html">Auth0</a></li>
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0-sdk.html">SDK</a></li>
             <li class="phpdocumentor-breadcrumb"><a href="namespaces/auth0-sdk-contract.html">Contract</a></li>
@@ -115,225 +120,282 @@
         <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">14</span>
+    <span class="phpdocumentor-element-found-in__line">10</span>
 
     </aside>
 
-            <p class="phpdocumentor-summary">Interface Auth0Interface.</p>
+        
 
 
 
 
-
-
-
-
-
+    
+    
 <h3 id="toc">
     Table of Contents
-    <a href="#toc" class="headerlink"><i class="fas fa-link"></i></a>
+    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#toc" class="headerlink"><i class="fas fa-link"></i></a>
+
 </h3>
 
+
+
+
+
+
+
+
+
+
+<h4 id="toc-methods">
+    Methods
+    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#toc-methods" class="headerlink"><i class="fas fa-link"></i></a>
+
+</h4>
 <dl class="phpdocumentor-table-of-contents">
-                        <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_authentication">authentication()</a>
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_authentication">authentication()</a>
     <span>
                                 &nbsp;: <a href="classes/Auth0-SDK-Contract-API-AuthenticationInterface.html"><abbr title="\Auth0\SDK\Contract\API\AuthenticationInterface">AuthenticationInterface</abbr></a>    </span>
 </dt>
 <dd>Create, configure, and return an instance of the Authentication class.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_clear">clear()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_clear">clear()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Delete any persistent data and clear out all stored properties.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_configuration">configuration()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_configuration">configuration()</a>
     <span>
                                 &nbsp;: <a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a>    </span>
 </dt>
 <dd>Retrieve the SdkConfiguration instance.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_decode">decode()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_decode">decode()</a>
     <span>
                                 &nbsp;: <a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a>    </span>
 </dt>
 <dd>Verifies and decodes an ID token using the properties in this class.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_exchange">exchange()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_exchange">exchange()</a>
     <span>
                                 &nbsp;: bool    </span>
 </dt>
 <dd>Exchange authorization code for access, ID, and refresh tokens.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessToken">getAccessToken()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessToken">getAccessToken()</a>
     <span>
                                 &nbsp;: string|null    </span>
 </dt>
 <dd>Get access token from an active session.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessTokenExpiration">getAccessTokenExpiration()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessTokenExpiration">getAccessTokenExpiration()</a>
     <span>
                                 &nbsp;: int|null    </span>
 </dt>
 <dd>Get token expiration from an active session.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessTokenScope">getAccessTokenScope()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessTokenScope">getAccessTokenScope()</a>
     <span>
                                 &nbsp;: array&lt;string|int, string&gt;    </span>
 </dt>
 <dd>Get token scopes from an active session.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getBearerToken">getBearerToken()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getBackchannel">getBackchannel()</a>
+    <span>
+                                &nbsp;: string|null    </span>
+</dt>
+<dd>Get the OIDC backchannel logout key generated during exchange(). This is used for session matching with getCredentials() calls, for comparison against cached requests from handleBackchannelLogout().</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getBearerToken">getBearerToken()</a>
     <span>
                                 &nbsp;: <a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a>|null    </span>
 </dt>
 <dd>Get an available bearer token from a variety of input sources.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getCredentials">getCredentials()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getCredentials">getCredentials()</a>
     <span>
                                 &nbsp;: object|null    </span>
 </dt>
 <dd>Return an object representing the current session credentials (including id token, access token, access token expiration, refresh token and user data) without triggering an authorization flow. Returns null when session data is not available.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getExchangeParameters">getExchangeParameters()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getExchangeParameters">getExchangeParameters()</a>
     <span>
                                 &nbsp;: object|null    </span>
 </dt>
 <dd>Get the code exchange details from the GET request.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getIdToken">getIdToken()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getIdToken">getIdToken()</a>
     <span>
                                 &nbsp;: string|null    </span>
 </dt>
 <dd>Get ID token from an active session.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getInvitationParameters">getInvitationParameters()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getInvitationParameters">getInvitationParameters()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;|null    </span>
+                                &nbsp;: null|array{invitation: string, organization: string, organizationName: string}    </span>
 </dt>
 <dd>Get the invitation details from the GET request.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getRefreshToken">getRefreshToken()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getRefreshToken">getRefreshToken()</a>
     <span>
                                 &nbsp;: string|null    </span>
 </dt>
 <dd>Get refresh token from an active session.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getRequestParameter">getRequestParameter()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getRequestParameter">getRequestParameter()</a>
     <span>
                                 &nbsp;: string|null    </span>
 </dt>
 <dd>Get the specified parameter from POST or GET, depending on configured response mode.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getUser">getUser()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getUser">getUser()</a>
     <span>
-                                &nbsp;: array&lt;string|int, mixed&gt;|null    </span>
+                                &nbsp;: null|array&lt;string|int, mixed&gt;    </span>
 </dt>
 <dd>Get userinfo from an active session.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_handleInvitation">handleInvitation()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_handleBackchannelLogout">handleBackchannelLogout()</a>
+    <span>
+                                &nbsp;: <a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a>    </span>
+</dt>
+<dd>Store a OIDC Backchannel Logout request in the cache. Matching sessions will be invalidated on future requests when getCredentials() is called.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_handleInvitation">handleInvitation()</a>
     <span>
                                 &nbsp;: string|null    </span>
 </dt>
 <dd>If invitation parameters are present in the request, handle extraction and return a URL for redirection to Universal Login to accept. Returns null if no invitation parameters were found.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_login">login()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_isAuthenticated">isAuthenticated()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Returns true if a session is present. Your application must check if the session&#039;s access token has expired.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_login">login()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Return the url to the login page.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_logout">logout()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_loginWithCustomTokenExchange">loginWithCustomTokenExchange()</a>
+    <span>
+                                &nbsp;: bool    </span>
+</dt>
+<dd>Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_logout">logout()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Delete any persistent data and clear out all stored properties, and return the URI to Auth0 /logout endpoint for redirection.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_management">management()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_refreshState">refreshState()</a>
     <span>
-                                &nbsp;: <a href="classes/Auth0-SDK-Contract-API-ManagementInterface.html"><abbr title="\Auth0\SDK\Contract\API\ManagementInterface">ManagementInterface</abbr></a>    </span>
+                                &nbsp;: self    </span>
 </dt>
-<dd>Create, configure, and return an instance of the Management class.</dd>
+<dd>Updates the SDK&#039;s internal state by clearing it&#039;s credentials cache, and retrieving the current credentials from the configured session medium. Use this when you directly make changes to the configured session medium to ensure the SDK reflects those changes.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_renew">renew()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_renew">renew()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Renews the access token and ID token using an existing refresh token.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessToken">setAccessToken()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessToken">setAccessToken()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Sets and persists the access token.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessTokenExpiration">setAccessTokenExpiration()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessTokenExpiration">setAccessTokenExpiration()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Sets and persists the access token expiration unix timestamp.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessTokenScope">setAccessTokenScope()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessTokenScope">setAccessTokenScope()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Sets and persists the access token scope.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setIdToken">setIdToken()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setBackchannel">setBackchannel()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+<dd>Sets and persists an identifier used for OIDC backchannel logout requests.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setConfiguration">setConfiguration()</a>
+    <span>
+                                &nbsp;: self    </span>
+</dt>
+<dd>Set the configuration for the SDK instance.</dd>
+
+            <dt class="phpdocumentor-table-of-contents__entry -method -public">
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setIdToken">setIdToken()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Updates the active session&#039;s stored Id Token.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setRefreshToken">setRefreshToken()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setRefreshToken">setRefreshToken()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Sets and persists the refresh token.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setUser">setUser()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setUser">setUser()</a>
     <span>
                                 &nbsp;: self    </span>
 </dt>
 <dd>Set the user property to a userinfo array and, if configured, persist.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
-    <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_signup">signup()</a>
+    <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_signup">signup()</a>
     <span>
                                 &nbsp;: string    </span>
 </dt>
 <dd>Return the url to the signup page when using the New Universal Login Experience.</dd>
 
-        </dl>
+    </dl>
 
 
+
+
+        
 
         
 
@@ -341,6 +403,7 @@
         <h3 class="phpdocumentor-elements__header" id="methods">
             Methods
             <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#methods" class="headerlink"><i class="fas fa-link"></i></a>
+
         </h3>
                     <article
         class="phpdocumentor-element
@@ -351,11 +414,12 @@
     <h4 class="phpdocumentor-element__name" id="method_authentication">
         authentication()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_authentication" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">19</span>
+    <span class="phpdocumentor-element-found-in__line">15</span>
 
     </aside>
 
@@ -365,15 +429,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">authentication</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-API-AuthenticationInterface.html"><abbr title="\Auth0\SDK\Contract\API\AuthenticationInterface">AuthenticationInterface</abbr></a></span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-API-AuthenticationInterface.html"><abbr title="\Auth0\SDK\Contract\API\AuthenticationInterface">AuthenticationInterface</abbr></a></span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-API-AuthenticationInterface.html"><abbr title="\Auth0\SDK\Contract\API\AuthenticationInterface">AuthenticationInterface</abbr></a></span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -384,11 +453,12 @@
     <h4 class="phpdocumentor-element__name" id="method_clear">
         clear()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_clear" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">102</span>
+    <span class="phpdocumentor-element-found-in__line">22</span>
 
     </aside>
 
@@ -396,15 +466,18 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">clear</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$transient</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">clear</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">bool&nbsp;</span><span class="phpdocumentor-signature__argument__name">$transient</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">true</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$transient</span>
-                : <span class="phpdocumentor-signature__argument__return-type">bool</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">true</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$transient</span>
+                : <span class="phpdocumentor-argument-list__argument__type">bool</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">true</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>when true, data in transient storage is also cleared</p>
 </section>
@@ -414,11 +487,13 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -429,6 +504,7 @@
     <h4 class="phpdocumentor-element__name" id="method_configuration">
         configuration()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_configuration" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
@@ -443,15 +519,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">configuration</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -462,11 +543,12 @@
     <h4 class="phpdocumentor-element__name" id="method_decode">
         decode()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_decode" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">119</span>
+    <span class="phpdocumentor-element-found-in__line">44</span>
 
     </aside>
 
@@ -474,14 +556,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">decode</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$token</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenAudience</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenOrganization</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenNonce</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenMaxAge</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenLeeway</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenNow</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenType</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">decode</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$token</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenAudience</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenOrganization</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenNonce</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenMaxAge</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenLeeway</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenNow</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$tokenType</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a></span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$token</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$token</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>ID token to verify and decode</p>
@@ -489,92 +574,93 @@
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$tokenAudience</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$tokenAudience</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. An array of allowed values for the 'aud' claim. Successful if ANY match.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$tokenOrganization</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$tokenOrganization</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. An array of allowed values for the 'org_id' claim. Successful if ANY match.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$tokenNonce</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$tokenNonce</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. The value expected for the 'nonce' claim.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$tokenMaxAge</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$tokenMaxAge</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|int</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$tokenLeeway</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$tokenLeeway</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|int</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. Leeway in seconds to allow during time calculations. Defaults to 60.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$tokenNow</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$tokenNow</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|int</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. Unix timestamp representing the current point in time to use for time calculations.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$tokenType</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$tokenType</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"></section>
-
+                
             </dd>
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_decode_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_decode_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-InvalidTokenException.html"><abbr title="\Auth0\SDK\Exception\InvalidTokenException">InvalidTokenException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>When token validation fails. See the exception message for further details.</p>
+                                                                                        <section class="phpdocumentor-description"><p>When token validation fails. See the exception message for further details.</p>
 </section>
 
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a></span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a></span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -585,11 +671,12 @@
     <h4 class="phpdocumentor-element__name" id="method_exchange">
         exchange()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_exchange" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">144</span>
+    <span class="phpdocumentor-element-found-in__line">69</span>
 
     </aside>
 
@@ -597,33 +684,36 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">exchange</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$redirectUri</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$code</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+                    <span class="phpdocumentor-signature__name">exchange</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$redirectUri</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$code</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$state</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$redirectUri</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$redirectUri</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. Redirect URI sent with authorize request. Defaults to the SDK's configured redirectUri.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$code</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$code</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. The value of the <code class="prettyprint">code</code> parameter. One will be extracted from $_GET if not specified.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$state</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$state</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. The value of the <code class="prettyprint">state</code> parameter. One will be extracted from $_GET if not specified.</p>
 </section>
@@ -632,66 +722,55 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_exchange_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_exchange_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-StateException.html"><abbr title="\Auth0\SDK\Exception\StateException">StateException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>if the code value is missing from the request parameters</p>
+                                                                                        <section class="phpdocumentor-description"><p>if the code value is missing from the request parameters</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-StateException.html"><abbr title="\Auth0\SDK\Exception\StateException">StateException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>if the state value is missing from the request parameters, or otherwise invalid</p>
+                                                                                        <section class="phpdocumentor-description"><p>if the state value is missing from the request parameters, or otherwise invalid</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-StateException.html"><abbr title="\Auth0\SDK\Exception\StateException">StateException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>if access token is missing from the response</p>
+                                                                                        <section class="phpdocumentor-description"><p>if access token is missing from the response</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-NetworkException.html"><abbr title="\Auth0\SDK\Exception\NetworkException">NetworkException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
+                                                                                        <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
 </section>
 
                                     </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/authorization/flows/call-your-api-using-the-authorization-code-flow"><abbr title="https://auth0.com/docs/authorization/flows/call-your-api-using-the-authorization-code-flow">https://auth0.com/docs/authorization/flows/call-your-api-using-the-authorization-code-flow</abbr></a></span>
-                                        
-                                             
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/authorization/flows/call-your-api-using-the-authorization-code-flow">https://auth0.com/docs/authorization/flows/call-your-api-using-the-authorization-code-flow</a></span>
+                                                                
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">bool</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -702,11 +781,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getAccessToken">
         getAccessToken()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessToken" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">187</span>
+    <span class="phpdocumentor-element-found-in__line">78</span>
 
     </aside>
 
@@ -716,15 +796,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getAccessToken</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">string|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -735,11 +820,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getAccessTokenExpiration">
         getAccessTokenExpiration()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessTokenExpiration" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">204</span>
+    <span class="phpdocumentor-element-found-in__line">83</span>
 
     </aside>
 
@@ -749,15 +835,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getAccessTokenExpiration</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">int|null</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">int|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">int|null</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -768,11 +859,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getAccessTokenScope">
         getAccessTokenScope()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessTokenScope" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">199</span>
+    <span class="phpdocumentor-element-found-in__line">90</span>
 
     </aside>
 
@@ -782,15 +874,59 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getAccessTokenScope</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">array&lt;string|int, string&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_getBackchannel">
+        getBackchannel()
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getBackchannel" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">95</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Get the OIDC backchannel logout key generated during exchange(). This is used for session matching with getCredentials() calls, for comparison against cached requests from handleBackchannelLogout().</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">getBackchannel</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -801,11 +937,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getBearerToken">
         getBearerToken()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getBearerToken" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">269</span>
+    <span class="phpdocumentor-element-found-in__line">106</span>
 
     </aside>
 
@@ -813,51 +950,54 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getBearerToken</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$get</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$post</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$server</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string, string&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$haystack</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$needles</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a>|null</span></code>
+                    <span class="phpdocumentor-signature__name">getBearerToken</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$get</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$post</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$server</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$haystack</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$needles</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a>|null</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$get</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$get</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. An array of viable parameter names to search against $_GET as a token candidate.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$post</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$post</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. An array of viable parameter names to search against $_POST as a token candidate.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$server</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$server</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. An array of viable parameter names to search against $_SERVER as a token candidate.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$haystack</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string, string&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$haystack</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string, string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. A key-value array in which to search for <code class="prettyprint">$needles</code> as token candidates.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$needles</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$needles</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. An array of viable keys to search against <code class="prettyprint">$haystack</code> as token candidates.</p>
 </section>
@@ -867,11 +1007,13 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a>|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a>|null</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -882,11 +1024,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getCredentials">
         getCredentials()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getCredentials" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">170</span>
+    <span class="phpdocumentor-element-found-in__line">117</span>
 
     </aside>
 
@@ -896,15 +1039,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getCredentials</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">object|null</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">object|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">object|null</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -915,11 +1063,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getExchangeParameters">
         getExchangeParameters()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getExchangeParameters" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">293</span>
+    <span class="phpdocumentor-element-found-in__line">122</span>
 
     </aside>
 
@@ -929,15 +1078,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getExchangeParameters</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">object|null</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">object|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">object|null</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -948,11 +1102,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getIdToken">
         getIdToken()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getIdToken" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">175</span>
+    <span class="phpdocumentor-element-found-in__line">127</span>
 
     </aside>
 
@@ -962,15 +1117,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getIdToken</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">string|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -981,11 +1141,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getInvitationParameters">
         getInvitationParameters()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getInvitationParameters" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">300</span>
+    <span class="phpdocumentor-element-found-in__line">134</span>
 
     </aside>
 
@@ -993,17 +1154,22 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getInvitationParameters</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;|null</span></code>
+                    <span class="phpdocumentor-signature__name">getInvitationParameters</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array{invitation: string, organization: string, organizationName: string}</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|array{invitation: string, organization: string, organizationName: string}</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1014,11 +1180,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getRefreshToken">
         getRefreshToken()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getRefreshToken" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">192</span>
+    <span class="phpdocumentor-element-found-in__line">139</span>
 
     </aside>
 
@@ -1028,15 +1195,20 @@
     <span class="phpdocumentor-signature__visibility">public</span>
                     <span class="phpdocumentor-signature__name">getRefreshToken</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">string|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1047,11 +1219,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getRequestParameter">
         getRequestParameter()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getRequestParameter" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">284</span>
+    <span class="phpdocumentor-element-found-in__line">148</span>
 
     </aside>
 
@@ -1059,14 +1232,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getRequestParameter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$parameterName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filter</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">FILTER_SANITIZE_FULL_SPECIAL_CHARS</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterOptions</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
+                    <span class="phpdocumentor-signature__name">getRequestParameter</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$parameterName</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filter</span><span> = </span><span class="phpdocumentor-signature__argument__default-value"><abbr title="\Auth0\SDK\Contract\FILTER_SANITIZE_FULL_SPECIAL_CHARS">FILTER_SANITIZE_FULL_SPECIAL_CHARS</abbr></span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">array&lt;string|int, int&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$filterOptions</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">[]</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$parameterName</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$parameterName</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>name of the parameter to pull from the request</p>
@@ -1074,18 +1250,18 @@
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$filter</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">FILTER_SANITIZE_FULL_SPECIAL_CHARS</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$filter</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value"><abbr title="\Auth0\SDK\Contract\FILTER_SANITIZE_FULL_SPECIAL_CHARS">FILTER_SANITIZE_FULL_SPECIAL_CHARS</abbr></span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Defaults to \FILTER_SANITIZE_FULL_SPECIAL_CHARS. The type of PHP filter_var() filter to apply.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$filterOptions</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int&gt;</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">[]</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$filterOptions</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, int&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">[]</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. Any additional <code class="prettyprint">filter_var()</code> sanitization filters to pass. See: https://www.php.net/manual/en/filter.filters.sanitize.php</p>
 </section>
@@ -1095,11 +1271,13 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">string|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1110,11 +1288,12 @@
     <h4 class="phpdocumentor-element__name" id="method_getUser">
         getUser()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getUser" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">182</span>
+    <span class="phpdocumentor-element-found-in__line">159</span>
 
     </aside>
 
@@ -1122,17 +1301,95 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">getUser</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;|null</span></code>
+                    <span class="phpdocumentor-signature__name">getUser</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">array&lt;string|int, mixed&gt;|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">null|array&lt;string|int, mixed&gt;</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_handleBackchannelLogout">
+        handleBackchannelLogout()
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_handleBackchannelLogout" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">169</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Store a OIDC Backchannel Logout request in the cache. Matching sessions will be invalidated on future requests when getCredentials() is called.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">handleBackchannelLogout</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$logoutToken</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a></span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$logoutToken</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>An encoded logout token to validate and process.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="method_handleBackchannelLogout_tags">
+        Tags
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_handleBackchannelLogout_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
+                                                                                        <section class="phpdocumentor-description"><p>when used without statefulness being configured</p>
+</section>
+
+                                    </dd>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-InvalidTokenException.html"><abbr title="\Auth0\SDK\Exception\InvalidTokenException">InvalidTokenException</abbr></a></span>
+                                                                                        <section class="phpdocumentor-description"><p>when token validation fails. See the exception message for further details.</p>
+</section>
+
+                                    </dd>
+                        </dl>
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-TokenInterface.html"><abbr title="\Auth0\SDK\Contract\TokenInterface">TokenInterface</abbr></a></span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1143,11 +1400,12 @@
     <h4 class="phpdocumentor-element__name" id="method_handleInvitation">
         handleInvitation()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_handleInvitation" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">76</span>
+    <span class="phpdocumentor-element-found-in__line">185</span>
 
     </aside>
 
@@ -1155,24 +1413,27 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">handleInvitation</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$redirectUrl</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int|string|null&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
+                    <span class="phpdocumentor-signature__name">handleInvitation</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$redirectUrl</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, null|int|string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string|null</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$redirectUrl</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$redirectUrl</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$params</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int|string|null&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$params</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, null|int|string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>additional parameters to include with the request</p>
 </section>
@@ -1181,54 +1442,86 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_handleInvitation_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_handleInvitation_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when a Client ID is not configured</p>
+                                                                                        <section class="phpdocumentor-description"><p>when a Client ID is not configured</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when <code class="prettyprint">redirectUri</code> is not specified, and supplied SdkConfiguration does not have a default redirectUri configured</p>
+                                                                                        <section class="phpdocumentor-description"><p>when <code class="prettyprint">redirectUri</code> is not specified, and supplied SdkConfiguration does not have a default redirectUri configured</p>
 </section>
 
                                     </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/universal-login/new-experience"><abbr title="https://auth0.com/docs/universal-login/new-experience">https://auth0.com/docs/universal-login/new-experience</abbr></a></span>
-                                        
-                                             
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/universal-login/new-experience">https://auth0.com/docs/universal-login/new-experience</a></span>
+                                                                
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/authentication#login"><abbr title="https://auth0.com/docs/api/authentication#login">https://auth0.com/docs/api/authentication#login</abbr></a></span>
-                                        
-                                             
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/authentication#login">https://auth0.com/docs/api/authentication#login</a></span>
+                                                                
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">string|null</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string|null</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_isAuthenticated">
+        isAuthenticated()
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_isAuthenticated" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">193</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Returns true if a session is present. Your application must check if the session&#039;s access token has expired.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">isAuthenticated</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+    
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1239,11 +1532,12 @@
     <h4 class="phpdocumentor-element__name" id="method_login">
         login()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_login" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">42</span>
+    <span class="phpdocumentor-element-found-in__line">206</span>
 
     </aside>
 
@@ -1251,24 +1545,27 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">login</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$redirectUrl</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int|string|null&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">login</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$redirectUrl</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, null|int|string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$redirectUrl</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$redirectUrl</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$params</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int|string|null&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$params</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, null|int|string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>additional parameters to include with the request</p>
 </section>
@@ -1277,46 +1574,181 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_login_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_login_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when a Client ID is not configured</p>
+                                                                                        <section class="phpdocumentor-description"><p>when a Client ID is not configured</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when <code class="prettyprint">redirectUri</code> is not specified, and supplied SdkConfiguration does not have a default redirectUri configured</p>
+                                                                                        <section class="phpdocumentor-description"><p>when <code class="prettyprint">redirectUri</code> is not specified, and supplied SdkConfiguration does not have a default redirectUri configured</p>
 </section>
 
                                     </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/authentication#login"><abbr title="https://auth0.com/docs/api/authentication#login">https://auth0.com/docs/api/authentication#login</abbr></a></span>
-                                        
-                                             
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/authentication#login">https://auth0.com/docs/api/authentication#login</a></span>
+                                                                
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">string</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_loginWithCustomTokenExchange">
+        loginWithCustomTokenExchange()
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_loginWithCustomTokenExchange" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">229</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">loginWithCustomTokenExchange</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$subjectToken</span></span><span class="phpdocumentor-signature__argument"><span>, </span><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$subjectTokenType</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$actorToken</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$actorTokenType</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, null|int|string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">bool</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$subjectToken</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>the token being exchanged</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$subjectTokenType</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>a URI identifying the type of <code class="prettyprint">subjectToken</code>. Any custom URI scheme is accepted (e.g. <code class="prettyprint">urn:acme:token</code>).</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$actorToken</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Optional. A token representing the acting party for delegation. Requires <code class="prettyprint">actorTokenType</code>.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$actorTokenType</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Optional. A URI identifying the type of <code class="prettyprint">actorToken</code>. Requires <code class="prettyprint">actorToken</code>.</p>
+</section>
+
+            </dd>
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$params</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, null|int|string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Optional. Additional content to include in the body of the API request, such as <code class="prettyprint">audience</code>, <code class="prettyprint">scope</code>, and <code class="prettyprint">organization</code>.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+    <h5 class="phpdocumentor-tag-list__heading" id="method_loginWithCustomTokenExchange_tags">
+        Tags
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_loginWithCustomTokenExchange_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h5>
+    <dl class="phpdocumentor-tag-list">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ArgumentException.html"><abbr title="\Auth0\SDK\Exception\ArgumentException">ArgumentException</abbr></a></span>
+                                                                                        <section class="phpdocumentor-description"><p>when <code class="prettyprint">subjectToken</code> is blank, <code class="prettyprint">subjectTokenType</code> is blank or not a valid URI, or the actor token and its type are not supplied together</p>
+</section>
+
+                                    </dd>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
+                                                                                        <section class="phpdocumentor-description"><p>when used without statefulness being configured</p>
+</section>
+
+                                    </dd>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-StateException.html"><abbr title="\Auth0\SDK\Exception\StateException">StateException</abbr></a></span>
+                                                                                        <section class="phpdocumentor-description"><p>if the token exchange request fails, or an access token is missing from the response</p>
+</section>
+
+                                    </dd>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-InvalidTokenException.html"><abbr title="\Auth0\SDK\Exception\InvalidTokenException">InvalidTokenException</abbr></a></span>
+                                                                                        <section class="phpdocumentor-description"><p>when validation of a returned ID token fails</p>
+</section>
+
+                                    </dd>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-NetworkException.html"><abbr title="\Auth0\SDK\Exception\NetworkException">NetworkException</abbr></a></span>
+                                                                                        <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
+</section>
+
+                                    </dd>
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/authenticate/custom-token-exchange">https://auth0.com/docs/authenticate/custom-token-exchange</a></span>
+                                                                
+                                    </dd>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://datatracker.ietf.org/doc/html/rfc8693">https://datatracker.ietf.org/doc/html/rfc8693</a></span>
+                                                                
+                                    </dd>
+                        </dl>
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">bool</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1327,11 +1759,12 @@
     <h4 class="phpdocumentor-element__name" id="method_logout">
         logout()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_logout" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">92</span>
+    <span class="phpdocumentor-element-found-in__line">248</span>
 
     </aside>
 
@@ -1339,24 +1772,27 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">logout</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnUri</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int|string|null&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">logout</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$returnUri</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, null|int|string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$returnUri</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$returnUri</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$params</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int|string|null&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$params</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, null|int|string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. Additional parameters to include with the request.</p>
 </section>
@@ -1365,46 +1801,43 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_logout_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_logout_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when a Client ID is not configured</p>
+                                                                                        <section class="phpdocumentor-description"><p>when a Client ID is not configured</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when <code class="prettyprint">returnUri</code> is not specified, and supplied SdkConfiguration does not have a default redirectUri configured</p>
+                                                                                        <section class="phpdocumentor-description"><p>when <code class="prettyprint">returnUri</code> is not specified, and supplied SdkConfiguration does not have a default redirectUri configured</p>
 </section>
 
                                     </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/authentication#logout"><abbr title="https://auth0.com/docs/api/authentication#logout">https://auth0.com/docs/api/authentication#logout</abbr></a></span>
-                                        
-                                             
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/authentication#logout">https://auth0.com/docs/api/authentication#logout</a></span>
+                                                                
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">string</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1412,32 +1845,38 @@
             -public
                                                         "
 >
-    <h4 class="phpdocumentor-element__name" id="method_management">
-        management()
-        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_management" class="headerlink"><i class="fas fa-link"></i></a>
+    <h4 class="phpdocumentor-element__name" id="method_refreshState">
+        refreshState()
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_refreshState" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">24</span>
+    <span class="phpdocumentor-element-found-in__line">256</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Create, configure, and return an instance of the Management class.</p>
+        <p class="phpdocumentor-summary">Updates the SDK&#039;s internal state by clearing it&#039;s credentials cache, and retrieving the current credentials from the configured session medium. Use this when you directly make changes to the configured session medium to ensure the SDK reflects those changes.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">management</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-API-ManagementInterface.html"><abbr title="\Auth0\SDK\Contract\API\ManagementInterface">ManagementInterface</abbr></a></span></code>
+                    <span class="phpdocumentor-signature__name">refreshState</span><span>(</span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
     
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type"><a href="classes/Auth0-SDK-Contract-API-ManagementInterface.html"><abbr title="\Auth0\SDK\Contract\API\ManagementInterface">ManagementInterface</abbr></a></span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1448,11 +1887,12 @@
     <h4 class="phpdocumentor-element__name" id="method_renew">
         renew()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_renew" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">163</span>
+    <span class="phpdocumentor-element-found-in__line">271</span>
 
     </aside>
 
@@ -1460,17 +1900,20 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">renew</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int|string|null&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">renew</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, null|int|string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
         <section class="phpdocumentor-description"><p>Scope &quot;offline_access&quot; must be declared in order to obtain refresh token for later token renewal.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$params</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int|string|null&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$params</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, null|int|string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. Additional parameters to include with the request.</p>
 </section>
@@ -1479,66 +1922,55 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_renew_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_renew_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-StateException.html"><abbr title="\Auth0\SDK\Exception\StateException">StateException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>if the Auth0 object does not have access token and refresh token, or the API did not renew tokens properly</p>
+                                                                                        <section class="phpdocumentor-description"><p>if the Auth0 object does not have access token and refresh token, or the API did not renew tokens properly</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when a Client ID is not configured</p>
+                                                                                        <section class="phpdocumentor-description"><p>when a Client ID is not configured</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when a Client Secret is not configured</p>
+                                                                                        <section class="phpdocumentor-description"><p>when a Client Secret is not configured</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-NetworkException.html"><abbr title="\Auth0\SDK\Exception\NetworkException">NetworkException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
+                                                                                        <section class="phpdocumentor-description"><p>when the API request fails due to a network error</p>
 </section>
 
                                     </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/tokens/refresh-token/current"><abbr title="https://auth0.com/docs/tokens/refresh-token/current">https://auth0.com/docs/tokens/refresh-token/current</abbr></a></span>
-                                        
-                                             
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/tokens/refresh-token/current">https://auth0.com/docs/tokens/refresh-token/current</a></span>
+                                                                
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1549,11 +1981,12 @@
     <h4 class="phpdocumentor-element__name" id="method_setAccessToken">
         setAccessToken()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessToken" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">229</span>
+    <span class="phpdocumentor-element-found-in__line">280</span>
 
     </aside>
 
@@ -1561,14 +1994,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setAccessToken</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$accessToken</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">setAccessToken</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$accessToken</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$accessToken</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$accessToken</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>access token returned from the code exchange</p>
@@ -1579,11 +2015,13 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1594,11 +2032,12 @@
     <h4 class="phpdocumentor-element__name" id="method_setAccessTokenExpiration">
         setAccessTokenExpiration()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessTokenExpiration" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">256</span>
+    <span class="phpdocumentor-element-found-in__line">289</span>
 
     </aside>
 
@@ -1606,14 +2045,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setAccessTokenExpiration</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$accessTokenExpiration</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">setAccessTokenExpiration</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">int&nbsp;</span><span class="phpdocumentor-signature__argument__name">$accessTokenExpiration</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$accessTokenExpiration</span>
-                : <span class="phpdocumentor-signature__argument__return-type">int</span>
+                <span class="phpdocumentor-argument-list__argument__name">$accessTokenExpiration</span>
+                : <span class="phpdocumentor-argument-list__argument__type">int</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>unix timestamp representing the expiration time on the access token</p>
@@ -1624,11 +2066,13 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1639,11 +2083,12 @@
     <h4 class="phpdocumentor-element__name" id="method_setAccessTokenScope">
         setAccessTokenScope()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessTokenScope" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">247</span>
+    <span class="phpdocumentor-element-found-in__line">298</span>
 
     </aside>
 
@@ -1651,14 +2096,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setAccessTokenScope</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$accessTokenScope</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">setAccessTokenScope</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$accessTokenScope</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$accessTokenScope</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, string&gt;</span>
+                <span class="phpdocumentor-argument-list__argument__name">$accessTokenScope</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, string&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>an array of scopes for the access token</p>
@@ -1669,11 +2117,115 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setBackchannel">
+        setBackchannel()
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setBackchannel" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">307</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Sets and persists an identifier used for OIDC backchannel logout requests.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setBackchannel</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$backchannel</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$backchannel</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>an OIDC backchannel logout identifier composed of the sub, iss and sid claims from the source ID Token.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
+</article>
+                    <article
+        class="phpdocumentor-element
+            -method
+            -public
+                                                        "
+>
+    <h4 class="phpdocumentor-element__name" id="method_setConfiguration">
+        setConfiguration()
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setConfiguration" class="headerlink"><i class="fas fa-link"></i></a>
+
+    </h4>
+    <aside class="phpdocumentor-element-found-in">
+    <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
+    :
+    <span class="phpdocumentor-element-found-in__line">316</span>
+
+    </aside>
+
+        <p class="phpdocumentor-summary">Set the configuration for the SDK instance.</p>
+
+    <code class="phpdocumentor-code phpdocumentor-signature ">
+    <span class="phpdocumentor-signature__visibility">public</span>
+                    <span class="phpdocumentor-signature__name">setConfiguration</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, mixed&gt;|<a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a>&nbsp;</span><span class="phpdocumentor-signature__argument__name">$configuration</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+
+    <div class="phpdocumentor-label-line">
+        </div>
+    
+    
+        <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
+    <dl class="phpdocumentor-argument-list">
+                    <dt class="phpdocumentor-argument-list__entry">
+                <span class="phpdocumentor-argument-list__argument__name">$configuration</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;|<a href="classes/Auth0-SDK-Configuration-SdkConfiguration.html"><abbr title="\Auth0\SDK\Configuration\SdkConfiguration">SdkConfiguration</abbr></a></span>
+                            </dt>
+            <dd class="phpdocumentor-argument-list__definition">
+                    <section class="phpdocumentor-description"><p>Required. Base configuration options for the SDK. See the SdkConfiguration class constructor for options.</p>
+</section>
+
+            </dd>
+            </dl>
+
+    
+
+        
+    
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1684,11 +2236,12 @@
     <h4 class="phpdocumentor-element__name" id="method_setIdToken">
         setIdToken()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setIdToken" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">211</span>
+    <span class="phpdocumentor-element-found-in__line">325</span>
 
     </aside>
 
@@ -1696,14 +2249,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setIdToken</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$idToken</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">setIdToken</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$idToken</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$idToken</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$idToken</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>id token returned from the code exchange</p>
@@ -1714,11 +2270,13 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1729,11 +2287,12 @@
     <h4 class="phpdocumentor-element__name" id="method_setRefreshToken">
         setRefreshToken()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setRefreshToken" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">238</span>
+    <span class="phpdocumentor-element-found-in__line">334</span>
 
     </aside>
 
@@ -1741,14 +2300,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setRefreshToken</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$refreshToken</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">setRefreshToken</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$refreshToken</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$refreshToken</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string</span>
+                <span class="phpdocumentor-argument-list__argument__name">$refreshToken</span>
+                : <span class="phpdocumentor-argument-list__argument__type">string</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>refresh token returned from the code exchange</p>
@@ -1759,11 +2321,13 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1774,11 +2338,12 @@
     <h4 class="phpdocumentor-element__name" id="method_setUser">
         setUser()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setUser" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">220</span>
+    <span class="phpdocumentor-element-found-in__line">343</span>
 
     </aside>
 
@@ -1786,14 +2351,17 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">setUser</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, array|int|string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$user</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
+                    <span class="phpdocumentor-signature__name">setUser</span><span>(</span><span class="phpdocumentor-signature__argument"><span class="phpdocumentor-signature__argument__type">array&lt;string|int, array&lt;string|int, mixed&gt;|int|string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$user</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">self</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$user</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, array|int|string&gt;</span>
+                <span class="phpdocumentor-argument-list__argument__name">$user</span>
+                : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, array&lt;string|int, mixed&gt;|int|string&gt;</span>
                             </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>user data to store</p>
@@ -1804,11 +2372,13 @@
 
     
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">self</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">self</span>
+            </section>
+
 </article>
                     <article
         class="phpdocumentor-element
@@ -1819,11 +2389,12 @@
     <h4 class="phpdocumentor-element__name" id="method_signup">
         signup()
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_signup" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h4>
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">59</span>
+    <span class="phpdocumentor-element-found-in__line">359</span>
 
     </aside>
 
@@ -1831,24 +2402,27 @@
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
-                    <span class="phpdocumentor-signature__name">signup</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__return-type">string|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$redirectUrl</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int|string|null&gt;|null&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
+                    <span class="phpdocumentor-signature__name">signup</span><span>(</span><span class="phpdocumentor-signature__argument"><span>[</span><span class="phpdocumentor-signature__argument__type">null|string&nbsp;</span><span class="phpdocumentor-signature__argument__name">$redirectUrl</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span class="phpdocumentor-signature__argument"><span>[</span><span>, </span><span class="phpdocumentor-signature__argument__type">null|array&lt;string|int, null|int|string&gt;&nbsp;</span><span class="phpdocumentor-signature__argument__name">$params</span><span> = </span><span class="phpdocumentor-signature__argument__default-value">null</span><span> ]</span></span><span>)</span><span> : </span><span class="phpdocumentor-signature__response_type">string</span></code>
 
+    <div class="phpdocumentor-label-line">
+        </div>
+    
     
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
     <dl class="phpdocumentor-argument-list">
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$redirectUrl</span>
-                : <span class="phpdocumentor-signature__argument__return-type">string|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$redirectUrl</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>Optional. URI to return to after logging out. Defaults to the SDK's configured redirectUri.</p>
 </section>
 
             </dd>
                     <dt class="phpdocumentor-argument-list__entry">
-                <span class="phpdocumentor-signature__argument__name">$params</span>
-                : <span class="phpdocumentor-signature__argument__return-type">array&lt;string|int, int|string|null&gt;|null</span>
-                 = <span class="phpdocumentor-signature__argument__default-value">null</span>            </dt>
+                <span class="phpdocumentor-argument-list__argument__name">$params</span>
+                : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, null|int|string&gt;</span>
+                 = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
                     <section class="phpdocumentor-description"><p>additional parameters to include with the request</p>
 </section>
@@ -1857,121 +2431,112 @@
             </dl>
 
     
-    <h5 class="phpdocumentor-tag-list__heading" id="tags">
+    <h5 class="phpdocumentor-tag-list__heading" id="method_signup_tags">
         Tags
-        <a href="#tags" class="headerlink"><i class="fas fa-link"></i></a>
+        <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_signup_tags" class="headerlink"><i class="fas fa-link"></i></a>
+
     </h5>
     <dl class="phpdocumentor-tag-list">
-                                    <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                    <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">throws</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when a Client ID is not configured</p>
+                                                                                        <section class="phpdocumentor-description"><p>when a Client ID is not configured</p>
 </section>
 
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">throws</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
+                            <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-ConfigurationException.html"><abbr title="\Auth0\SDK\Exception\ConfigurationException">ConfigurationException</abbr></a></span>
-                                                            
-                                                 <section class="phpdocumentor-description"><p>when <code class="prettyprint">redirectUri</code> is not specified, and supplied SdkConfiguration does not have a default redirectUri configured</p>
+                                                                                        <section class="phpdocumentor-description"><p>when <code class="prettyprint">redirectUri</code> is not specified, and supplied SdkConfiguration does not have a default redirectUri configured</p>
 </section>
 
                                     </dd>
-                                                <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/universal-login/new-experience"><abbr title="https://auth0.com/docs/universal-login/new-experience">https://auth0.com/docs/universal-login/new-experience</abbr></a></span>
-                                        
-                                             
+                                <dt class="phpdocumentor-tag-list__entry">
+                <span class="phpdocumentor-tag__name">see</span>
+            </dt>
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/universal-login/new-experience">https://auth0.com/docs/universal-login/new-experience</a></span>
+                                                                
                                     </dd>
-                            <dt class="phpdocumentor-tag-list__entry">
-                    <span class="phpdocumentor-tag__name">see</span>
-                </dt>
-                <dd class="phpdocumentor-tag-list__definition">
-                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/authentication#login"><abbr title="https://auth0.com/docs/api/authentication#login">https://auth0.com/docs/api/authentication#login</abbr></a></span>
-                                        
-                                             
+                            <dd class="phpdocumentor-tag-list__definition">
+                                                                                    <span class="phpdocumentor-tag-link"><a href="https://auth0.com/docs/api/authentication#login">https://auth0.com/docs/api/authentication#login</a></span>
+                                                                
                                     </dd>
                         </dl>
 
-        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
-    <span class="phpdocumentor-signature__response_type">string</span>
-            &mdash;
         
     
+            <section>
+        <h5 class="phpdocumentor-return-value__heading">Return values</h5>
+        <span class="phpdocumentor-signature__response_type">string</span>
+            </section>
+
 </article>
             </section>
 
         
-    <script type="text/javascript">
-        function loadExternalCodeSnippets(line) {
-            Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach((pre) => {
-                var src = pre.getAttribute('data-src').replace( /\\/g, '/');
-                var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
-                var language = 'php';
-
-                var code = document.createElement('code');
-                code.className = 'language-' + language;
-
-                pre.textContent = '';
-
-                pre.setAttribute('data-line', line)
-                code.textContent = 'Loading…';
-
-                pre.appendChild(code);
-
-                var xhr = new XMLHttpRequest();
-
-                xhr.open('GET', src, true);
-
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4) {
-
-                        if (xhr.status < 400 && xhr.responseText) {
-                            code.textContent = xhr.responseText;
-
-                            Prism.highlightElement(code);
-                        }
-                        else if (xhr.status >= 400) {
-                            code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
-                        }
-                        else {
-                            code.textContent = '✖ Error: File does not exist, is empty or trying to view from localhost';
-                        }
-                    }
-                };
-
-                xhr.send(null);
-            });
-        }
-
-        var modals = document.querySelectorAll("[data-modal]");
-
-        modals.forEach(function (trigger) {
-            trigger.addEventListener("click", function (event) {
-                //event.preventDefault();
-                const modal = document.getElementById(trigger.dataset.modal);
-                modal.classList.add("phpdocumentor-modal__open");
-                loadExternalCodeSnippets(trigger.dataset.line)
-                const exits = modal.querySelectorAll("[data-exit-button]");
-                exits.forEach(function (exit) {
-                    exit.addEventListener("click", function (event) {
-                        event.preventDefault();
-                        modal.classList.remove("phpdocumentor-modal__open");
-                    });
-                });
-            });
-        });
-    </script>
-
     </article>
-                <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
+                                </section>
+                <section class="phpdocumentor-on-this-page__sidebar">
+                                
+    <section class="phpdocumentor-on-this-page__content">
+        <strong class="phpdocumentor-on-this-page__title">On this page</strong>
+
+        <ul class="phpdocumentor-list -clean">
+            <li class="phpdocumentor-on-this-page-section__title">Table Of Contents</li>
+            <li>
+                <ul class="phpdocumentor-list -clean">
+                                                                                <li><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#toc-methods">Methods</a></li>
+                                    </ul>
+            </li>
+            
+                            <li class="phpdocumentor-on-this-page-section__title">Methods</li>
+                <li>
+                    <ul class="phpdocumentor-list -clean">
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_authentication">authentication()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_clear">clear()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_configuration">configuration()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_decode">decode()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_exchange">exchange()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessToken">getAccessToken()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessTokenExpiration">getAccessTokenExpiration()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getAccessTokenScope">getAccessTokenScope()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getBackchannel">getBackchannel()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getBearerToken">getBearerToken()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getCredentials">getCredentials()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getExchangeParameters">getExchangeParameters()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getIdToken">getIdToken()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getInvitationParameters">getInvitationParameters()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getRefreshToken">getRefreshToken()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getRequestParameter">getRequestParameter()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_getUser">getUser()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_handleBackchannelLogout">handleBackchannelLogout()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_handleInvitation">handleInvitation()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_isAuthenticated">isAuthenticated()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_login">login()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_loginWithCustomTokenExchange">loginWithCustomTokenExchange()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_logout">logout()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_refreshState">refreshState()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_renew">renew()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessToken">setAccessToken()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessTokenExpiration">setAccessTokenExpiration()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setAccessTokenScope">setAccessTokenScope()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setBackchannel">setBackchannel()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setConfiguration">setConfiguration()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setIdToken">setIdToken()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setRefreshToken">setRefreshToken()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_setUser">setUser()</a></li>
+                                                    <li class=""><a href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_signup">signup()</a></li>
+                                            </ul>
+                </li>
+            
+                    </ul>
+    </section>
+
+                </section>
+                            </div>
+            <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
     <section class="phpdocumentor-search-results__dialog">
         <header class="phpdocumentor-search-results__header">
             <h2 class="phpdocumentor-search-results__title">Search results</h2>
@@ -1982,7 +2547,6 @@
         </section>
     </section>
 </section>
-            </div>
         </div>
         <a href="classes/Auth0-SDK-Contract-Auth0Interface.html#top" class="phpdocumentor-back-to-top"><i class="fas fa-chevron-circle-up"></i></a>
 

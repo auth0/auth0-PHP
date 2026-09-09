@@ -7,11 +7,14 @@
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="../">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png"/>
     <link rel="icon" href="images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png"/>
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/base.css">
             <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="css/template.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0/css/all.min.css" integrity="sha256-ybRkN9dBjhcS2qrW1z+hfCxq+1aBdwyQM5wlQoQVt/0=" crossorigin="anonymous" />
@@ -20,6 +23,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/line-highlight/prism-line-highlight.css">
                 <script src="https://cdn.jsdelivr.net/npm/fuse.js@3.4.6"></script>
         <script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2"></script>
+        <script src="js/template.js"></script>
         <script src="js/search.js"></script>
         <script defer src="js/searchIndex.js"></script>
     </head>
@@ -53,8 +57,8 @@
 <label class="phpdocumentor-sidebar__menu-icon" for="sidebar-button">
     Menu
 </label>
-<aside class="phpdocumentor-column -four phpdocumentor-sidebar">
-                    <section class="phpdocumentor-sidebar__category">
+<aside class="phpdocumentor-column -three phpdocumentor-sidebar">
+                    <section class="phpdocumentor-sidebar__category -namespaces">
             <h2 class="phpdocumentor-sidebar__category-header">Namespaces</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="namespaces/auth0.html" class="">Auth0</a>
@@ -67,7 +71,7 @@
             </ul>
 
                         </section>
-                <section class="phpdocumentor-sidebar__category">
+                <section class="phpdocumentor-sidebar__category -packages">
             <h2 class="phpdocumentor-sidebar__category-header">Packages</h2>
                                     <h4 class="phpdocumentor-sidebar__root-namespace">
     <a href="packages/Auth0.html" class="">Auth0</a>
@@ -81,220 +85,35 @@
 
                         </section>
             
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -reports">
         <h2 class="phpdocumentor-sidebar__category-header">Reports</h2>
                 <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/deprecated.html">Deprecated</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/errors.html">Errors</a></h3>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="reports/markers.html">Markers</a></h3>
     </section>
 
-    <section class="phpdocumentor-sidebar__category">
+    <section class="phpdocumentor-sidebar__category -indices">
         <h2 class="phpdocumentor-sidebar__category-header">Indices</h2>
         <h3 class="phpdocumentor-sidebar__root-package"><a href="indices/files.html">Files</a></h3>
     </section>
 </aside>
 
-            <div class="phpdocumentor-column -eight phpdocumentor-content">
-                <ul class="phpdocumentor-breadcrumbs">
-    <li><a href="">Home</a></li>
-</ul>
+            <div class="phpdocumentor-column -nine phpdocumentor-content">
+                                        <section>
+        <ul class="phpdocumentor-breadcrumbs">
+            <li><a href="">Home</a></li>
+        </ul>
 
-<div class="phpdocumentor-row">
-    <h2 class="phpdocumentor-content__title">Errors</h2>
+        <div class="phpdocumentor-row">
+            <h2 class="phpdocumentor-content__title">Errors</h2>
 
-        <h3>Table of Contents</h3>
-    <table class="phpdocumentor-table_of_contents">
-                                            <tr>
-                    <td class="phpdocumentor-cell"><a href="reports/errors.html#src/Contract/API/Management/RolesInterface.php">src/Contract/API/Management/RolesInterface.php</a></td>
-                    <td class="phpdocumentor-cell">2</td>
-                </tr>
-                                                            <tr>
-                    <td class="phpdocumentor-cell"><a href="reports/errors.html#src/Contract/API/Management/UsersInterface.php">src/Contract/API/Management/UsersInterface.php</a></td>
-                    <td class="phpdocumentor-cell">2</td>
-                </tr>
-                                                            <tr>
-                    <td class="phpdocumentor-cell"><a href="reports/errors.html#src/Contract/Auth0Interface.php">src/Contract/Auth0Interface.php</a></td>
-                    <td class="phpdocumentor-cell">1</td>
-                </tr>
-                                                            <tr>
-                    <td class="phpdocumentor-cell"><a href="reports/errors.html#src/Store/CookieStore.php">src/Store/CookieStore.php</a></td>
-                    <td class="phpdocumentor-cell">1</td>
-                </tr>
-                                                            <tr>
-                    <td class="phpdocumentor-cell"><a href="reports/errors.html#src/Utility/HttpClient.php">src/Utility/HttpClient.php</a></td>
-                    <td class="phpdocumentor-cell">1</td>
-                </tr>
-                                                            <tr>
-                    <td class="phpdocumentor-cell"><a href="reports/errors.html#src/Utility/HttpRequest.php">src/Utility/HttpRequest.php</a></td>
-                    <td class="phpdocumentor-cell">1</td>
-                </tr>
-                                                            <tr>
-                    <td class="phpdocumentor-cell"><a href="reports/errors.html#src/Utility/Toolkit/Assert.php">src/Utility/Toolkit/Assert.php</a></td>
-                    <td class="phpdocumentor-cell">1</td>
-                </tr>
-                                                            <tr>
-                    <td class="phpdocumentor-cell"><a href="reports/errors.html#src/Utility/Toolkit.php">src/Utility/Toolkit.php</a></td>
-                    <td class="phpdocumentor-cell">1</td>
-                </tr>
-                                    </table>
-    
-    
-            <a id="src/Contract/API/Management/RolesInterface.php"></a>
-        <h3><abbr title="src/Contract/API/Management/RolesInterface.php">RolesInterface.php</abbr></h3>
-        <table>
-            <thead>
-                <tr>
-                    <th class="phpdocumentor-heading">Type</th>
-                    <th class="phpdocumentor-heading">Line</th>
-                    <th class="phpdocumentor-heading">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                            <tr>
-                    <td class="phpdocumentor-cell">ERROR</td>
-                    <td class="phpdocumentor-cell">0</td>
-                    <td class="phpdocumentor-cell">Tag &quot;param&quot; with body &quot;@param array{permissions: array&lt;array{permission_name: string, resource_server_identifier: string}&gt;}  $permissions  permissions to add, array of permission arrays&quot; has error &quot;\Auth0\SDK\Contract\API\Management\array{permissions: array&quot; is not a valid Fqsen.</td>
-                </tr>
-                            <tr>
-                    <td class="phpdocumentor-cell">ERROR</td>
-                    <td class="phpdocumentor-cell">0</td>
-                    <td class="phpdocumentor-cell">Tag &quot;param&quot; with body &quot;@param array{permissions: array&lt;array{permission_name: string, resource_server_identifier: string}&gt;}  $permissions  permissions to delete, array of permission arrays&quot; has error &quot;\Auth0\SDK\Contract\API\Management\array{permissions: array&quot; is not a valid Fqsen.</td>
-                </tr>
-                        </tbody>
-        </table>
-            <a id="src/Contract/API/Management/UsersInterface.php"></a>
-        <h3><abbr title="src/Contract/API/Management/UsersInterface.php">UsersInterface.php</abbr></h3>
-        <table>
-            <thead>
-                <tr>
-                    <th class="phpdocumentor-heading">Type</th>
-                    <th class="phpdocumentor-heading">Line</th>
-                    <th class="phpdocumentor-heading">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                            <tr>
-                    <td class="phpdocumentor-cell">ERROR</td>
-                    <td class="phpdocumentor-cell">0</td>
-                    <td class="phpdocumentor-cell">Tag &quot;param&quot; with body &quot;@param array{permissions: array&lt;array{permission_name: string, resource_server_identifier: string}&gt;}  $permissions  array of permissions to add&quot; has error &quot;\Auth0\SDK\Contract\API\Management\array{permissions: array&quot; is not a valid Fqsen.</td>
-                </tr>
-                            <tr>
-                    <td class="phpdocumentor-cell">ERROR</td>
-                    <td class="phpdocumentor-cell">0</td>
-                    <td class="phpdocumentor-cell">Tag &quot;param&quot; with body &quot;@param array{permissions: array&lt;array{permission_name: string, resource_server_identifier: string}&gt;}  $permissions  array of permissions to remove&quot; has error &quot;\Auth0\SDK\Contract\API\Management\array{permissions: array&quot; is not a valid Fqsen.</td>
-                </tr>
-                        </tbody>
-        </table>
-            <a id="src/Contract/Auth0Interface.php"></a>
-        <h3><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></h3>
-        <table>
-            <thead>
-                <tr>
-                    <th class="phpdocumentor-heading">Type</th>
-                    <th class="phpdocumentor-heading">Line</th>
-                    <th class="phpdocumentor-heading">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                            <tr>
-                    <td class="phpdocumentor-cell">ERROR</td>
-                    <td class="phpdocumentor-cell">0</td>
-                    <td class="phpdocumentor-cell">Tag &quot;return&quot; with body &quot;@return array{invitation: string, organization: string, organizationName: string}|null&quot; has error &quot;\Auth0\SDK\Contract\array{invitation: string&quot; is not a valid Fqsen.</td>
-                </tr>
-                        </tbody>
-        </table>
-            <a id="src/Store/CookieStore.php"></a>
-        <h3><abbr title="src/Store/CookieStore.php">CookieStore.php</abbr></h3>
-        <table>
-            <thead>
-                <tr>
-                    <th class="phpdocumentor-heading">Type</th>
-                    <th class="phpdocumentor-heading">Line</th>
-                    <th class="phpdocumentor-heading">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                            <tr>
-                    <td class="phpdocumentor-cell">ERROR</td>
-                    <td class="phpdocumentor-cell">0</td>
-                    <td class="phpdocumentor-cell">Tag &quot;return&quot; with body &quot;@return array{expires: int, path: string, domain?: string, secure: bool, httponly: bool, samesite: string, url_encode?: int}&quot; has error &quot;\Auth0\SDK\Store\array{expires: int&quot; is not a valid Fqsen.</td>
-                </tr>
-                        </tbody>
-        </table>
-            <a id="src/Utility/HttpClient.php"></a>
-        <h3><abbr title="src/Utility/HttpClient.php">HttpClient.php</abbr></h3>
-        <table>
-            <thead>
-                <tr>
-                    <th class="phpdocumentor-heading">Type</th>
-                    <th class="phpdocumentor-heading">Line</th>
-                    <th class="phpdocumentor-heading">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                            <tr>
-                    <td class="phpdocumentor-cell">ERROR</td>
-                    <td class="phpdocumentor-cell">0</td>
-                    <td class="phpdocumentor-cell">Tag &quot;param&quot; with body &quot;@param array&lt;array{response?: ResponseInterface, callback?: callable, exception?: \Exception}|ResponseInterface&gt;  $responses  an array of ResponseInterface objects, or an array of arrays containing ResponseInterfaces with callbacks&quot; has error &quot;\Auth0\SDK\Utility\array{response&quot; is not a valid Fqsen.</td>
-                </tr>
-                        </tbody>
-        </table>
-            <a id="src/Utility/HttpRequest.php"></a>
-        <h3><abbr title="src/Utility/HttpRequest.php">HttpRequest.php</abbr></h3>
-        <table>
-            <thead>
-                <tr>
-                    <th class="phpdocumentor-heading">Type</th>
-                    <th class="phpdocumentor-heading">Line</th>
-                    <th class="phpdocumentor-heading">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                            <tr>
-                    <td class="phpdocumentor-cell">ERROR</td>
-                    <td class="phpdocumentor-cell">0</td>
-                    <td class="phpdocumentor-cell">Tag &quot;return&quot; with body &quot;@return array{stream: \Psr\Http\Message\StreamInterface, boundary: string}&quot; has error &quot;\Auth0\SDK\Utility\array{stream: \Psr\Http\Message\StreamInterface&quot; is not a valid Fqsen.</td>
-                </tr>
-                        </tbody>
-        </table>
-            <a id="src/Utility/Toolkit/Assert.php"></a>
-        <h3><abbr title="src/Utility/Toolkit/Assert.php">Assert.php</abbr></h3>
-        <table>
-            <thead>
-                <tr>
-                    <th class="phpdocumentor-heading">Type</th>
-                    <th class="phpdocumentor-heading">Line</th>
-                    <th class="phpdocumentor-heading">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                            <tr>
-                    <td class="phpdocumentor-cell">ERROR</td>
-                    <td class="phpdocumentor-cell">0</td>
-                    <td class="phpdocumentor-cell">Tag &quot;param&quot; with body &quot;@param array&lt;array{0: mixed, 1: \Throwable}&gt;  $subjects  values to process&quot; has error &quot;\Auth0\SDK\Utility\Toolkit\array{0: mixed&quot; is not a valid Fqsen.</td>
-                </tr>
-                        </tbody>
-        </table>
-            <a id="src/Utility/Toolkit.php"></a>
-        <h3><abbr title="src/Utility/Toolkit.php">Toolkit.php</abbr></h3>
-        <table>
-            <thead>
-                <tr>
-                    <th class="phpdocumentor-heading">Type</th>
-                    <th class="phpdocumentor-heading">Line</th>
-                    <th class="phpdocumentor-heading">Description</th>
-                </tr>
-            </thead>
-            <tbody>
-                            <tr>
-                    <td class="phpdocumentor-cell">ERROR</td>
-                    <td class="phpdocumentor-cell">0</td>
-                    <td class="phpdocumentor-cell">Tag &quot;param&quot; with body &quot;@param array&lt;array{0: mixed, 1: \Throwable}&gt;  $subjects  an array of values to work with&quot; has error &quot;\Auth0\SDK\Utility\array{0: mixed&quot; is not a valid Fqsen.</td>
-                </tr>
-                        </tbody>
-        </table>
-    </div>
-                <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
+            
+                            <div class="phpdocumentor-admonition phpdocumentor-admonition--success">No errors have been found in this project.</div>
+            
+                    </div>
+    </section>
+                            </div>
+            <section data-search-results class="phpdocumentor-search-results phpdocumentor-search-results--hidden">
     <section class="phpdocumentor-search-results__dialog">
         <header class="phpdocumentor-search-results__header">
             <h2 class="phpdocumentor-search-results__title">Search results</h2>
@@ -305,7 +124,6 @@
         </section>
     </section>
 </section>
-            </div>
         </div>
         <a href="reports/errors.html#top" class="phpdocumentor-back-to-top"><i class="fas fa-chevron-circle-up"></i></a>
 
