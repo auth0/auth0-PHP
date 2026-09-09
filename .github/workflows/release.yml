@@ -4,6 +4,8 @@ on:
   pull_request:
     types:
       - closed
+      - synchronize
+      - opened
   workflow_dispatch:
 
 permissions:
@@ -84,3 +86,30 @@ jobs:
           tag: ${{ steps.get_version.outputs.version }}
           commit: ${{ github.sha }}
           prerelease: ${{ steps.get_prerelease.outputs.prerelease }}
+
+  docs:
+    if: github.event_name == 'pull_request' || (github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/'))
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+
+      - name: Install phpDocumentor
+        run: curl -sL https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.10.0/phpDocumentor.phar -o phpdoc.phar
+
+      - name: Generate Auth API docs
+        run: php phpdoc.phar --config phpdoc.dist.xml
+
+      - name: Publish to docs branch
+        if: github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/')
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: docs
+          publish_dir: ./docs
+          commit_message: "Build: (${{ github.sha }}) Release ${{ github.event.pull_request.title }}"
