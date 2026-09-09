@@ -89,6 +89,7 @@ jobs:
     if: github.event.pull_request.merged && startsWith(github.event.pull_request.head.ref, 'release/')
     needs: release
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v4
