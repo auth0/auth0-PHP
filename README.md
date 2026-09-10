@@ -414,7 +414,8 @@ If your application accepts input from untrusted sources (such as query paramete
 
 ## API Reference
 
-- [API Reference](./reference.md)
+- [Authentication API Reference](https://auth0.github.io/auth0-PHP/)
+- [Management API Reference](./reference.md)
 
 ## Support Policy
 

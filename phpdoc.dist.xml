@@ -13,6 +13,13 @@
             <source dsn=".">
                 <path>src</path>
             </source>
+            <ignore>
+                <!-- Management API is documented separately via reference.md -->
+                <path>src/API/Management</path>
+                <path>src/API/ClientAbstract.php</path>
+                <path>src/API/Management.php</path>
+                <path>src/Mock</path>
+            </ignore>
             <extensions>
                 <extension>php</extension>
             </extensions>
