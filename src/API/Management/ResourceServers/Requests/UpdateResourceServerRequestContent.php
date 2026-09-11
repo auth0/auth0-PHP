@@ -71,6 +71,12 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
     private ?int $tokenLifetime;
 
     /**
+     * @var ?int $tokenLifetimeForAnonymousAccessTokens Expiration value (in seconds) for anonymous-session access tokens issued for this API.
+     */
+    #[JsonProperty('token_lifetime_for_anonymous_access_tokens')]
+    private ?int $tokenLifetimeForAnonymousAccessTokens;
+
+    /**
      * @var ?value-of<ResourceServerTokenDialectSchemaEnum> $tokenDialect
      */
     #[JsonProperty('token_dialect')]
@@ -129,6 +135,7 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
      *   allowOnlineAccess?: ?bool,
      *   allowOnlineAccessWithEphemeralSessions?: ?bool,
      *   tokenLifetime?: ?int,
+     *   tokenLifetimeForAnonymousAccessTokens?: ?int,
      *   tokenDialect?: ?value-of<ResourceServerTokenDialectSchemaEnum>,
      *   enforcePolicies?: ?bool,
      *   tokenEncryption?: ?ResourceServerTokenEncryption,
@@ -151,6 +158,7 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
         $this->allowOnlineAccess = $values['allowOnlineAccess'] ?? null;
         $this->allowOnlineAccessWithEphemeralSessions = $values['allowOnlineAccessWithEphemeralSessions'] ?? null;
         $this->tokenLifetime = $values['tokenLifetime'] ?? null;
+        $this->tokenLifetimeForAnonymousAccessTokens = $values['tokenLifetimeForAnonymousAccessTokens'] ?? null;
         $this->tokenDialect = $values['tokenDialect'] ?? null;
         $this->enforcePolicies = $values['enforcePolicies'] ?? null;
         $this->tokenEncryption = $values['tokenEncryption'] ?? null;
@@ -320,6 +328,24 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
     {
         $this->tokenLifetime = $value;
         $this->_setField('tokenLifetime');
+        return $this;
+    }
+
+    /**
+     * @return ?int
+     */
+    public function getTokenLifetimeForAnonymousAccessTokens(): ?int
+    {
+        return $this->tokenLifetimeForAnonymousAccessTokens;
+    }
+
+    /**
+     * @param ?int $value
+     */
+    public function setTokenLifetimeForAnonymousAccessTokens(?int $value = null): self
+    {
+        $this->tokenLifetimeForAnonymousAccessTokens = $value;
+        $this->_setField('tokenLifetimeForAnonymousAccessTokens');
         return $this;
     }
 

@@ -18,12 +18,12 @@ use Auth0\SDK\API\Management\Flows\FlowsClientInterface;
 use Auth0\SDK\API\Management\Forms\FormsClientInterface;
 use Auth0\SDK\API\Management\UserGrants\UserGrantsClientInterface;
 use Auth0\SDK\API\Management\Groups\GroupsClientInterface;
+use Auth0\SDK\API\Management\Guardian\GuardianClientInterface;
 use Auth0\SDK\API\Management\Hooks\HooksClientInterface;
 use Auth0\SDK\API\Management\Jobs\JobsClientInterface;
 use Auth0\SDK\API\Management\LogStreams\LogStreamsClientInterface;
 use Auth0\SDK\API\Management\Logs\LogsClientInterface;
 use Auth0\SDK\API\Management\NetworkAcls\NetworkAclsClientInterface;
-use Auth0\SDK\API\Management\OrganizationTemplates\OrganizationTemplatesClientInterface;
 use Auth0\SDK\API\Management\Organizations\OrganizationsClientInterface;
 use Auth0\SDK\API\Management\Prompts\PromptsClientInterface;
 use Auth0\SDK\API\Management\RateLimitPolicies\RateLimitPoliciesClientInterface;
@@ -44,7 +44,7 @@ use Auth0\SDK\API\Management\Users\UsersClientInterface;
 use Auth0\SDK\API\Management\Anomaly\AnomalyClientInterface;
 use Auth0\SDK\API\Management\AttackProtection\AttackProtectionClientInterface;
 use Auth0\SDK\API\Management\Emails\EmailsClientInterface;
-use Auth0\SDK\API\Management\Guardian\GuardianClientInterface;
+use Auth0\SDK\API\Management\Experimentation\ExperimentationClientInterface;
 use Auth0\SDK\API\Management\Keys\KeysClientInterface;
 use Auth0\SDK\API\Management\RiskAssessments\RiskAssessmentsClientInterface;
 use Auth0\SDK\API\Management\Tenants\TenantsClientInterface;
@@ -133,6 +133,11 @@ interface ManagementInterface
     public function getGroups(): GroupsClientInterface;
 
     /**
+     * @return GuardianClientInterface
+     */
+    public function getGuardian(): GuardianClientInterface;
+
+    /**
      * @return HooksClientInterface
      */
     public function getHooks(): HooksClientInterface;
@@ -156,11 +161,6 @@ interface ManagementInterface
      * @return NetworkAclsClientInterface
      */
     public function getNetworkAcls(): NetworkAclsClientInterface;
-
-    /**
-     * @return OrganizationTemplatesClientInterface
-     */
-    public function getOrganizationTemplates(): OrganizationTemplatesClientInterface;
 
     /**
      * @return OrganizationsClientInterface
@@ -263,9 +263,9 @@ interface ManagementInterface
     public function getEmails(): EmailsClientInterface;
 
     /**
-     * @return GuardianClientInterface
+     * @return ExperimentationClientInterface
      */
-    public function getGuardian(): GuardianClientInterface;
+    public function getExperimentation(): ExperimentationClientInterface;
 
     /**
      * @return KeysClientInterface

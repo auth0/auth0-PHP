@@ -11,6 +11,9 @@ use Auth0\SDK\API\Management\Types\SetGuardianFactorsProviderPhoneTwilioResponse
 use Auth0\SDK\API\Management\Types\GetGuardianFactorsProviderPhoneResponseContent;
 use Auth0\SDK\API\Management\Guardian\Factors\Phone\Requests\SetGuardianFactorsProviderPhoneRequestContent;
 use Auth0\SDK\API\Management\Types\SetGuardianFactorsProviderPhoneResponseContent;
+use Auth0\SDK\API\Management\Types\GetPhoneFactorSettingsResponseContent;
+use Auth0\SDK\API\Management\Guardian\Factors\Phone\Requests\SetPhoneFactorSettingsRequestContent;
+use Auth0\SDK\API\Management\Types\SetPhoneFactorSettingsResponseContent;
 use Auth0\SDK\API\Management\Types\GetGuardianFactorPhoneTemplatesResponseContent;
 use Auth0\SDK\API\Management\Guardian\Factors\Phone\Requests\SetGuardianFactorPhoneTemplatesRequestContent;
 use Auth0\SDK\API\Management\Types\SetGuardianFactorPhoneTemplatesResponseContent;
@@ -149,6 +152,52 @@ interface PhoneClientInterface
      * @return ?SetGuardianFactorsProviderPhoneResponseContent
      */
     public function setProvider(SetGuardianFactorsProviderPhoneRequestContent $request, ?array $options = null): ?SetGuardianFactorsProviderPhoneResponseContent;
+
+    /**
+     * TODO: Link this endpoint to relevant documentation when available.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->get();
+     * ```
+     *
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?GetPhoneFactorSettingsResponseContent
+     */
+    public function get(?array $options = null): ?GetPhoneFactorSettingsResponseContent;
+
+    /**
+     * TODO: Link this endpoint to relevant documentation when available.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->set(
+     *     new SetPhoneFactorSettingsRequestContent([
+     *         'otpLength' => 1,
+     *         'otpExpirationTime' => 1,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param SetPhoneFactorSettingsRequestContent $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?SetPhoneFactorSettingsResponseContent
+     */
+    public function set(SetPhoneFactorSettingsRequestContent $request, ?array $options = null): ?SetPhoneFactorSettingsResponseContent;
 
     /**
      * Retrieve details of the multi-factor authentication enrollment and verification templates for phone-type factors available in your tenant.

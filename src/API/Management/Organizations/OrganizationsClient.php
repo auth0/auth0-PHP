@@ -29,6 +29,9 @@ use Auth0\SDK\API\Management\Core\Client\HttpMethod;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use Auth0\SDK\API\Management\Types\GetOrganizationByNameResponseContent;
+use Auth0\SDK\API\Management\Organizations\Requests\SearchOrganizationsRequestParameters;
+use Auth0\SDK\API\Management\Types\SearchOrganization;
+use Auth0\SDK\API\Management\Types\SearchOrganizationsPaginatedResponseContent;
 use Auth0\SDK\API\Management\Types\GetOrganizationResponseContent;
 use Auth0\SDK\API\Management\Organizations\Requests\UpdateOrganizationRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateOrganizationResponseContent;
@@ -307,6 +310,62 @@ class OrganizationsClient implements OrganizationsClientInterface
             message: 'API request failed',
             statusCode: $statusCode,
             body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Retrieve details of organizations matching a search criteria. It is possible to:
+     *
+     * - Specify a search criteria for organizations
+     * - Search via `name`
+     * - Search via `display_name`
+     * - Substring matching (`contains` and `ends-with`) requires at least 3 characters
+     * - Use wildcards
+     *
+     * The `q` query parameter can be used to get organizations that match the specified criteria on `name` OR `display_name`.
+     *
+     * This endpoint supports SCIM or Lucene filter syntax with low-latency, cursor-based pagination. Use the `parser` parameter to specify "scim" or "lucene" syntax (default: "lucene").
+     *
+     * Results are eventually consistent and may not reflect recent updates immediately.
+     *
+     * **Sortable fields:** `name`, `display_name`, `created_at` (ascending only). Defaults to insertion order (oldest first).
+     *
+     * Example:
+     * ```php
+     * $client->organizations->search(
+     *     new SearchOrganizationsRequestParameters([
+     *         'q' => 'q',
+     *         'parser' => SearchParserEnum::Scim->value,
+     *         'take' => 1,
+     *         'from' => 'from',
+     *         'sort' => OrganizationSortFieldEnum::Name->value,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param SearchOrganizationsRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return Pager<SearchOrganization>
+     */
+    public function search(SearchOrganizationsRequestParameters $request = new SearchOrganizationsRequestParameters(), ?array $options = null): Pager
+    {
+        return new CursorPager(
+            request: $request,
+            getNextPage: fn (SearchOrganizationsRequestParameters $request) => $this->_search($request, $options),
+            setCursor: function (SearchOrganizationsRequestParameters $request, ?string $cursor) {
+                $request->setFrom($cursor);
+            },
+            /* @phpstan-ignore-next-line */
+            getNextCursor: fn (?SearchOrganizationsPaginatedResponseContent $response) => $response?->getNext() ?? null,
+            /* @phpstan-ignore-next-line */
+            getItems: fn (?SearchOrganizationsPaginatedResponseContent $response) => $response?->getOrganizations() ?? [],
         );
     }
 
@@ -621,6 +680,85 @@ class OrganizationsClient implements OrganizationsClientInterface
                     return null;
                 }
                 return ListOrganizationsPaginatedResponseContent::fromJson($json);
+            }
+        } catch (JsonException $e) {
+            throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Retrieve details of organizations matching a search criteria. It is possible to:
+     *
+     * - Specify a search criteria for organizations
+     * - Search via `name`
+     * - Search via `display_name`
+     * - Substring matching (`contains` and `ends-with`) requires at least 3 characters
+     * - Use wildcards
+     *
+     * The `q` query parameter can be used to get organizations that match the specified criteria on `name` OR `display_name`.
+     *
+     * This endpoint supports SCIM or Lucene filter syntax with low-latency, cursor-based pagination. Use the `parser` parameter to specify "scim" or "lucene" syntax (default: "lucene").
+     *
+     * Results are eventually consistent and may not reflect recent updates immediately.
+     *
+     * **Sortable fields:** `name`, `display_name`, `created_at` (ascending only). Defaults to insertion order (oldest first).
+     *
+     * @param SearchOrganizationsRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?SearchOrganizationsPaginatedResponseContent
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    private function _search(SearchOrganizationsRequestParameters $request = new SearchOrganizationsRequestParameters(), ?array $options = null): ?SearchOrganizationsPaginatedResponseContent
+    {
+        $options = array_merge($this->options, $options ?? []);
+        $query = [];
+        if ($request->getQ() != null) {
+            $query['q'] = $request->getQ();
+        }
+        if ($request->getParser() != null) {
+            $query['parser'] = $request->getParser();
+        }
+        if ($request->getTake() != null) {
+            $query['take'] = $request->getTake();
+        }
+        if ($request->getFrom() != null) {
+            $query['from'] = $request->getFrom();
+        }
+        if ($request->getSort() != null) {
+            $query['sort'] = $request->getSort();
+        }
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "organizations/search",
+                    method: HttpMethod::GET,
+                    query: $query,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                $json = $response->getBody()->getContents();
+                if (empty($json)) {
+                    return null;
+                }
+                return SearchOrganizationsPaginatedResponseContent::fromJson($json);
             }
         } catch (JsonException $e) {
             throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);

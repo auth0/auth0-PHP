@@ -2,6 +2,7 @@
 
 namespace Auth0\SDK\API\Management\Guardian\Factors;
 
+use Auth0\SDK\API\Management\Guardian\Factors\Email\EmailClient;
 use Auth0\SDK\API\Management\Guardian\Factors\Phone\PhoneClient;
 use Auth0\SDK\API\Management\Guardian\Factors\PushNotification\PushNotificationClient;
 use Auth0\SDK\API\Management\Guardian\Factors\Sms\SmsClient;
@@ -20,6 +21,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Auth0\SDK\API\Management\Types\GuardianFactorNameEnum;
 use Auth0\SDK\API\Management\Guardian\Factors\Requests\SetGuardianFactorRequestContent;
 use Auth0\SDK\API\Management\Types\SetGuardianFactorResponseContent;
+use Auth0\SDK\API\Management\Guardian\Factors\Email\EmailClientInterface;
 use Auth0\SDK\API\Management\Guardian\Factors\Phone\PhoneClientInterface;
 use Auth0\SDK\API\Management\Guardian\Factors\PushNotification\PushNotificationClientInterface;
 use Auth0\SDK\API\Management\Guardian\Factors\Sms\SmsClientInterface;
@@ -27,6 +29,11 @@ use Auth0\SDK\API\Management\Guardian\Factors\Duo\DuoClientInterface;
 
 class FactorsClient implements FactorsClientInterface
 {
+    /**
+     * @var EmailClient $email
+     */
+    public EmailClient $email;
+
     /**
      * @var PhoneClient $phone
      */
@@ -79,6 +86,7 @@ class FactorsClient implements FactorsClientInterface
     ) {
         $this->client = $client;
         $this->options = $options ?? [];
+        $this->email = new EmailClient($this->client, $this->options);
         $this->phone = new PhoneClient($this->client, $this->options);
         $this->pushNotification = new PushNotificationClient($this->client, $this->options);
         $this->sms = new SmsClient($this->client, $this->options);
@@ -195,6 +203,14 @@ class FactorsClient implements FactorsClientInterface
             statusCode: $statusCode,
             body: $response->getBody()->getContents(),
         );
+    }
+
+    /**
+     * @return EmailClientInterface
+     */
+    public function getEmail(): EmailClientInterface
+    {
+        return $this->email;
     }
 
     /**
