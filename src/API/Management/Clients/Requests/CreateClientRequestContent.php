@@ -27,6 +27,7 @@ use Auth0\SDK\API\Management\Types\ClientComplianceLevelEnum;
 use Auth0\SDK\API\Management\Types\ClientTokenExchangeConfiguration;
 use Auth0\SDK\API\Management\Types\CreateTokenQuota;
 use Auth0\SDK\API\Management\Types\CreateIdentityAssertionAuthorizationGrant;
+use Auth0\SDK\API\Management\Types\CreateAnonymousSessions;
 use Auth0\SDK\API\Management\Types\ClientThirdPartySecurityModeEnum;
 use Auth0\SDK\API\Management\Types\ClientRedirectionPolicyEnum;
 use Auth0\SDK\API\Management\Types\ExpressConfiguration;
@@ -347,6 +348,12 @@ class CreateClientRequestContent extends JsonSerializableType
     private ?CreateIdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant;
 
     /**
+     * @var ?CreateAnonymousSessions $anonymousSessions
+     */
+    #[JsonProperty('anonymous_sessions')]
+    private ?CreateAnonymousSessions $anonymousSessions;
+
+    /**
      * @var ?value-of<ClientThirdPartySecurityModeEnum> $thirdPartySecurityMode
      */
     #[JsonProperty('third_party_security_mode')]
@@ -435,6 +442,7 @@ class CreateClientRequestContent extends JsonSerializableType
      *   tokenQuota?: ?CreateTokenQuota,
      *   resourceServerIdentifier?: ?string,
      *   identityAssertionAuthorizationGrant?: ?CreateIdentityAssertionAuthorizationGrant,
+     *   anonymousSessions?: ?CreateAnonymousSessions,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   expressConfiguration?: ?ExpressConfiguration,
@@ -497,6 +505,7 @@ class CreateClientRequestContent extends JsonSerializableType
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
         $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
+        $this->anonymousSessions = $values['anonymousSessions'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
@@ -1420,6 +1429,24 @@ class CreateClientRequestContent extends JsonSerializableType
     {
         $this->identityAssertionAuthorizationGrant = $value;
         $this->_setField('identityAssertionAuthorizationGrant');
+        return $this;
+    }
+
+    /**
+     * @return ?CreateAnonymousSessions
+     */
+    public function getAnonymousSessions(): ?CreateAnonymousSessions
+    {
+        return $this->anonymousSessions;
+    }
+
+    /**
+     * @param ?CreateAnonymousSessions $value
+     */
+    public function setAnonymousSessions(?CreateAnonymousSessions $value = null): self
+    {
+        $this->anonymousSessions = $value;
+        $this->_setField('anonymousSessions');
         return $this;
     }
 

@@ -13,6 +13,7 @@ use Auth0\SDK\API\Management\Types\ClientTokenEndpointAuthMethodOrNullEnum;
 use Auth0\SDK\API\Management\Types\ClientAppTypeEnum;
 use Auth0\SDK\API\Management\Types\UpdateTokenQuota;
 use Auth0\SDK\API\Management\Types\UpdateIdentityAssertionAuthorizationGrant;
+use Auth0\SDK\API\Management\Types\UpdateAnonymousSessions;
 use Auth0\SDK\API\Management\Types\ClientAddons;
 use Auth0\SDK\API\Management\Types\ClientMobile;
 use Auth0\SDK\API\Management\Types\NativeSocialLoginPatch;
@@ -217,6 +218,12 @@ class UpdateClientRequestContent extends JsonSerializableType
     private ?UpdateIdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant;
 
     /**
+     * @var ?UpdateAnonymousSessions $anonymousSessions
+     */
+    #[JsonProperty('anonymous_sessions')]
+    private ?UpdateAnonymousSessions $anonymousSessions;
+
+    /**
      * @var ?string $formTemplate Form template for WS-Federation protocol
      */
     #[JsonProperty('form_template')]
@@ -414,6 +421,7 @@ class UpdateClientRequestContent extends JsonSerializableType
      *   customLoginPagePreview?: ?string,
      *   tokenQuota?: ?UpdateTokenQuota,
      *   identityAssertionAuthorizationGrant?: ?UpdateIdentityAssertionAuthorizationGrant,
+     *   anonymousSessions?: ?UpdateAnonymousSessions,
      *   formTemplate?: ?string,
      *   addons?: ?ClientAddons,
      *   clientMetadata?: ?array<string, mixed>,
@@ -476,6 +484,7 @@ class UpdateClientRequestContent extends JsonSerializableType
         $this->customLoginPagePreview = $values['customLoginPagePreview'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
+        $this->anonymousSessions = $values['anonymousSessions'] ?? null;
         $this->formTemplate = $values['formTemplate'] ?? null;
         $this->addons = $values['addons'] ?? null;
         $this->clientMetadata = $values['clientMetadata'] ?? null;
@@ -1042,6 +1051,24 @@ class UpdateClientRequestContent extends JsonSerializableType
     {
         $this->identityAssertionAuthorizationGrant = $value;
         $this->_setField('identityAssertionAuthorizationGrant');
+        return $this;
+    }
+
+    /**
+     * @return ?UpdateAnonymousSessions
+     */
+    public function getAnonymousSessions(): ?UpdateAnonymousSessions
+    {
+        return $this->anonymousSessions;
+    }
+
+    /**
+     * @param ?UpdateAnonymousSessions $value
+     */
+    public function setAnonymousSessions(?UpdateAnonymousSessions $value = null): self
+    {
+        $this->anonymousSessions = $value;
+        $this->_setField('anonymousSessions');
         return $this;
     }
 

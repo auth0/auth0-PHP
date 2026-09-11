@@ -93,6 +93,12 @@ class ResourceServer extends JsonSerializableType
     private ?bool $enforcePolicies;
 
     /**
+     * @var ?int $tokenLifetimeForAnonymousAccessTokens Expiration value (in seconds) for anonymous-session access tokens issued for this API.
+     */
+    #[JsonProperty('token_lifetime_for_anonymous_access_tokens')]
+    private ?int $tokenLifetimeForAnonymousAccessTokens;
+
+    /**
      * @var ?value-of<ResourceServerTokenDialectResponseEnum> $tokenDialect
      */
     #[JsonProperty('token_dialect')]
@@ -156,6 +162,7 @@ class ResourceServer extends JsonSerializableType
      *   tokenLifetime?: ?int,
      *   tokenLifetimeForWeb?: ?int,
      *   enforcePolicies?: ?bool,
+     *   tokenLifetimeForAnonymousAccessTokens?: ?int,
      *   tokenDialect?: ?value-of<ResourceServerTokenDialectResponseEnum>,
      *   tokenEncryption?: ?ResourceServerTokenEncryption,
      *   consentPolicy?: ?value-of<ResourceServerConsentPolicyEnum>,
@@ -183,6 +190,7 @@ class ResourceServer extends JsonSerializableType
         $this->tokenLifetime = $values['tokenLifetime'] ?? null;
         $this->tokenLifetimeForWeb = $values['tokenLifetimeForWeb'] ?? null;
         $this->enforcePolicies = $values['enforcePolicies'] ?? null;
+        $this->tokenLifetimeForAnonymousAccessTokens = $values['tokenLifetimeForAnonymousAccessTokens'] ?? null;
         $this->tokenDialect = $values['tokenDialect'] ?? null;
         $this->tokenEncryption = $values['tokenEncryption'] ?? null;
         $this->consentPolicy = $values['consentPolicy'] ?? null;
@@ -442,6 +450,24 @@ class ResourceServer extends JsonSerializableType
     {
         $this->enforcePolicies = $value;
         $this->_setField('enforcePolicies');
+        return $this;
+    }
+
+    /**
+     * @return ?int
+     */
+    public function getTokenLifetimeForAnonymousAccessTokens(): ?int
+    {
+        return $this->tokenLifetimeForAnonymousAccessTokens;
+    }
+
+    /**
+     * @param ?int $value
+     */
+    public function setTokenLifetimeForAnonymousAccessTokens(?int $value = null): self
+    {
+        $this->tokenLifetimeForAnonymousAccessTokens = $value;
+        $this->_setField('tokenLifetimeForAnonymousAccessTokens');
         return $this;
     }
 
