@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\Types\DefaultTokenQuota;
 use Auth0\SDK\API\Management\Types\TenantSettingsFlags;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Types\TenantSettingsSupportedLocalesEnum;
+use Auth0\SDK\API\Management\Types\ResourceServerAccessToken;
 use Auth0\SDK\API\Management\Types\TenantSettingsNullableSecurityHeaders;
 use Auth0\SDK\API\Management\Types\SessionCookieSchema;
 use Auth0\SDK\API\Management\Types\TenantSettingsSessions;
@@ -174,6 +175,12 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     private ?array $enabledLocales;
 
     /**
+     * @var ?ResourceServerAccessToken $accessToken
+     */
+    #[JsonProperty('access_token')]
+    private ?ResourceServerAccessToken $accessToken;
+
+    /**
      * @var ?TenantSettingsNullableSecurityHeaders $securityHeaders
      */
     #[JsonProperty('security_headers')]
@@ -312,6 +319,7 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
      *   legacySandboxVersion?: ?string,
      *   defaultRedirectionUri?: ?string,
      *   enabledLocales?: ?array<value-of<TenantSettingsSupportedLocalesEnum>>,
+     *   accessToken?: ?ResourceServerAccessToken,
      *   securityHeaders?: ?TenantSettingsNullableSecurityHeaders,
      *   sessionCookie?: ?SessionCookieSchema,
      *   sessions?: ?TenantSettingsSessions,
@@ -360,6 +368,7 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
         $this->legacySandboxVersion = $values['legacySandboxVersion'] ?? null;
         $this->defaultRedirectionUri = $values['defaultRedirectionUri'] ?? null;
         $this->enabledLocales = $values['enabledLocales'] ?? null;
+        $this->accessToken = $values['accessToken'] ?? null;
         $this->securityHeaders = $values['securityHeaders'] ?? null;
         $this->sessionCookie = $values['sessionCookie'] ?? null;
         $this->sessions = $values['sessions'] ?? null;
@@ -827,6 +836,24 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     {
         $this->enabledLocales = $value;
         $this->_setField('enabledLocales');
+        return $this;
+    }
+
+    /**
+     * @return ?ResourceServerAccessToken
+     */
+    public function getAccessToken(): ?ResourceServerAccessToken
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * @param ?ResourceServerAccessToken $value
+     */
+    public function setAccessToken(?ResourceServerAccessToken $value = null): self
+    {
+        $this->accessToken = $value;
+        $this->_setField('accessToken');
         return $this;
     }
 
