@@ -7,6 +7,8 @@ use Auth0\SDK\API\Management\Core\Pagination\Pager;
 use Auth0\SDK\API\Management\Types\ResourceServer;
 use Auth0\SDK\API\Management\ResourceServers\Requests\CreateResourceServerRequestContent;
 use Auth0\SDK\API\Management\Types\CreateResourceServerResponseContent;
+use Auth0\SDK\API\Management\ResourceServers\Requests\SearchResourceServersRequestParameters;
+use Auth0\SDK\API\Management\Types\ResourceServerSearchResponse;
 use Auth0\SDK\API\Management\ResourceServers\Requests\GetResourceServerRequestParameters;
 use Auth0\SDK\API\Management\Types\GetResourceServerResponseContent;
 use Auth0\SDK\API\Management\ResourceServers\Requests\UpdateResourceServerRequestContent;
@@ -69,6 +71,40 @@ interface ResourceServersClientInterface
      * @return ?CreateResourceServerResponseContent
      */
     public function create(CreateResourceServerRequestContent $request, ?array $options = null): ?CreateResourceServerResponseContent;
+
+    /**
+     * Search resource servers using SCIM or Lucene filter syntax with low-latency, eventually consistent results. Use the parser parameter to specify "scim" or "lucene" syntax (default: "lucene"). This endpoint provides an alternative to the standard GET /resource-servers endpoint with better performance for complex queries.
+     * Results may not reflect recent updates immediately.
+     *
+     * The `signing_secret` field is not supported by this endpoint.
+     *
+     * Example:
+     * ```php
+     * $client->resourceServers->search(
+     *     new SearchResourceServersRequestParameters([
+     *         'q' => 'q',
+     *         'parser' => SearchParserEnum::Scim->value,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'take' => 1,
+     *         'from' => 'from',
+     *         'sort' => ResourceServerSortFieldEnum::Identifier->value,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param SearchResourceServersRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return Pager<ResourceServerSearchResponse>
+     */
+    public function search(SearchResourceServersRequestParameters $request = new SearchResourceServersRequestParameters(), ?array $options = null): Pager;
 
     /**
      * Retrieve <a href="https://auth0.com/docs/apis">API</a> details with the given ID.

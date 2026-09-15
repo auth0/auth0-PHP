@@ -18,6 +18,10 @@ use Auth0\SDK\API\Management\Environments;
 use Auth0\SDK\API\Management\Core\Client\HttpMethod;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
+use Auth0\SDK\API\Management\ResourceServers\Requests\SearchResourceServersRequestParameters;
+use Auth0\SDK\API\Management\Types\ResourceServerSearchResponse;
+use Auth0\SDK\API\Management\Core\Pagination\CursorPager;
+use Auth0\SDK\API\Management\Types\SearchResourceServersResponseContent;
 use Auth0\SDK\API\Management\ResourceServers\Requests\GetResourceServerRequestParameters;
 use Auth0\SDK\API\Management\Types\GetResourceServerResponseContent;
 use Auth0\SDK\API\Management\ResourceServers\Requests\UpdateResourceServerRequestContent;
@@ -161,6 +165,53 @@ class ResourceServersClient implements ResourceServersClientInterface
             message: 'API request failed',
             statusCode: $statusCode,
             body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Search resource servers using SCIM or Lucene filter syntax with low-latency, eventually consistent results. Use the parser parameter to specify "scim" or "lucene" syntax (default: "lucene"). This endpoint provides an alternative to the standard GET /resource-servers endpoint with better performance for complex queries.
+     * Results may not reflect recent updates immediately.
+     *
+     * The `signing_secret` field is not supported by this endpoint.
+     *
+     * Example:
+     * ```php
+     * $client->resourceServers->search(
+     *     new SearchResourceServersRequestParameters([
+     *         'q' => 'q',
+     *         'parser' => SearchParserEnum::Scim->value,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'take' => 1,
+     *         'from' => 'from',
+     *         'sort' => ResourceServerSortFieldEnum::Identifier->value,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param SearchResourceServersRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return Pager<ResourceServerSearchResponse>
+     */
+    public function search(SearchResourceServersRequestParameters $request = new SearchResourceServersRequestParameters(), ?array $options = null): Pager
+    {
+        return new CursorPager(
+            request: $request,
+            getNextPage: fn (SearchResourceServersRequestParameters $request) => $this->_search($request, $options),
+            setCursor: function (SearchResourceServersRequestParameters $request, ?string $cursor) {
+                $request->setFrom($cursor);
+            },
+            /* @phpstan-ignore-next-line */
+            getNextCursor: fn (?SearchResourceServersResponseContent $response) => $response?->getNext() ?? null,
+            /* @phpstan-ignore-next-line */
+            getItems: fn (?SearchResourceServersResponseContent $response) => $response?->getResourceServers() ?? [],
         );
     }
 
@@ -386,6 +437,80 @@ class ResourceServersClient implements ResourceServersClientInterface
                     return null;
                 }
                 return ListResourceServerOffsetPaginatedResponseContent::fromJson($json);
+            }
+        } catch (JsonException $e) {
+            throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Search resource servers using SCIM or Lucene filter syntax with low-latency, eventually consistent results. Use the parser parameter to specify "scim" or "lucene" syntax (default: "lucene"). This endpoint provides an alternative to the standard GET /resource-servers endpoint with better performance for complex queries.
+     * Results may not reflect recent updates immediately.
+     *
+     * The `signing_secret` field is not supported by this endpoint.
+     *
+     * @param SearchResourceServersRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?SearchResourceServersResponseContent
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    private function _search(SearchResourceServersRequestParameters $request = new SearchResourceServersRequestParameters(), ?array $options = null): ?SearchResourceServersResponseContent
+    {
+        $options = array_merge($this->options, $options ?? []);
+        $query = [];
+        if ($request->getQ() != null) {
+            $query['q'] = $request->getQ();
+        }
+        if ($request->getParser() != null) {
+            $query['parser'] = $request->getParser();
+        }
+        if ($request->getFields() != null) {
+            $query['fields'] = $request->getFields();
+        }
+        if ($request->getIncludeFields() != null) {
+            $query['include_fields'] = $request->getIncludeFields();
+        }
+        if ($request->getTake() != null) {
+            $query['take'] = $request->getTake();
+        }
+        if ($request->getFrom() != null) {
+            $query['from'] = $request->getFrom();
+        }
+        if ($request->getSort() != null) {
+            $query['sort'] = $request->getSort();
+        }
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "resource-servers/search",
+                    method: HttpMethod::GET,
+                    query: $query,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                $json = $response->getBody()->getContents();
+                if (empty($json)) {
+                    return null;
+                }
+                return SearchResourceServersResponseContent::fromJson($json);
             }
         } catch (JsonException $e) {
             throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
