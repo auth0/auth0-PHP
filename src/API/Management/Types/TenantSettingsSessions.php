@@ -17,14 +17,22 @@ class TenantSettingsSessions extends JsonSerializableType
     private ?bool $oidcLogoutPromptEnabled;
 
     /**
+     * @var ?TenantSettingsSessionsAnonymous $anonymous
+     */
+    #[JsonProperty('anonymous')]
+    private ?TenantSettingsSessionsAnonymous $anonymous;
+
+    /**
      * @param array{
      *   oidcLogoutPromptEnabled?: ?bool,
+     *   anonymous?: ?TenantSettingsSessionsAnonymous,
      * } $values
      */
     public function __construct(
         array $values = [],
     ) {
         $this->oidcLogoutPromptEnabled = $values['oidcLogoutPromptEnabled'] ?? null;
+        $this->anonymous = $values['anonymous'] ?? null;
     }
 
     /**
@@ -42,6 +50,24 @@ class TenantSettingsSessions extends JsonSerializableType
     {
         $this->oidcLogoutPromptEnabled = $value;
         $this->_setField('oidcLogoutPromptEnabled');
+        return $this;
+    }
+
+    /**
+     * @return ?TenantSettingsSessionsAnonymous
+     */
+    public function getAnonymous(): ?TenantSettingsSessionsAnonymous
+    {
+        return $this->anonymous;
+    }
+
+    /**
+     * @param ?TenantSettingsSessionsAnonymous $value
+     */
+    public function setAnonymous(?TenantSettingsSessionsAnonymous $value = null): self
+    {
+        $this->anonymous = $value;
+        $this->_setField('anonymous');
         return $this;
     }
 

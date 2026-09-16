@@ -20,6 +20,9 @@ use Auth0\SDK\API\Management\Types\SetGuardianFactorsProviderPhoneTwilioResponse
 use Auth0\SDK\API\Management\Types\GetGuardianFactorsProviderPhoneResponseContent;
 use Auth0\SDK\API\Management\Guardian\Factors\Phone\Requests\SetGuardianFactorsProviderPhoneRequestContent;
 use Auth0\SDK\API\Management\Types\SetGuardianFactorsProviderPhoneResponseContent;
+use Auth0\SDK\API\Management\Types\GetPhoneFactorSettingsResponseContent;
+use Auth0\SDK\API\Management\Guardian\Factors\Phone\Requests\SetPhoneFactorSettingsRequestContent;
+use Auth0\SDK\API\Management\Types\SetPhoneFactorSettingsResponseContent;
 use Auth0\SDK\API\Management\Types\GetGuardianFactorPhoneTemplatesResponseContent;
 use Auth0\SDK\API\Management\Guardian\Factors\Phone\Requests\SetGuardianFactorPhoneTemplatesRequestContent;
 use Auth0\SDK\API\Management\Types\SetGuardianFactorPhoneTemplatesResponseContent;
@@ -375,6 +378,117 @@ class PhoneClient implements PhoneClientInterface
                     return null;
                 }
                 return SetGuardianFactorsProviderPhoneResponseContent::fromJson($json);
+            }
+        } catch (JsonException $e) {
+            throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * TODO: Link this endpoint to relevant documentation when available.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->get();
+     * ```
+     *
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?GetPhoneFactorSettingsResponseContent
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    public function get(?array $options = null): ?GetPhoneFactorSettingsResponseContent
+    {
+        $options = array_merge($this->options, $options ?? []);
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "guardian/factors/phone/settings",
+                    method: HttpMethod::GET,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                $json = $response->getBody()->getContents();
+                if (empty($json)) {
+                    return null;
+                }
+                return GetPhoneFactorSettingsResponseContent::fromJson($json);
+            }
+        } catch (JsonException $e) {
+            throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * TODO: Link this endpoint to relevant documentation when available.
+     *
+     * Example:
+     * ```php
+     * $client->guardian->factors->phone->set(
+     *     new SetPhoneFactorSettingsRequestContent([
+     *         'otpLength' => 1,
+     *         'otpExpirationTime' => 1,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param SetPhoneFactorSettingsRequestContent $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?SetPhoneFactorSettingsResponseContent
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    public function set(SetPhoneFactorSettingsRequestContent $request, ?array $options = null): ?SetPhoneFactorSettingsResponseContent
+    {
+        $options = array_merge($this->options, $options ?? []);
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "guardian/factors/phone/settings",
+                    method: HttpMethod::PUT,
+                    body: $request,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                $json = $response->getBody()->getContents();
+                if (empty($json)) {
+                    return null;
+                }
+                return SetPhoneFactorSettingsResponseContent::fromJson($json);
             }
         } catch (JsonException $e) {
             throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);

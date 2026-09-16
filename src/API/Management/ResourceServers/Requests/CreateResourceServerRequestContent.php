@@ -8,6 +8,7 @@ use Auth0\SDK\API\Management\Types\ResourceServerScope;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Types\SigningAlgorithmEnum;
 use Auth0\SDK\API\Management\Types\ResourceServerTokenDialectSchemaEnum;
+use Auth0\SDK\API\Management\Types\ResourceServerAccessToken;
 use Auth0\SDK\API\Management\Types\ResourceServerTokenEncryption;
 use Auth0\SDK\API\Management\Types\ResourceServerConsentPolicyEnum;
 use Auth0\SDK\API\Management\Types\ResourceServerProofOfPossession;
@@ -71,6 +72,12 @@ class CreateResourceServerRequestContent extends JsonSerializableType
     private ?int $tokenLifetime;
 
     /**
+     * @var ?int $tokenLifetimeForAnonymousAccessTokens Expiration value (in seconds) for anonymous-session access tokens issued for this API.
+     */
+    #[JsonProperty('token_lifetime_for_anonymous_access_tokens')]
+    private ?int $tokenLifetimeForAnonymousAccessTokens;
+
+    /**
      * @var ?value-of<ResourceServerTokenDialectSchemaEnum> $tokenDialect
      */
     #[JsonProperty('token_dialect')]
@@ -87,6 +94,12 @@ class CreateResourceServerRequestContent extends JsonSerializableType
      */
     #[JsonProperty('enforce_policies')]
     private ?bool $enforcePolicies;
+
+    /**
+     * @var ?ResourceServerAccessToken $accessToken
+     */
+    #[JsonProperty('access_token')]
+    private ?ResourceServerAccessToken $accessToken;
 
     /**
      * @var ?ResourceServerTokenEncryption $tokenEncryption
@@ -135,9 +148,11 @@ class CreateResourceServerRequestContent extends JsonSerializableType
      *   allowOnlineAccess?: ?bool,
      *   allowOnlineAccessWithEphemeralSessions?: ?bool,
      *   tokenLifetime?: ?int,
+     *   tokenLifetimeForAnonymousAccessTokens?: ?int,
      *   tokenDialect?: ?value-of<ResourceServerTokenDialectSchemaEnum>,
      *   skipConsentForVerifiableFirstPartyClients?: ?bool,
      *   enforcePolicies?: ?bool,
+     *   accessToken?: ?ResourceServerAccessToken,
      *   tokenEncryption?: ?ResourceServerTokenEncryption,
      *   consentPolicy?: ?value-of<ResourceServerConsentPolicyEnum>,
      *   authorizationDetails?: ?array<mixed>,
@@ -158,9 +173,11 @@ class CreateResourceServerRequestContent extends JsonSerializableType
         $this->allowOnlineAccess = $values['allowOnlineAccess'] ?? null;
         $this->allowOnlineAccessWithEphemeralSessions = $values['allowOnlineAccessWithEphemeralSessions'] ?? null;
         $this->tokenLifetime = $values['tokenLifetime'] ?? null;
+        $this->tokenLifetimeForAnonymousAccessTokens = $values['tokenLifetimeForAnonymousAccessTokens'] ?? null;
         $this->tokenDialect = $values['tokenDialect'] ?? null;
         $this->skipConsentForVerifiableFirstPartyClients = $values['skipConsentForVerifiableFirstPartyClients'] ?? null;
         $this->enforcePolicies = $values['enforcePolicies'] ?? null;
+        $this->accessToken = $values['accessToken'] ?? null;
         $this->tokenEncryption = $values['tokenEncryption'] ?? null;
         $this->consentPolicy = $values['consentPolicy'] ?? null;
         $this->authorizationDetails = $values['authorizationDetails'] ?? null;
@@ -332,6 +349,24 @@ class CreateResourceServerRequestContent extends JsonSerializableType
     }
 
     /**
+     * @return ?int
+     */
+    public function getTokenLifetimeForAnonymousAccessTokens(): ?int
+    {
+        return $this->tokenLifetimeForAnonymousAccessTokens;
+    }
+
+    /**
+     * @param ?int $value
+     */
+    public function setTokenLifetimeForAnonymousAccessTokens(?int $value = null): self
+    {
+        $this->tokenLifetimeForAnonymousAccessTokens = $value;
+        $this->_setField('tokenLifetimeForAnonymousAccessTokens');
+        return $this;
+    }
+
+    /**
      * @return ?value-of<ResourceServerTokenDialectSchemaEnum>
      */
     public function getTokenDialect(): ?string
@@ -382,6 +417,24 @@ class CreateResourceServerRequestContent extends JsonSerializableType
     {
         $this->enforcePolicies = $value;
         $this->_setField('enforcePolicies');
+        return $this;
+    }
+
+    /**
+     * @return ?ResourceServerAccessToken
+     */
+    public function getAccessToken(): ?ResourceServerAccessToken
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * @param ?ResourceServerAccessToken $value
+     */
+    public function setAccessToken(?ResourceServerAccessToken $value = null): self
+    {
+        $this->accessToken = $value;
+        $this->_setField('accessToken');
         return $this;
     }
 
