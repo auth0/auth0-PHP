@@ -6,6 +6,7 @@ use Auth0\SDK\API\Management\Types\GuardianFactor;
 use Auth0\SDK\API\Management\Types\GuardianFactorNameEnum;
 use Auth0\SDK\API\Management\Guardian\Factors\Requests\SetGuardianFactorRequestContent;
 use Auth0\SDK\API\Management\Types\SetGuardianFactorResponseContent;
+use Auth0\SDK\API\Management\Guardian\Factors\Email\EmailClientInterface;
 use Auth0\SDK\API\Management\Guardian\Factors\Phone\PhoneClientInterface;
 use Auth0\SDK\API\Management\Guardian\Factors\PushNotification\PushNotificationClientInterface;
 use Auth0\SDK\API\Management\Guardian\Factors\Sms\SmsClientInterface;
@@ -59,6 +60,11 @@ interface FactorsClientInterface
      * @return ?SetGuardianFactorResponseContent
      */
     public function set(string $name, SetGuardianFactorRequestContent $request, ?array $options = null): ?SetGuardianFactorResponseContent;
+
+    /**
+     * @return EmailClientInterface
+     */
+    public function getEmail(): EmailClientInterface;
 
     /**
      * @return PhoneClientInterface

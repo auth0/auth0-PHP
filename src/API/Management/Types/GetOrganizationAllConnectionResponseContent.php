@@ -38,6 +38,12 @@ class GetOrganizationAllConnectionResponseContent extends JsonSerializableType
     private ?string $organizationAccessLevel;
 
     /**
+     * @var ?value-of<OrganizationMemberAccessLevelEnum> $organizationMemberAccessLevel
+     */
+    #[JsonProperty('organization_member_access_level')]
+    private ?string $organizationMemberAccessLevel;
+
+    /**
      * @var ?bool $isEnabled Whether the connection is enabled for the organization.
      */
     #[JsonProperty('is_enabled')]
@@ -63,6 +69,7 @@ class GetOrganizationAllConnectionResponseContent extends JsonSerializableType
      *   showAsButton?: ?bool,
      *   isSignupEnabled?: ?bool,
      *   organizationAccessLevel?: ?value-of<OrganizationAccessLevelEnum>,
+     *   organizationMemberAccessLevel?: ?value-of<OrganizationMemberAccessLevelEnum>,
      *   isEnabled?: ?bool,
      *   connection?: ?OrganizationConnectionInformation,
      * } $values
@@ -75,6 +82,7 @@ class GetOrganizationAllConnectionResponseContent extends JsonSerializableType
         $this->showAsButton = $values['showAsButton'] ?? null;
         $this->isSignupEnabled = $values['isSignupEnabled'] ?? null;
         $this->organizationAccessLevel = $values['organizationAccessLevel'] ?? null;
+        $this->organizationMemberAccessLevel = $values['organizationMemberAccessLevel'] ?? null;
         $this->isEnabled = $values['isEnabled'] ?? null;
         $this->connectionId = $values['connectionId'];
         $this->connection = $values['connection'] ?? null;
@@ -167,6 +175,24 @@ class GetOrganizationAllConnectionResponseContent extends JsonSerializableType
     {
         $this->organizationAccessLevel = $value;
         $this->_setField('organizationAccessLevel');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<OrganizationMemberAccessLevelEnum>
+     */
+    public function getOrganizationMemberAccessLevel(): ?string
+    {
+        return $this->organizationMemberAccessLevel;
+    }
+
+    /**
+     * @param ?value-of<OrganizationMemberAccessLevelEnum> $value
+     */
+    public function setOrganizationMemberAccessLevel(?string $value = null): self
+    {
+        $this->organizationMemberAccessLevel = $value;
+        $this->_setField('organizationMemberAccessLevel');
         return $this;
     }
 

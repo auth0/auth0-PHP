@@ -8,6 +8,8 @@ use Auth0\SDK\API\Management\Types\Organization;
 use Auth0\SDK\API\Management\Organizations\Requests\CreateOrganizationRequestContent;
 use Auth0\SDK\API\Management\Types\CreateOrganizationResponseContent;
 use Auth0\SDK\API\Management\Types\GetOrganizationByNameResponseContent;
+use Auth0\SDK\API\Management\Organizations\Requests\SearchOrganizationsRequestParameters;
+use Auth0\SDK\API\Management\Types\SearchOrganization;
 use Auth0\SDK\API\Management\Types\GetOrganizationResponseContent;
 use Auth0\SDK\API\Management\Organizations\Requests\UpdateOrganizationRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateOrganizationResponseContent;
@@ -116,6 +118,49 @@ interface OrganizationsClientInterface
      * @return ?GetOrganizationByNameResponseContent
      */
     public function getByName(string $name, ?array $options = null): ?GetOrganizationByNameResponseContent;
+
+    /**
+     * Retrieve details of organizations matching a search criteria. It is possible to:
+     *
+     * - Specify a search criteria for organizations
+     * - Search via `name`
+     * - Search via `display_name`
+     * - Substring matching (`contains` and `ends-with`) requires at least 3 characters
+     * - Use wildcards
+     *
+     * The `q` query parameter can be used to get organizations that match the specified criteria on `name` OR `display_name`.
+     *
+     * This endpoint supports SCIM or Lucene filter syntax with low-latency, cursor-based pagination. Use the `parser` parameter to specify "scim" or "lucene" syntax (default: "lucene").
+     *
+     * Results are eventually consistent and may not reflect recent updates immediately.
+     *
+     * **Sortable fields:** `name`, `display_name`, `created_at` (ascending only). Defaults to insertion order (oldest first).
+     *
+     * Example:
+     * ```php
+     * $client->organizations->search(
+     *     new SearchOrganizationsRequestParameters([
+     *         'q' => 'q',
+     *         'parser' => SearchParserEnum::Scim->value,
+     *         'take' => 1,
+     *         'from' => 'from',
+     *         'sort' => OrganizationSortFieldEnum::Name->value,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param SearchOrganizationsRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return Pager<SearchOrganization>
+     */
+    public function search(SearchOrganizationsRequestParameters $request = new SearchOrganizationsRequestParameters(), ?array $options = null): Pager;
 
     /**
      * Retrieve details about a single Organization specified by ID.
