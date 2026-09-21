@@ -42,12 +42,14 @@ class ConnectionOptionsOkta extends JsonSerializableType
      *   connectionSettings?: ?ConnectionConnectionSettings,
      *   domainAliases?: ?array<string>,
      *   dpopSigningAlg?: ?value-of<ConnectionDpopSigningAlgEnum>,
+     *   enablePushedAuthorizationRequests?: ?bool,
      *   iconUrl?: ?string,
      *   idTokenSessionExpirySupported?: ?bool,
      *   idTokenSignedResponseAlgs?: ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>>,
      *   issuer?: ?string,
      *   jwksUri?: ?string,
      *   oidcMetadata?: ?ConnectionOptionsOidcMetadata,
+     *   pushedAuthorizationRequestEndpoint?: ?string,
      *   scope?: ?string,
      *   sendBackChannelNonce?: ?bool,
      *   setUserRootAttributes?: ?value-of<ConnectionSetUserRootAttributesEnum>,
@@ -77,12 +79,14 @@ class ConnectionOptionsOkta extends JsonSerializableType
         $this->connectionSettings = $values['connectionSettings'] ?? null;
         $this->domainAliases = $values['domainAliases'] ?? null;
         $this->dpopSigningAlg = $values['dpopSigningAlg'] ?? null;
+        $this->enablePushedAuthorizationRequests = $values['enablePushedAuthorizationRequests'] ?? null;
         $this->iconUrl = $values['iconUrl'] ?? null;
         $this->idTokenSessionExpirySupported = $values['idTokenSessionExpirySupported'] ?? null;
         $this->idTokenSignedResponseAlgs = $values['idTokenSignedResponseAlgs'] ?? null;
         $this->issuer = $values['issuer'] ?? null;
         $this->jwksUri = $values['jwksUri'] ?? null;
         $this->oidcMetadata = $values['oidcMetadata'] ?? null;
+        $this->pushedAuthorizationRequestEndpoint = $values['pushedAuthorizationRequestEndpoint'] ?? null;
         $this->scope = $values['scope'] ?? null;
         $this->sendBackChannelNonce = $values['sendBackChannelNonce'] ?? null;
         $this->setUserRootAttributes = $values['setUserRootAttributes'] ?? null;

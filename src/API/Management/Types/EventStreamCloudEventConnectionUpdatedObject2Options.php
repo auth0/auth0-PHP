@@ -152,16 +152,34 @@ class EventStreamCloudEventConnectionUpdatedObject2Options extends JsonSerializa
     private ?string $destinationUrl;
 
     /**
+     * @var ?bool $disableFieldsMapFix When true, disables the automatic correction of the fieldsMap configuration to ensure proper mapping of SAML attributes to user profile fields. Defaults to false (fieldsMap fix enabled).
+     */
+    #[JsonProperty('disableFieldsMapFix')]
+    private ?bool $disableFieldsMapFix;
+
+    /**
      * @var ?bool $disableSignout When true, disables sending SAML logout requests (SingleLogoutService) to the identity provider during user sign-out. The user will be logged out of Auth0 but will remain logged into the identity provider. Defaults to false (federated logout enabled).
      */
     #[JsonProperty('disableSignout')]
     private ?bool $disableSignout;
 
     /**
+     * @var ?string $discoveryUrl URL of the identity provider's OIDC Discovery endpoint (/.well-known/openid-configuration). When provided and oidc_metadata is empty, Auth0 automatically retrieves the provider's configuration including endpoints and supported features. Used with Cross App Access.
+     */
+    #[JsonProperty('discovery_url')]
+    private ?string $discoveryUrl;
+
+    /**
      * @var ?array<string, mixed> $fieldsMap
      */
     #[JsonProperty('fieldsMap'), ArrayType(['string' => 'mixed'])]
     private ?array $fieldsMap;
+
+    /**
+     * @var ?string $fieldsMapJsonRaw Raw JSON string representation of the fieldsMap configuration. Used internally for storage and retrieval of the fieldsMap object.
+     */
+    #[JsonProperty('fieldsMapJsonRaw')]
+    private ?string $fieldsMapJsonRaw;
 
     /**
      * @var ?string $globalTokenRevocationJwtIss Expected 'iss' (Issuer) claim value for JWT tokens in Global Token Revocation requests from the identity provider. When configured, Auth0 validates the JWT issuer matches this value before processing token revocation. Must be used together with global_token_revocation_jwt_sub.
@@ -180,6 +198,12 @@ class EventStreamCloudEventConnectionUpdatedObject2Options extends JsonSerializa
      */
     #[JsonProperty('metadataUrl')]
     private ?string $metadataUrl;
+
+    /**
+     * @var ?EventStreamCloudEventConnectionUpdatedObject2OptionsOidcMetadata $oidcMetadata
+     */
+    #[JsonProperty('oidc_metadata')]
+    private ?EventStreamCloudEventConnectionUpdatedObject2OptionsOidcMetadata $oidcMetadata;
 
     /**
      * @var ?string $recipientUrl The URL where Auth0 will send SAML authentication requests (the Identity Provider's SSO URL). Must be a valid HTTPS URL.
@@ -230,11 +254,15 @@ class EventStreamCloudEventConnectionUpdatedObject2Options extends JsonSerializa
      *   debug?: ?bool,
      *   deflate?: ?bool,
      *   destinationUrl?: ?string,
+     *   disableFieldsMapFix?: ?bool,
      *   disableSignout?: ?bool,
+     *   discoveryUrl?: ?string,
      *   fieldsMap?: ?array<string, mixed>,
+     *   fieldsMapJsonRaw?: ?string,
      *   globalTokenRevocationJwtIss?: ?string,
      *   globalTokenRevocationJwtSub?: ?string,
      *   metadataUrl?: ?string,
+     *   oidcMetadata?: ?EventStreamCloudEventConnectionUpdatedObject2OptionsOidcMetadata,
      *   recipientUrl?: ?string,
      *   requestTemplate?: ?string,
      *   signOutEndpoint?: ?string,
@@ -267,11 +295,15 @@ class EventStreamCloudEventConnectionUpdatedObject2Options extends JsonSerializa
         $this->debug = $values['debug'] ?? null;
         $this->deflate = $values['deflate'] ?? null;
         $this->destinationUrl = $values['destinationUrl'] ?? null;
+        $this->disableFieldsMapFix = $values['disableFieldsMapFix'] ?? null;
         $this->disableSignout = $values['disableSignout'] ?? null;
+        $this->discoveryUrl = $values['discoveryUrl'] ?? null;
         $this->fieldsMap = $values['fieldsMap'] ?? null;
+        $this->fieldsMapJsonRaw = $values['fieldsMapJsonRaw'] ?? null;
         $this->globalTokenRevocationJwtIss = $values['globalTokenRevocationJwtIss'] ?? null;
         $this->globalTokenRevocationJwtSub = $values['globalTokenRevocationJwtSub'] ?? null;
         $this->metadataUrl = $values['metadataUrl'] ?? null;
+        $this->oidcMetadata = $values['oidcMetadata'] ?? null;
         $this->recipientUrl = $values['recipientUrl'] ?? null;
         $this->requestTemplate = $values['requestTemplate'] ?? null;
         $this->signOutEndpoint = $values['signOutEndpoint'] ?? null;
@@ -695,6 +727,24 @@ class EventStreamCloudEventConnectionUpdatedObject2Options extends JsonSerializa
     /**
      * @return ?bool
      */
+    public function getDisableFieldsMapFix(): ?bool
+    {
+        return $this->disableFieldsMapFix;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setDisableFieldsMapFix(?bool $value = null): self
+    {
+        $this->disableFieldsMapFix = $value;
+        $this->_setField('disableFieldsMapFix');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
     public function getDisableSignout(): ?bool
     {
         return $this->disableSignout;
@@ -707,6 +757,24 @@ class EventStreamCloudEventConnectionUpdatedObject2Options extends JsonSerializa
     {
         $this->disableSignout = $value;
         $this->_setField('disableSignout');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getDiscoveryUrl(): ?string
+    {
+        return $this->discoveryUrl;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setDiscoveryUrl(?string $value = null): self
+    {
+        $this->discoveryUrl = $value;
+        $this->_setField('discoveryUrl');
         return $this;
     }
 
@@ -725,6 +793,24 @@ class EventStreamCloudEventConnectionUpdatedObject2Options extends JsonSerializa
     {
         $this->fieldsMap = $value;
         $this->_setField('fieldsMap');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getFieldsMapJsonRaw(): ?string
+    {
+        return $this->fieldsMapJsonRaw;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setFieldsMapJsonRaw(?string $value = null): self
+    {
+        $this->fieldsMapJsonRaw = $value;
+        $this->_setField('fieldsMapJsonRaw');
         return $this;
     }
 
@@ -779,6 +865,24 @@ class EventStreamCloudEventConnectionUpdatedObject2Options extends JsonSerializa
     {
         $this->metadataUrl = $value;
         $this->_setField('metadataUrl');
+        return $this;
+    }
+
+    /**
+     * @return ?EventStreamCloudEventConnectionUpdatedObject2OptionsOidcMetadata
+     */
+    public function getOidcMetadata(): ?EventStreamCloudEventConnectionUpdatedObject2OptionsOidcMetadata
+    {
+        return $this->oidcMetadata;
+    }
+
+    /**
+     * @param ?EventStreamCloudEventConnectionUpdatedObject2OptionsOidcMetadata $value
+     */
+    public function setOidcMetadata(?EventStreamCloudEventConnectionUpdatedObject2OptionsOidcMetadata $value = null): self
+    {
+        $this->oidcMetadata = $value;
+        $this->_setField('oidcMetadata');
         return $this;
     }
 

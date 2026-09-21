@@ -4,6 +4,8 @@ namespace Auth0\SDK\API\Management\Types;
 
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
+use DateTime;
+use Auth0\SDK\API\Management\Core\Types\Date;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 
 class GetClientResponseContent extends JsonSerializableType
@@ -13,6 +15,18 @@ class GetClientResponseContent extends JsonSerializableType
      */
     #[JsonProperty('client_id')]
     private ?string $clientId;
+
+    /**
+     * @var ?DateTime $createdAt The ISO 8601 timestamp of when this client was created.
+     */
+    #[JsonProperty('created_at'), Date(Date::TYPE_DATETIME)]
+    private ?DateTime $createdAt;
+
+    /**
+     * @var ?DateTime $updatedAt The ISO 8601 timestamp of when this client was last updated.
+     */
+    #[JsonProperty('updated_at'), Date(Date::TYPE_DATETIME)]
+    private ?DateTime $updatedAt;
 
     /**
      * @var ?string $tenant Name of the tenant this client belongs to.
@@ -337,6 +351,12 @@ class GetClientResponseContent extends JsonSerializableType
     private ?ExpressConfiguration $expressConfiguration;
 
     /**
+     * @var ?B2BIntegrationConfiguration $b2BIntegrationConfiguration
+     */
+    #[JsonProperty('b2b_integration_configuration')]
+    private ?B2BIntegrationConfiguration $b2BIntegrationConfiguration;
+
+    /**
      * @var ?ClientMyOrganizationResponseConfiguration $myOrganizationConfiguration
      */
     #[JsonProperty('my_organization_configuration')]
@@ -347,6 +367,12 @@ class GetClientResponseContent extends JsonSerializableType
      */
     #[JsonProperty('identity_assertion_authorization_grant')]
     private ?IdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant;
+
+    /**
+     * @var ?AnonymousSessions $anonymousSessions
+     */
+    #[JsonProperty('anonymous_sessions')]
+    private ?AnonymousSessions $anonymousSessions;
 
     /**
      * @var ?value-of<ClientThirdPartySecurityModeEnum> $thirdPartySecurityMode
@@ -399,6 +425,8 @@ class GetClientResponseContent extends JsonSerializableType
     /**
      * @param array{
      *   clientId?: ?string,
+     *   createdAt?: ?DateTime,
+     *   updatedAt?: ?DateTime,
      *   tenant?: ?string,
      *   name?: ?string,
      *   description?: ?string,
@@ -452,8 +480,10 @@ class GetClientResponseContent extends JsonSerializableType
      *   parRequestExpiry?: ?int,
      *   tokenQuota?: ?TokenQuota,
      *   expressConfiguration?: ?ExpressConfiguration,
+     *   b2BIntegrationConfiguration?: ?B2BIntegrationConfiguration,
      *   myOrganizationConfiguration?: ?ClientMyOrganizationResponseConfiguration,
      *   identityAssertionAuthorizationGrant?: ?IdentityAssertionAuthorizationGrant,
+     *   anonymousSessions?: ?AnonymousSessions,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   resourceServerIdentifier?: ?string,
@@ -468,6 +498,8 @@ class GetClientResponseContent extends JsonSerializableType
         array $values = [],
     ) {
         $this->clientId = $values['clientId'] ?? null;
+        $this->createdAt = $values['createdAt'] ?? null;
+        $this->updatedAt = $values['updatedAt'] ?? null;
         $this->tenant = $values['tenant'] ?? null;
         $this->name = $values['name'] ?? null;
         $this->description = $values['description'] ?? null;
@@ -521,8 +553,10 @@ class GetClientResponseContent extends JsonSerializableType
         $this->parRequestExpiry = $values['parRequestExpiry'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
+        $this->b2BIntegrationConfiguration = $values['b2BIntegrationConfiguration'] ?? null;
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
         $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
+        $this->anonymousSessions = $values['anonymousSessions'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
@@ -548,6 +582,42 @@ class GetClientResponseContent extends JsonSerializableType
     {
         $this->clientId = $value;
         $this->_setField('clientId');
+        return $this;
+    }
+
+    /**
+     * @return ?DateTime
+     */
+    public function getCreatedAt(): ?DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param ?DateTime $value
+     */
+    public function setCreatedAt(?DateTime $value = null): self
+    {
+        $this->createdAt = $value;
+        $this->_setField('createdAt');
+        return $this;
+    }
+
+    /**
+     * @return ?DateTime
+     */
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param ?DateTime $value
+     */
+    public function setUpdatedAt(?DateTime $value = null): self
+    {
+        $this->updatedAt = $value;
+        $this->_setField('updatedAt');
         return $this;
     }
 
@@ -1506,6 +1576,24 @@ class GetClientResponseContent extends JsonSerializableType
     }
 
     /**
+     * @return ?B2BIntegrationConfiguration
+     */
+    public function getB2BIntegrationConfiguration(): ?B2BIntegrationConfiguration
+    {
+        return $this->b2BIntegrationConfiguration;
+    }
+
+    /**
+     * @param ?B2BIntegrationConfiguration $value
+     */
+    public function setB2BIntegrationConfiguration(?B2BIntegrationConfiguration $value = null): self
+    {
+        $this->b2BIntegrationConfiguration = $value;
+        $this->_setField('b2BIntegrationConfiguration');
+        return $this;
+    }
+
+    /**
      * @return ?ClientMyOrganizationResponseConfiguration
      */
     public function getMyOrganizationConfiguration(): ?ClientMyOrganizationResponseConfiguration
@@ -1538,6 +1626,24 @@ class GetClientResponseContent extends JsonSerializableType
     {
         $this->identityAssertionAuthorizationGrant = $value;
         $this->_setField('identityAssertionAuthorizationGrant');
+        return $this;
+    }
+
+    /**
+     * @return ?AnonymousSessions
+     */
+    public function getAnonymousSessions(): ?AnonymousSessions
+    {
+        return $this->anonymousSessions;
+    }
+
+    /**
+     * @param ?AnonymousSessions $value
+     */
+    public function setAnonymousSessions(?AnonymousSessions $value = null): self
+    {
+        $this->anonymousSessions = $value;
+        $this->_setField('anonymousSessions');
         return $this;
     }
 

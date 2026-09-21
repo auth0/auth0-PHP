@@ -20,6 +20,12 @@ class CreateConnectionRequestContentSaml extends JsonSerializableType
     private string $strategy;
 
     /**
+     * @var ?ConnectionCrossAppAccessResourceApp $crossAppAccessResourceApp
+     */
+    #[JsonProperty('cross_app_access_resource_app')]
+    private ?ConnectionCrossAppAccessResourceApp $crossAppAccessResourceApp;
+
+    /**
      * @var ?ConnectionOptionsSaml $options
      */
     #[JsonProperty('options')]
@@ -39,6 +45,7 @@ class CreateConnectionRequestContentSaml extends JsonSerializableType
      *   displayName?: ?string,
      *   isDomainConnection?: ?bool,
      *   metadata?: ?array<string, ?string>,
+     *   crossAppAccessResourceApp?: ?ConnectionCrossAppAccessResourceApp,
      *   options?: ?ConnectionOptionsSaml,
      *   showAsButton?: ?bool,
      * } $values
@@ -52,6 +59,7 @@ class CreateConnectionRequestContentSaml extends JsonSerializableType
         $this->isDomainConnection = $values['isDomainConnection'] ?? null;
         $this->metadata = $values['metadata'] ?? null;
         $this->strategy = $values['strategy'];
+        $this->crossAppAccessResourceApp = $values['crossAppAccessResourceApp'] ?? null;
         $this->options = $values['options'] ?? null;
         $this->showAsButton = $values['showAsButton'] ?? null;
     }
@@ -71,6 +79,24 @@ class CreateConnectionRequestContentSaml extends JsonSerializableType
     {
         $this->strategy = $value;
         $this->_setField('strategy');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionCrossAppAccessResourceApp
+     */
+    public function getCrossAppAccessResourceApp(): ?ConnectionCrossAppAccessResourceApp
+    {
+        return $this->crossAppAccessResourceApp;
+    }
+
+    /**
+     * @param ?ConnectionCrossAppAccessResourceApp $value
+     */
+    public function setCrossAppAccessResourceApp(?ConnectionCrossAppAccessResourceApp $value = null): self
+    {
+        $this->crossAppAccessResourceApp = $value;
+        $this->_setField('crossAppAccessResourceApp');
         return $this;
     }
 

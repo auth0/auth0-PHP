@@ -17,6 +17,12 @@ class EventStreamCloudEventUserDeletedData extends JsonSerializableType
     private EventStreamCloudEventUserDeletedObject $object;
 
     /**
+     * @var ?EventStreamCloudEventUserDeletedPreviousObject $previousObject
+     */
+    #[JsonProperty('previous_object')]
+    private ?EventStreamCloudEventUserDeletedPreviousObject $previousObject;
+
+    /**
      * @var ?EventStreamCloudEventContext $context
      */
     #[JsonProperty('context')]
@@ -25,6 +31,7 @@ class EventStreamCloudEventUserDeletedData extends JsonSerializableType
     /**
      * @param array{
      *   object: EventStreamCloudEventUserDeletedObject,
+     *   previousObject?: ?EventStreamCloudEventUserDeletedPreviousObject,
      *   context?: ?EventStreamCloudEventContext,
      * } $values
      */
@@ -32,6 +39,7 @@ class EventStreamCloudEventUserDeletedData extends JsonSerializableType
         array $values,
     ) {
         $this->object = $values['object'];
+        $this->previousObject = $values['previousObject'] ?? null;
         $this->context = $values['context'] ?? null;
     }
 
@@ -50,6 +58,24 @@ class EventStreamCloudEventUserDeletedData extends JsonSerializableType
     {
         $this->object = $value;
         $this->_setField('object');
+        return $this;
+    }
+
+    /**
+     * @return ?EventStreamCloudEventUserDeletedPreviousObject
+     */
+    public function getPreviousObject(): ?EventStreamCloudEventUserDeletedPreviousObject
+    {
+        return $this->previousObject;
+    }
+
+    /**
+     * @param ?EventStreamCloudEventUserDeletedPreviousObject $value
+     */
+    public function setPreviousObject(?EventStreamCloudEventUserDeletedPreviousObject $value = null): self
+    {
+        $this->previousObject = $value;
+        $this->_setField('previousObject');
         return $this;
     }
 

@@ -48,6 +48,18 @@ class ClientMyOrganizationResponseConfiguration extends JsonSerializableType
     private ?string $invitationLandingClientId;
 
     /**
+     * @var ?bool $enforcePermissionCeiling When true, limits the permissions that organization admins can assign to members to only those held by the admin themselves.
+     */
+    #[JsonProperty('enforce_permission_ceiling')]
+    private ?bool $enforcePermissionCeiling;
+
+    /**
+     * @var ?bool $enforceSelfAssignmentRestriction When true, prevents organization admins from assigning permissions to themselves.
+     */
+    #[JsonProperty('enforce_self_assignment_restriction')]
+    private ?bool $enforceSelfAssignmentRestriction;
+
+    /**
      * @param array{
      *   allowedStrategies: array<value-of<ClientMyOrganizationConfigurationAllowedStrategiesEnum>>,
      *   connectionDeletionBehavior: value-of<ClientMyOrganizationDeletionBehaviorEnum>,
@@ -55,6 +67,8 @@ class ClientMyOrganizationResponseConfiguration extends JsonSerializableType
      *   userAttributeProfileId?: ?string,
      *   thirdPartyClientAccess?: ?ClientMyOrganizationThirdPartyClientAccessConfiguration,
      *   invitationLandingClientId?: ?string,
+     *   enforcePermissionCeiling?: ?bool,
+     *   enforceSelfAssignmentRestriction?: ?bool,
      * } $values
      */
     public function __construct(
@@ -66,6 +80,8 @@ class ClientMyOrganizationResponseConfiguration extends JsonSerializableType
         $this->thirdPartyClientAccess = $values['thirdPartyClientAccess'] ?? null;
         $this->connectionDeletionBehavior = $values['connectionDeletionBehavior'];
         $this->invitationLandingClientId = $values['invitationLandingClientId'] ?? null;
+        $this->enforcePermissionCeiling = $values['enforcePermissionCeiling'] ?? null;
+        $this->enforceSelfAssignmentRestriction = $values['enforceSelfAssignmentRestriction'] ?? null;
     }
 
     /**
@@ -173,6 +189,42 @@ class ClientMyOrganizationResponseConfiguration extends JsonSerializableType
     {
         $this->invitationLandingClientId = $value;
         $this->_setField('invitationLandingClientId');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getEnforcePermissionCeiling(): ?bool
+    {
+        return $this->enforcePermissionCeiling;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setEnforcePermissionCeiling(?bool $value = null): self
+    {
+        $this->enforcePermissionCeiling = $value;
+        $this->_setField('enforcePermissionCeiling');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getEnforceSelfAssignmentRestriction(): ?bool
+    {
+        return $this->enforceSelfAssignmentRestriction;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setEnforceSelfAssignmentRestriction(?bool $value = null): self
+    {
+        $this->enforceSelfAssignmentRestriction = $value;
+        $this->_setField('enforceSelfAssignmentRestriction');
         return $this;
     }
 

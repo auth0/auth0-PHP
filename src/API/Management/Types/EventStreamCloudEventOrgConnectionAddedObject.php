@@ -4,6 +4,7 @@ namespace Auth0\SDK\API\Management\Types;
 
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
+use Auth0\SDK\API\Management\Core\Types\Union;
 
 /**
  * The event content.
@@ -51,12 +52,36 @@ class EventStreamCloudEventOrgConnectionAddedObject extends JsonSerializableType
     private ?bool $isSignupEnabled;
 
     /**
+     * @var ?bool $isEnabled Determines whether the connection is enabled for the organization.
+     */
+    #[JsonProperty('is_enabled')]
+    private ?bool $isEnabled;
+
+    /**
+     * @var (
+     *    value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel0Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel1Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel2Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel3Enum>
+     * )|null $organizationAccessLevel
+     */
+    #[JsonProperty('organization_access_level'), Union('string', 'null')]
+    private string|null $organizationAccessLevel;
+
+    /**
      * @param array{
      *   organization: EventStreamCloudEventOrgConnectionAddedObjectOrganization,
      *   connection: EventStreamCloudEventOrgConnectionAddedObjectConnection,
      *   assignMembershipOnLogin?: ?bool,
      *   showAsButton?: ?bool,
      *   isSignupEnabled?: ?bool,
+     *   isEnabled?: ?bool,
+     *   organizationAccessLevel?: (
+     *    value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel0Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel1Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel2Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel3Enum>
+     * )|null,
      * } $values
      */
     public function __construct(
@@ -67,6 +92,8 @@ class EventStreamCloudEventOrgConnectionAddedObject extends JsonSerializableType
         $this->assignMembershipOnLogin = $values['assignMembershipOnLogin'] ?? null;
         $this->showAsButton = $values['showAsButton'] ?? null;
         $this->isSignupEnabled = $values['isSignupEnabled'] ?? null;
+        $this->isEnabled = $values['isEnabled'] ?? null;
+        $this->organizationAccessLevel = $values['organizationAccessLevel'] ?? null;
     }
 
     /**
@@ -156,6 +183,52 @@ class EventStreamCloudEventOrgConnectionAddedObject extends JsonSerializableType
     {
         $this->isSignupEnabled = $value;
         $this->_setField('isSignupEnabled');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getIsEnabled(): ?bool
+    {
+        return $this->isEnabled;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setIsEnabled(?bool $value = null): self
+    {
+        $this->isEnabled = $value;
+        $this->_setField('isEnabled');
+        return $this;
+    }
+
+    /**
+     * @return (
+     *    value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel0Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel1Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel2Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel3Enum>
+     * )|null
+     */
+    public function getOrganizationAccessLevel(): string|null
+    {
+        return $this->organizationAccessLevel;
+    }
+
+    /**
+     * @param (
+     *    value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel0Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel1Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel2Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionAddedObjectOrganizationAccessLevel3Enum>
+     * )|null $value
+     */
+    public function setOrganizationAccessLevel(string|null $value = null): self
+    {
+        $this->organizationAccessLevel = $value;
+        $this->_setField('organizationAccessLevel');
         return $this;
     }
 

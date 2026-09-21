@@ -5,6 +5,7 @@ namespace Auth0\SDK\API\Management\Organizations\Connections\Requests;
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 use Auth0\SDK\API\Management\Types\OrganizationAccessLevelEnumWithNull;
+use Auth0\SDK\API\Management\Types\OrganizationMemberAccessLevelEnumWithNull;
 
 class UpdateOrganizationConnectionRequestParameters extends JsonSerializableType
 {
@@ -39,6 +40,12 @@ class UpdateOrganizationConnectionRequestParameters extends JsonSerializableType
     private ?string $organizationAccessLevel;
 
     /**
+     * @var ?value-of<OrganizationMemberAccessLevelEnumWithNull> $organizationMemberAccessLevel
+     */
+    #[JsonProperty('organization_member_access_level')]
+    private ?string $organizationMemberAccessLevel;
+
+    /**
      * @var ?bool $isEnabled Whether the connection is enabled for the organization.
      */
     #[JsonProperty('is_enabled')]
@@ -51,6 +58,7 @@ class UpdateOrganizationConnectionRequestParameters extends JsonSerializableType
      *   showAsButton?: ?bool,
      *   isSignupEnabled?: ?bool,
      *   organizationAccessLevel?: ?value-of<OrganizationAccessLevelEnumWithNull>,
+     *   organizationMemberAccessLevel?: ?value-of<OrganizationMemberAccessLevelEnumWithNull>,
      *   isEnabled?: ?bool,
      * } $values
      */
@@ -62,6 +70,7 @@ class UpdateOrganizationConnectionRequestParameters extends JsonSerializableType
         $this->showAsButton = $values['showAsButton'] ?? null;
         $this->isSignupEnabled = $values['isSignupEnabled'] ?? null;
         $this->organizationAccessLevel = $values['organizationAccessLevel'] ?? null;
+        $this->organizationMemberAccessLevel = $values['organizationMemberAccessLevel'] ?? null;
         $this->isEnabled = $values['isEnabled'] ?? null;
     }
 
@@ -152,6 +161,24 @@ class UpdateOrganizationConnectionRequestParameters extends JsonSerializableType
     {
         $this->organizationAccessLevel = $value;
         $this->_setField('organizationAccessLevel');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<OrganizationMemberAccessLevelEnumWithNull>
+     */
+    public function getOrganizationMemberAccessLevel(): ?string
+    {
+        return $this->organizationMemberAccessLevel;
+    }
+
+    /**
+     * @param ?value-of<OrganizationMemberAccessLevelEnumWithNull> $value
+     */
+    public function setOrganizationMemberAccessLevel(?string $value = null): self
+    {
+        $this->organizationMemberAccessLevel = $value;
+        $this->_setField('organizationMemberAccessLevel');
         return $this;
     }
 

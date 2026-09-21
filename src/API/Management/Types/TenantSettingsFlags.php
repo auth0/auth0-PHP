@@ -161,6 +161,12 @@ class TenantSettingsFlags extends JsonSerializableType
     private ?bool $genaiTrial;
 
     /**
+     * @var ?bool $localResourceDiscovery Whether the Local Resource Discovery endpoint is enabled (true) or disabled (false).
+     */
+    #[JsonProperty('local_resource_discovery')]
+    private ?bool $localResourceDiscovery;
+
+    /**
      * @var ?bool $enableDynamicClientRegistration Whether third-party developers can <a href="https://auth0.com/docs/api-auth/dynamic-client-registration">dynamically register</a> applications for your APIs (true) or not (false). This flag enables dynamic client registration.
      */
     #[JsonProperty('enable_dynamic_client_registration')]
@@ -211,6 +217,7 @@ class TenantSettingsFlags extends JsonSerializableType
      *   removeAlgFromJwks?: ?bool,
      *   improvedSignupBotDetectionInClassic?: ?bool,
      *   genaiTrial?: ?bool,
+     *   localResourceDiscovery?: ?bool,
      *   enableDynamicClientRegistration?: ?bool,
      *   disableManagementApiSmsObfuscation?: ?bool,
      *   trustAzureAdfsEmailVerifiedConnectionProperty?: ?bool,
@@ -245,6 +252,7 @@ class TenantSettingsFlags extends JsonSerializableType
         $this->removeAlgFromJwks = $values['removeAlgFromJwks'] ?? null;
         $this->improvedSignupBotDetectionInClassic = $values['improvedSignupBotDetectionInClassic'] ?? null;
         $this->genaiTrial = $values['genaiTrial'] ?? null;
+        $this->localResourceDiscovery = $values['localResourceDiscovery'] ?? null;
         $this->enableDynamicClientRegistration = $values['enableDynamicClientRegistration'] ?? null;
         $this->disableManagementApiSmsObfuscation = $values['disableManagementApiSmsObfuscation'] ?? null;
         $this->trustAzureAdfsEmailVerifiedConnectionProperty = $values['trustAzureAdfsEmailVerifiedConnectionProperty'] ?? null;
@@ -698,6 +706,24 @@ class TenantSettingsFlags extends JsonSerializableType
     {
         $this->genaiTrial = $value;
         $this->_setField('genaiTrial');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getLocalResourceDiscovery(): ?bool
+    {
+        return $this->localResourceDiscovery;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setLocalResourceDiscovery(?bool $value = null): self
+    {
+        $this->localResourceDiscovery = $value;
+        $this->_setField('localResourceDiscovery');
         return $this;
     }
 

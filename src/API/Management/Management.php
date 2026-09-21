@@ -18,6 +18,7 @@ use Auth0\SDK\API\Management\Flows\FlowsClient;
 use Auth0\SDK\API\Management\Forms\FormsClient;
 use Auth0\SDK\API\Management\UserGrants\UserGrantsClient;
 use Auth0\SDK\API\Management\Groups\GroupsClient;
+use Auth0\SDK\API\Management\Guardian\GuardianClient;
 use Auth0\SDK\API\Management\Hooks\HooksClient;
 use Auth0\SDK\API\Management\Jobs\JobsClient;
 use Auth0\SDK\API\Management\LogStreams\LogStreamsClient;
@@ -43,7 +44,7 @@ use Auth0\SDK\API\Management\Users\UsersClient;
 use Auth0\SDK\API\Management\Anomaly\AnomalyClient;
 use Auth0\SDK\API\Management\AttackProtection\AttackProtectionClient;
 use Auth0\SDK\API\Management\Emails\EmailsClient;
-use Auth0\SDK\API\Management\Guardian\GuardianClient;
+use Auth0\SDK\API\Management\Experimentation\ExperimentationClient;
 use Auth0\SDK\API\Management\Keys\KeysClient;
 use Auth0\SDK\API\Management\RiskAssessments\RiskAssessmentsClient;
 use Auth0\SDK\API\Management\Tenants\TenantsClient;
@@ -66,6 +67,7 @@ use Auth0\SDK\API\Management\Flows\FlowsClientInterface;
 use Auth0\SDK\API\Management\Forms\FormsClientInterface;
 use Auth0\SDK\API\Management\UserGrants\UserGrantsClientInterface;
 use Auth0\SDK\API\Management\Groups\GroupsClientInterface;
+use Auth0\SDK\API\Management\Guardian\GuardianClientInterface;
 use Auth0\SDK\API\Management\Hooks\HooksClientInterface;
 use Auth0\SDK\API\Management\Jobs\JobsClientInterface;
 use Auth0\SDK\API\Management\LogStreams\LogStreamsClientInterface;
@@ -91,7 +93,7 @@ use Auth0\SDK\API\Management\Users\UsersClientInterface;
 use Auth0\SDK\API\Management\Anomaly\AnomalyClientInterface;
 use Auth0\SDK\API\Management\AttackProtection\AttackProtectionClientInterface;
 use Auth0\SDK\API\Management\Emails\EmailsClientInterface;
-use Auth0\SDK\API\Management\Guardian\GuardianClientInterface;
+use Auth0\SDK\API\Management\Experimentation\ExperimentationClientInterface;
 use Auth0\SDK\API\Management\Keys\KeysClientInterface;
 use Auth0\SDK\API\Management\RiskAssessments\RiskAssessmentsClientInterface;
 use Auth0\SDK\API\Management\Tenants\TenantsClientInterface;
@@ -178,6 +180,11 @@ class Management implements ManagementInterface
      * @var GroupsClient $groups
      */
     public GroupsClient $groups;
+
+    /**
+     * @var GuardianClient $guardian
+     */
+    public GuardianClient $guardian;
 
     /**
      * @var HooksClient $hooks
@@ -305,9 +312,9 @@ class Management implements ManagementInterface
     public EmailsClient $emails;
 
     /**
-     * @var GuardianClient $guardian
+     * @var ExperimentationClient $experimentation
      */
-    public GuardianClient $guardian;
+    public ExperimentationClient $experimentation;
 
     /**
      * @var KeysClient $keys
@@ -365,8 +372,8 @@ class Management implements ManagementInterface
             'Authorization' => "Bearer $token",
             'X-Fern-Language' => 'PHP',
             'X-Fern-SDK-Name' => 'Auth0\SDK\API\Management',
-            'X-Fern-SDK-Version' => '9.1.0',
-            'User-Agent' => 'auth0/auth0-php/9.1.0',
+            'X-Fern-SDK-Version' => '9.3.0',
+            'User-Agent' => 'auth0/auth0-php/9.3.0',
         ];
 
         $this->options = $options ?? [];
@@ -403,6 +410,7 @@ class Management implements ManagementInterface
         $this->forms = new FormsClient($this->client, $this->options);
         $this->userGrants = new UserGrantsClient($this->client, $this->options);
         $this->groups = new GroupsClient($this->client, $this->options);
+        $this->guardian = new GuardianClient($this->client, $this->options);
         $this->hooks = new HooksClient($this->client, $this->options);
         $this->jobs = new JobsClient($this->client, $this->options);
         $this->logStreams = new LogStreamsClient($this->client, $this->options);
@@ -428,7 +436,7 @@ class Management implements ManagementInterface
         $this->anomaly = new AnomalyClient($this->client, $this->options);
         $this->attackProtection = new AttackProtectionClient($this->client, $this->options);
         $this->emails = new EmailsClient($this->client, $this->options);
-        $this->guardian = new GuardianClient($this->client, $this->options);
+        $this->experimentation = new ExperimentationClient($this->client, $this->options);
         $this->keys = new KeysClient($this->client, $this->options);
         $this->riskAssessments = new RiskAssessmentsClient($this->client, $this->options);
         $this->tenants = new TenantsClient($this->client, $this->options);
@@ -561,6 +569,14 @@ class Management implements ManagementInterface
     public function getGroups(): GroupsClientInterface
     {
         return $this->groups;
+    }
+
+    /**
+     * @return GuardianClientInterface
+     */
+    public function getGuardian(): GuardianClientInterface
+    {
+        return $this->guardian;
     }
 
     /**
@@ -764,11 +780,11 @@ class Management implements ManagementInterface
     }
 
     /**
-     * @return GuardianClientInterface
+     * @return ExperimentationClientInterface
      */
-    public function getGuardian(): GuardianClientInterface
+    public function getExperimentation(): ExperimentationClientInterface
     {
-        return $this->guardian;
+        return $this->experimentation;
     }
 
     /**

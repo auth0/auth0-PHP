@@ -13,6 +13,7 @@ use Auth0\SDK\API\Management\Types\ClientTokenEndpointAuthMethodOrNullEnum;
 use Auth0\SDK\API\Management\Types\ClientAppTypeEnum;
 use Auth0\SDK\API\Management\Types\UpdateTokenQuota;
 use Auth0\SDK\API\Management\Types\UpdateIdentityAssertionAuthorizationGrant;
+use Auth0\SDK\API\Management\Types\UpdateAnonymousSessions;
 use Auth0\SDK\API\Management\Types\ClientAddons;
 use Auth0\SDK\API\Management\Types\ClientMobile;
 use Auth0\SDK\API\Management\Types\NativeSocialLoginPatch;
@@ -28,6 +29,7 @@ use Auth0\SDK\API\Management\Types\ClientTokenVaultPrivilegedAccessWithCredentia
 use Auth0\SDK\API\Management\Types\ClientComplianceLevelEnum;
 use Auth0\SDK\API\Management\Types\ClientTokenExchangeConfigurationOrNull;
 use Auth0\SDK\API\Management\Types\ExpressConfigurationOrNull;
+use Auth0\SDK\API\Management\Types\B2BIntegrationConfiguration;
 use Auth0\SDK\API\Management\Types\ClientMyOrganizationPatchConfiguration;
 use Auth0\SDK\API\Management\Types\AsyncApprovalNotificationsChannelsEnum;
 use Auth0\SDK\API\Management\Types\ClientThirdPartySecurityModeEnum;
@@ -216,6 +218,12 @@ class UpdateClientRequestContent extends JsonSerializableType
     private ?UpdateIdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant;
 
     /**
+     * @var ?UpdateAnonymousSessions $anonymousSessions
+     */
+    #[JsonProperty('anonymous_sessions')]
+    private ?UpdateAnonymousSessions $anonymousSessions;
+
+    /**
      * @var ?string $formTemplate Form template for WS-Federation protocol
      */
     #[JsonProperty('form_template')]
@@ -352,6 +360,12 @@ class UpdateClientRequestContent extends JsonSerializableType
     private ?ExpressConfigurationOrNull $expressConfiguration;
 
     /**
+     * @var ?B2BIntegrationConfiguration $b2BIntegrationConfiguration
+     */
+    #[JsonProperty('b2b_integration_configuration')]
+    private ?B2BIntegrationConfiguration $b2BIntegrationConfiguration;
+
+    /**
      * @var ?ClientMyOrganizationPatchConfiguration $myOrganizationConfiguration
      */
     #[JsonProperty('my_organization_configuration')]
@@ -407,6 +421,7 @@ class UpdateClientRequestContent extends JsonSerializableType
      *   customLoginPagePreview?: ?string,
      *   tokenQuota?: ?UpdateTokenQuota,
      *   identityAssertionAuthorizationGrant?: ?UpdateIdentityAssertionAuthorizationGrant,
+     *   anonymousSessions?: ?UpdateAnonymousSessions,
      *   formTemplate?: ?string,
      *   addons?: ?ClientAddons,
      *   clientMetadata?: ?array<string, mixed>,
@@ -429,6 +444,7 @@ class UpdateClientRequestContent extends JsonSerializableType
      *   tokenExchange?: ?ClientTokenExchangeConfigurationOrNull,
      *   parRequestExpiry?: ?int,
      *   expressConfiguration?: ?ExpressConfigurationOrNull,
+     *   b2BIntegrationConfiguration?: ?B2BIntegrationConfiguration,
      *   myOrganizationConfiguration?: ?ClientMyOrganizationPatchConfiguration,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
@@ -468,6 +484,7 @@ class UpdateClientRequestContent extends JsonSerializableType
         $this->customLoginPagePreview = $values['customLoginPagePreview'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
+        $this->anonymousSessions = $values['anonymousSessions'] ?? null;
         $this->formTemplate = $values['formTemplate'] ?? null;
         $this->addons = $values['addons'] ?? null;
         $this->clientMetadata = $values['clientMetadata'] ?? null;
@@ -490,6 +507,7 @@ class UpdateClientRequestContent extends JsonSerializableType
         $this->tokenExchange = $values['tokenExchange'] ?? null;
         $this->parRequestExpiry = $values['parRequestExpiry'] ?? null;
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
+        $this->b2BIntegrationConfiguration = $values['b2BIntegrationConfiguration'] ?? null;
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
@@ -1037,6 +1055,24 @@ class UpdateClientRequestContent extends JsonSerializableType
     }
 
     /**
+     * @return ?UpdateAnonymousSessions
+     */
+    public function getAnonymousSessions(): ?UpdateAnonymousSessions
+    {
+        return $this->anonymousSessions;
+    }
+
+    /**
+     * @param ?UpdateAnonymousSessions $value
+     */
+    public function setAnonymousSessions(?UpdateAnonymousSessions $value = null): self
+    {
+        $this->anonymousSessions = $value;
+        $this->_setField('anonymousSessions');
+        return $this;
+    }
+
+    /**
      * @return ?string
      */
     public function getFormTemplate(): ?string
@@ -1429,6 +1465,24 @@ class UpdateClientRequestContent extends JsonSerializableType
     {
         $this->expressConfiguration = $value;
         $this->_setField('expressConfiguration');
+        return $this;
+    }
+
+    /**
+     * @return ?B2BIntegrationConfiguration
+     */
+    public function getB2BIntegrationConfiguration(): ?B2BIntegrationConfiguration
+    {
+        return $this->b2BIntegrationConfiguration;
+    }
+
+    /**
+     * @param ?B2BIntegrationConfiguration $value
+     */
+    public function setB2BIntegrationConfiguration(?B2BIntegrationConfiguration $value = null): self
+    {
+        $this->b2BIntegrationConfiguration = $value;
+        $this->_setField('b2BIntegrationConfiguration');
         return $this;
     }
 

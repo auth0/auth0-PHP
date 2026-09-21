@@ -9,6 +9,7 @@ use Auth0\SDK\API\Management\Types\EnabledFeaturesEnum;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Types\ConnectionProfileConfig;
 use Auth0\SDK\API\Management\Types\ConnectionProfileStrategyOverrides;
+use Auth0\SDK\API\Management\Types\ConnectionProfileProvisioning;
 use Auth0\SDK\API\Management\Types\ConnectionProfileCrossAppAccessResourceApp;
 
 class UpdateConnectionProfileRequestContent extends JsonSerializableType
@@ -50,6 +51,12 @@ class UpdateConnectionProfileRequestContent extends JsonSerializableType
     private ?ConnectionProfileStrategyOverrides $strategyOverrides;
 
     /**
+     * @var ?ConnectionProfileProvisioning $provisioning
+     */
+    #[JsonProperty('provisioning')]
+    private ?ConnectionProfileProvisioning $provisioning;
+
+    /**
      * @var ?ConnectionProfileCrossAppAccessResourceApp $crossAppAccessResourceApp
      */
     #[JsonProperty('cross_app_access_resource_app')]
@@ -63,6 +70,7 @@ class UpdateConnectionProfileRequestContent extends JsonSerializableType
      *   enabledFeatures?: ?array<value-of<EnabledFeaturesEnum>>,
      *   connectionConfig?: ?ConnectionProfileConfig,
      *   strategyOverrides?: ?ConnectionProfileStrategyOverrides,
+     *   provisioning?: ?ConnectionProfileProvisioning,
      *   crossAppAccessResourceApp?: ?ConnectionProfileCrossAppAccessResourceApp,
      * } $values
      */
@@ -75,6 +83,7 @@ class UpdateConnectionProfileRequestContent extends JsonSerializableType
         $this->enabledFeatures = $values['enabledFeatures'] ?? null;
         $this->connectionConfig = $values['connectionConfig'] ?? null;
         $this->strategyOverrides = $values['strategyOverrides'] ?? null;
+        $this->provisioning = $values['provisioning'] ?? null;
         $this->crossAppAccessResourceApp = $values['crossAppAccessResourceApp'] ?? null;
     }
 
@@ -183,6 +192,24 @@ class UpdateConnectionProfileRequestContent extends JsonSerializableType
     {
         $this->strategyOverrides = $value;
         $this->_setField('strategyOverrides');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionProfileProvisioning
+     */
+    public function getProvisioning(): ?ConnectionProfileProvisioning
+    {
+        return $this->provisioning;
+    }
+
+    /**
+     * @param ?ConnectionProfileProvisioning $value
+     */
+    public function setProvisioning(?ConnectionProfileProvisioning $value = null): self
+    {
+        $this->provisioning = $value;
+        $this->_setField('provisioning');
         return $this;
     }
 

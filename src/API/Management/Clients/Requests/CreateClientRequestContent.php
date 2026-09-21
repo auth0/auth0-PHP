@@ -27,9 +27,11 @@ use Auth0\SDK\API\Management\Types\ClientComplianceLevelEnum;
 use Auth0\SDK\API\Management\Types\ClientTokenExchangeConfiguration;
 use Auth0\SDK\API\Management\Types\CreateTokenQuota;
 use Auth0\SDK\API\Management\Types\CreateIdentityAssertionAuthorizationGrant;
+use Auth0\SDK\API\Management\Types\CreateAnonymousSessions;
 use Auth0\SDK\API\Management\Types\ClientThirdPartySecurityModeEnum;
 use Auth0\SDK\API\Management\Types\ClientRedirectionPolicyEnum;
 use Auth0\SDK\API\Management\Types\ExpressConfiguration;
+use Auth0\SDK\API\Management\Types\B2BIntegrationConfiguration;
 use Auth0\SDK\API\Management\Types\ClientMyOrganizationPostConfiguration;
 use Auth0\SDK\API\Management\Types\AsyncApprovalNotificationsChannelsEnum;
 
@@ -346,6 +348,12 @@ class CreateClientRequestContent extends JsonSerializableType
     private ?CreateIdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant;
 
     /**
+     * @var ?CreateAnonymousSessions $anonymousSessions
+     */
+    #[JsonProperty('anonymous_sessions')]
+    private ?CreateAnonymousSessions $anonymousSessions;
+
+    /**
      * @var ?value-of<ClientThirdPartySecurityModeEnum> $thirdPartySecurityMode
      */
     #[JsonProperty('third_party_security_mode')]
@@ -362,6 +370,12 @@ class CreateClientRequestContent extends JsonSerializableType
      */
     #[JsonProperty('express_configuration')]
     private ?ExpressConfiguration $expressConfiguration;
+
+    /**
+     * @var ?B2BIntegrationConfiguration $b2BIntegrationConfiguration
+     */
+    #[JsonProperty('b2b_integration_configuration')]
+    private ?B2BIntegrationConfiguration $b2BIntegrationConfiguration;
 
     /**
      * @var ?ClientMyOrganizationPostConfiguration $myOrganizationConfiguration
@@ -428,9 +442,11 @@ class CreateClientRequestContent extends JsonSerializableType
      *   tokenQuota?: ?CreateTokenQuota,
      *   resourceServerIdentifier?: ?string,
      *   identityAssertionAuthorizationGrant?: ?CreateIdentityAssertionAuthorizationGrant,
+     *   anonymousSessions?: ?CreateAnonymousSessions,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   expressConfiguration?: ?ExpressConfiguration,
+     *   b2BIntegrationConfiguration?: ?B2BIntegrationConfiguration,
      *   myOrganizationConfiguration?: ?ClientMyOrganizationPostConfiguration,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
      * } $values
@@ -489,9 +505,11 @@ class CreateClientRequestContent extends JsonSerializableType
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
         $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
+        $this->anonymousSessions = $values['anonymousSessions'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
+        $this->b2BIntegrationConfiguration = $values['b2BIntegrationConfiguration'] ?? null;
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
     }
@@ -1415,6 +1433,24 @@ class CreateClientRequestContent extends JsonSerializableType
     }
 
     /**
+     * @return ?CreateAnonymousSessions
+     */
+    public function getAnonymousSessions(): ?CreateAnonymousSessions
+    {
+        return $this->anonymousSessions;
+    }
+
+    /**
+     * @param ?CreateAnonymousSessions $value
+     */
+    public function setAnonymousSessions(?CreateAnonymousSessions $value = null): self
+    {
+        $this->anonymousSessions = $value;
+        $this->_setField('anonymousSessions');
+        return $this;
+    }
+
+    /**
      * @return ?value-of<ClientThirdPartySecurityModeEnum>
      */
     public function getThirdPartySecurityMode(): ?string
@@ -1465,6 +1501,24 @@ class CreateClientRequestContent extends JsonSerializableType
     {
         $this->expressConfiguration = $value;
         $this->_setField('expressConfiguration');
+        return $this;
+    }
+
+    /**
+     * @return ?B2BIntegrationConfiguration
+     */
+    public function getB2BIntegrationConfiguration(): ?B2BIntegrationConfiguration
+    {
+        return $this->b2BIntegrationConfiguration;
+    }
+
+    /**
+     * @param ?B2BIntegrationConfiguration $value
+     */
+    public function setB2BIntegrationConfiguration(?B2BIntegrationConfiguration $value = null): self
+    {
+        $this->b2BIntegrationConfiguration = $value;
+        $this->_setField('b2BIntegrationConfiguration');
         return $this;
     }
 

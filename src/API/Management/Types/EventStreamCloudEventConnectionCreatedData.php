@@ -27,6 +27,21 @@ class EventStreamCloudEventConnectionCreatedData extends JsonSerializableType
     private EventStreamCloudEventConnectionCreatedObject0|EventStreamCloudEventConnectionCreatedObject1|EventStreamCloudEventConnectionCreatedObject2|EventStreamCloudEventConnectionCreatedObject3|EventStreamCloudEventConnectionCreatedObject4|EventStreamCloudEventConnectionCreatedObject5|EventStreamCloudEventConnectionCreatedObject6|EventStreamCloudEventConnectionCreatedObject7 $object;
 
     /**
+     * @var (
+     *    EventStreamCloudEventConnectionCreatedPreviousObject0
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject1
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject2
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject3
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject4
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject5
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject6
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject7
+     * )|null $previousObject
+     */
+    #[JsonProperty('previous_object'), Union(EventStreamCloudEventConnectionCreatedPreviousObject0::class, EventStreamCloudEventConnectionCreatedPreviousObject1::class, EventStreamCloudEventConnectionCreatedPreviousObject2::class, EventStreamCloudEventConnectionCreatedPreviousObject3::class, EventStreamCloudEventConnectionCreatedPreviousObject4::class, EventStreamCloudEventConnectionCreatedPreviousObject5::class, EventStreamCloudEventConnectionCreatedPreviousObject6::class, EventStreamCloudEventConnectionCreatedPreviousObject7::class, 'null')]
+    private EventStreamCloudEventConnectionCreatedPreviousObject0|EventStreamCloudEventConnectionCreatedPreviousObject1|EventStreamCloudEventConnectionCreatedPreviousObject2|EventStreamCloudEventConnectionCreatedPreviousObject3|EventStreamCloudEventConnectionCreatedPreviousObject4|EventStreamCloudEventConnectionCreatedPreviousObject5|EventStreamCloudEventConnectionCreatedPreviousObject6|EventStreamCloudEventConnectionCreatedPreviousObject7|null $previousObject;
+
+    /**
      * @var ?EventStreamCloudEventContext $context
      */
     #[JsonProperty('context')]
@@ -44,6 +59,16 @@ class EventStreamCloudEventConnectionCreatedData extends JsonSerializableType
      *   |EventStreamCloudEventConnectionCreatedObject6
      *   |EventStreamCloudEventConnectionCreatedObject7
      * ),
+     *   previousObject?: (
+     *    EventStreamCloudEventConnectionCreatedPreviousObject0
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject1
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject2
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject3
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject4
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject5
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject6
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject7
+     * )|null,
      *   context?: ?EventStreamCloudEventContext,
      * } $values
      */
@@ -51,6 +76,7 @@ class EventStreamCloudEventConnectionCreatedData extends JsonSerializableType
         array $values,
     ) {
         $this->object = $values['object'];
+        $this->previousObject = $values['previousObject'] ?? null;
         $this->context = $values['context'] ?? null;
     }
 
@@ -87,6 +113,42 @@ class EventStreamCloudEventConnectionCreatedData extends JsonSerializableType
     {
         $this->object = $value;
         $this->_setField('object');
+        return $this;
+    }
+
+    /**
+     * @return (
+     *    EventStreamCloudEventConnectionCreatedPreviousObject0
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject1
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject2
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject3
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject4
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject5
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject6
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject7
+     * )|null
+     */
+    public function getPreviousObject(): EventStreamCloudEventConnectionCreatedPreviousObject0|EventStreamCloudEventConnectionCreatedPreviousObject1|EventStreamCloudEventConnectionCreatedPreviousObject2|EventStreamCloudEventConnectionCreatedPreviousObject3|EventStreamCloudEventConnectionCreatedPreviousObject4|EventStreamCloudEventConnectionCreatedPreviousObject5|EventStreamCloudEventConnectionCreatedPreviousObject6|EventStreamCloudEventConnectionCreatedPreviousObject7|null
+    {
+        return $this->previousObject;
+    }
+
+    /**
+     * @param (
+     *    EventStreamCloudEventConnectionCreatedPreviousObject0
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject1
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject2
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject3
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject4
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject5
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject6
+     *   |EventStreamCloudEventConnectionCreatedPreviousObject7
+     * )|null $value
+     */
+    public function setPreviousObject(EventStreamCloudEventConnectionCreatedPreviousObject0|EventStreamCloudEventConnectionCreatedPreviousObject1|EventStreamCloudEventConnectionCreatedPreviousObject2|EventStreamCloudEventConnectionCreatedPreviousObject3|EventStreamCloudEventConnectionCreatedPreviousObject4|EventStreamCloudEventConnectionCreatedPreviousObject5|EventStreamCloudEventConnectionCreatedPreviousObject6|EventStreamCloudEventConnectionCreatedPreviousObject7|null $value = null): self
+    {
+        $this->previousObject = $value;
+        $this->_setField('previousObject');
         return $this;
     }
 

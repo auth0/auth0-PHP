@@ -214,6 +214,18 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     private ?string $dpopSigningAlg;
 
     /**
+     * @var ?bool $enablePushedAuthorizationRequests
+     */
+    #[JsonProperty('enable_pushed_authorization_requests')]
+    private ?bool $enablePushedAuthorizationRequests;
+
+    /**
+     * @var ?string $pushedAuthorizationRequestEndpoint
+     */
+    #[JsonProperty('pushed_authorization_request_endpoint')]
+    private ?string $pushedAuthorizationRequestEndpoint;
+
+    /**
      * @var ?value-of<ConnectionTokenEndpointAuthMethodEnum> $tokenEndpointAuthMethod
      */
     #[JsonProperty('token_endpoint_auth_method')]
@@ -293,6 +305,8 @@ class ConnectionPropertiesOptions extends JsonSerializableType
      *   assertionDecryptionSettings?: ?ConnectionAssertionDecryptionSettings,
      *   idTokenSignedResponseAlgs?: ?array<value-of<ConnectionIdTokenSignedResponseAlgEnum>>,
      *   dpopSigningAlg?: ?value-of<ConnectionDpopSigningAlgEnum>,
+     *   enablePushedAuthorizationRequests?: ?bool,
+     *   pushedAuthorizationRequestEndpoint?: ?string,
      *   tokenEndpointAuthMethod?: ?value-of<ConnectionTokenEndpointAuthMethodEnum>,
      *   tokenEndpointAuthSigningAlg?: ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum>,
      *   tokenEndpointJwtcaAudFormat?: ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>,
@@ -338,6 +352,8 @@ class ConnectionPropertiesOptions extends JsonSerializableType
         $this->assertionDecryptionSettings = $values['assertionDecryptionSettings'] ?? null;
         $this->idTokenSignedResponseAlgs = $values['idTokenSignedResponseAlgs'] ?? null;
         $this->dpopSigningAlg = $values['dpopSigningAlg'] ?? null;
+        $this->enablePushedAuthorizationRequests = $values['enablePushedAuthorizationRequests'] ?? null;
+        $this->pushedAuthorizationRequestEndpoint = $values['pushedAuthorizationRequestEndpoint'] ?? null;
         $this->tokenEndpointAuthMethod = $values['tokenEndpointAuthMethod'] ?? null;
         $this->tokenEndpointAuthSigningAlg = $values['tokenEndpointAuthSigningAlg'] ?? null;
         $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
@@ -944,6 +960,42 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     {
         $this->dpopSigningAlg = $value;
         $this->_setField('dpopSigningAlg');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getEnablePushedAuthorizationRequests(): ?bool
+    {
+        return $this->enablePushedAuthorizationRequests;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setEnablePushedAuthorizationRequests(?bool $value = null): self
+    {
+        $this->enablePushedAuthorizationRequests = $value;
+        $this->_setField('enablePushedAuthorizationRequests');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getPushedAuthorizationRequestEndpoint(): ?string
+    {
+        return $this->pushedAuthorizationRequestEndpoint;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setPushedAuthorizationRequestEndpoint(?string $value = null): self
+    {
+        $this->pushedAuthorizationRequestEndpoint = $value;
+        $this->_setField('pushedAuthorizationRequestEndpoint');
         return $this;
     }
 

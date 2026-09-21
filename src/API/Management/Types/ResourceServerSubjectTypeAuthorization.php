@@ -23,9 +23,16 @@ class ResourceServerSubjectTypeAuthorization extends JsonSerializableType
     private ?ResourceServerSubjectTypeAuthorizationClient $client;
 
     /**
+     * @var ?ResourceServerSubjectTypeAuthorizationAnonymousUser $anonymousUser
+     */
+    #[JsonProperty('anonymous_user')]
+    private ?ResourceServerSubjectTypeAuthorizationAnonymousUser $anonymousUser;
+
+    /**
      * @param array{
      *   user?: ?ResourceServerSubjectTypeAuthorizationUser,
      *   client?: ?ResourceServerSubjectTypeAuthorizationClient,
+     *   anonymousUser?: ?ResourceServerSubjectTypeAuthorizationAnonymousUser,
      * } $values
      */
     public function __construct(
@@ -33,6 +40,7 @@ class ResourceServerSubjectTypeAuthorization extends JsonSerializableType
     ) {
         $this->user = $values['user'] ?? null;
         $this->client = $values['client'] ?? null;
+        $this->anonymousUser = $values['anonymousUser'] ?? null;
     }
 
     /**
@@ -68,6 +76,24 @@ class ResourceServerSubjectTypeAuthorization extends JsonSerializableType
     {
         $this->client = $value;
         $this->_setField('client');
+        return $this;
+    }
+
+    /**
+     * @return ?ResourceServerSubjectTypeAuthorizationAnonymousUser
+     */
+    public function getAnonymousUser(): ?ResourceServerSubjectTypeAuthorizationAnonymousUser
+    {
+        return $this->anonymousUser;
+    }
+
+    /**
+     * @param ?ResourceServerSubjectTypeAuthorizationAnonymousUser $value
+     */
+    public function setAnonymousUser(?ResourceServerSubjectTypeAuthorizationAnonymousUser $value = null): self
+    {
+        $this->anonymousUser = $value;
+        $this->_setField('anonymousUser');
         return $this;
     }
 

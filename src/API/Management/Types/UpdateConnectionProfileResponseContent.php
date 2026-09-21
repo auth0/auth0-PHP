@@ -51,6 +51,12 @@ class UpdateConnectionProfileResponseContent extends JsonSerializableType
     private ?ConnectionProfileStrategyOverrides $strategyOverrides;
 
     /**
+     * @var ?ConnectionProfileProvisioning $provisioning
+     */
+    #[JsonProperty('provisioning')]
+    private ?ConnectionProfileProvisioning $provisioning;
+
+    /**
      * @var ?ConnectionProfileCrossAppAccessResourceApp $crossAppAccessResourceApp
      */
     #[JsonProperty('cross_app_access_resource_app')]
@@ -65,6 +71,7 @@ class UpdateConnectionProfileResponseContent extends JsonSerializableType
      *   enabledFeatures?: ?array<value-of<EnabledFeaturesEnum>>,
      *   connectionConfig?: ?ConnectionProfileConfig,
      *   strategyOverrides?: ?ConnectionProfileStrategyOverrides,
+     *   provisioning?: ?ConnectionProfileProvisioning,
      *   crossAppAccessResourceApp?: ?ConnectionProfileCrossAppAccessResourceApp,
      * } $values
      */
@@ -78,6 +85,7 @@ class UpdateConnectionProfileResponseContent extends JsonSerializableType
         $this->enabledFeatures = $values['enabledFeatures'] ?? null;
         $this->connectionConfig = $values['connectionConfig'] ?? null;
         $this->strategyOverrides = $values['strategyOverrides'] ?? null;
+        $this->provisioning = $values['provisioning'] ?? null;
         $this->crossAppAccessResourceApp = $values['crossAppAccessResourceApp'] ?? null;
     }
 
@@ -204,6 +212,24 @@ class UpdateConnectionProfileResponseContent extends JsonSerializableType
     {
         $this->strategyOverrides = $value;
         $this->_setField('strategyOverrides');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionProfileProvisioning
+     */
+    public function getProvisioning(): ?ConnectionProfileProvisioning
+    {
+        return $this->provisioning;
+    }
+
+    /**
+     * @param ?ConnectionProfileProvisioning $value
+     */
+    public function setProvisioning(?ConnectionProfileProvisioning $value = null): self
+    {
+        $this->provisioning = $value;
+        $this->_setField('provisioning');
         return $this;
     }
 

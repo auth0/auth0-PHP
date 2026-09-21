@@ -48,6 +48,12 @@ class EventStreamCloudEventConnectionDeletedObject0OptionsOidcMetadata extends J
     private ?array $claimsSupported;
 
     /**
+     * @var ?array<string> $codeChallengeMethodsSupported JSON array containing a list of Proof Key for Code Exchange (PKCE) code challenge methods supported by this OP (e.g., S256, plain), as defined in RFC 7636.
+     */
+    #[JsonProperty('code_challenge_methods_supported'), ArrayType(['string'])]
+    private ?array $codeChallengeMethodsSupported;
+
+    /**
      * @var ?array<string> $displayValuesSupported JSON array containing a list of the JWS signing algorithms (alg values) supported by the Token Endpoint for the signature on the JWT [JWT] used to authenticate the Client at the Token Endpoint for the private_key_jwt and client_secret_jwt authentication methods. Servers SHOULD support RS256. The value none MUST NOT be used.
      */
     #[JsonProperty('display_values_supported'), ArrayType(['string'])]
@@ -244,6 +250,7 @@ class EventStreamCloudEventConnectionDeletedObject0OptionsOidcMetadata extends J
      *   claimsLocalesSupported?: ?array<string>,
      *   claimsParameterSupported?: ?bool,
      *   claimsSupported?: ?array<string>,
+     *   codeChallengeMethodsSupported?: ?array<string>,
      *   displayValuesSupported?: ?array<string>,
      *   dpopSigningAlgValuesSupported?: ?array<string>,
      *   endSessionEndpoint?: ?string,
@@ -283,6 +290,7 @@ class EventStreamCloudEventConnectionDeletedObject0OptionsOidcMetadata extends J
         $this->claimsLocalesSupported = $values['claimsLocalesSupported'] ?? null;
         $this->claimsParameterSupported = $values['claimsParameterSupported'] ?? null;
         $this->claimsSupported = $values['claimsSupported'] ?? null;
+        $this->codeChallengeMethodsSupported = $values['codeChallengeMethodsSupported'] ?? null;
         $this->displayValuesSupported = $values['displayValuesSupported'] ?? null;
         $this->dpopSigningAlgValuesSupported = $values['dpopSigningAlgValuesSupported'] ?? null;
         $this->endSessionEndpoint = $values['endSessionEndpoint'] ?? null;
@@ -421,6 +429,24 @@ class EventStreamCloudEventConnectionDeletedObject0OptionsOidcMetadata extends J
     {
         $this->claimsSupported = $value;
         $this->_setField('claimsSupported');
+        return $this;
+    }
+
+    /**
+     * @return ?array<string>
+     */
+    public function getCodeChallengeMethodsSupported(): ?array
+    {
+        return $this->codeChallengeMethodsSupported;
+    }
+
+    /**
+     * @param ?array<string> $value
+     */
+    public function setCodeChallengeMethodsSupported(?array $value = null): self
+    {
+        $this->codeChallengeMethodsSupported = $value;
+        $this->_setField('codeChallengeMethodsSupported');
         return $this;
     }
 

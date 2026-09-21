@@ -60,5 +60,13 @@ enum ConnectionStrategyEnum: string
     case Yahoo = "yahoo";
     case Yandex = "yandex";
     case NotionMcp = "notion-mcp";
+    case Asana = "asana";
+    case Atlassian = "atlassian";
+    case CloudflareMcp = "cloudflare-mcp";
+    case Gitlab = "gitlab";
+    case HubspotMcp = "hubspot-mcp";
+    case LinearMcp = "linear-mcp";
+    case SentryMcp = "sentry-mcp";
+    case Slack = "slack";
     case Auth0Adldap = "auth0-adldap";
 }

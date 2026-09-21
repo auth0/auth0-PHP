@@ -11,37 +11,37 @@ use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 class EventStreamCloudEventContextTenant extends JsonSerializableType
 {
     /**
-     * @var string $tenantId Machine-generated unique tenant identifier.
+     * @var string $id User-provided tenant identifier.
      */
-    #[JsonProperty('tenant_id')]
-    private string $tenantId;
+    #[JsonProperty('id')]
+    private string $id;
 
     /**
      * @param array{
-     *   tenantId: string,
+     *   id: string,
      * } $values
      */
     public function __construct(
         array $values,
     ) {
-        $this->tenantId = $values['tenantId'];
+        $this->id = $values['id'];
     }
 
     /**
      * @return string
      */
-    public function getTenantId(): string
+    public function getId(): string
     {
-        return $this->tenantId;
+        return $this->id;
     }
 
     /**
      * @param string $value
      */
-    public function setTenantId(string $value): self
+    public function setId(string $value): self
     {
-        $this->tenantId = $value;
-        $this->_setField('tenantId');
+        $this->id = $value;
+        $this->_setField('id');
         return $this;
     }
 

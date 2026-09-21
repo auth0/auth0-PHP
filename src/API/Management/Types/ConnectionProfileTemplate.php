@@ -48,6 +48,12 @@ class ConnectionProfileTemplate extends JsonSerializableType
     private ?ConnectionProfileStrategyOverrides $strategyOverrides;
 
     /**
+     * @var ?ConnectionProfileProvisioning $provisioning
+     */
+    #[JsonProperty('provisioning')]
+    private ?ConnectionProfileProvisioning $provisioning;
+
+    /**
      * @param array{
      *   name?: ?string,
      *   organization?: ?ConnectionProfileOrganization,
@@ -55,6 +61,7 @@ class ConnectionProfileTemplate extends JsonSerializableType
      *   enabledFeatures?: ?array<value-of<EnabledFeaturesEnum>>,
      *   connectionConfig?: ?ConnectionProfileConfig,
      *   strategyOverrides?: ?ConnectionProfileStrategyOverrides,
+     *   provisioning?: ?ConnectionProfileProvisioning,
      * } $values
      */
     public function __construct(
@@ -66,6 +73,7 @@ class ConnectionProfileTemplate extends JsonSerializableType
         $this->enabledFeatures = $values['enabledFeatures'] ?? null;
         $this->connectionConfig = $values['connectionConfig'] ?? null;
         $this->strategyOverrides = $values['strategyOverrides'] ?? null;
+        $this->provisioning = $values['provisioning'] ?? null;
     }
 
     /**
@@ -173,6 +181,24 @@ class ConnectionProfileTemplate extends JsonSerializableType
     {
         $this->strategyOverrides = $value;
         $this->_setField('strategyOverrides');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionProfileProvisioning
+     */
+    public function getProvisioning(): ?ConnectionProfileProvisioning
+    {
+        return $this->provisioning;
+    }
+
+    /**
+     * @param ?ConnectionProfileProvisioning $value
+     */
+    public function setProvisioning(?ConnectionProfileProvisioning $value = null): self
+    {
+        $this->provisioning = $value;
+        $this->_setField('provisioning');
         return $this;
     }
 
