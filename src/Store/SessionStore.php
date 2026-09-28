@@ -159,7 +159,7 @@ final readonly class SessionStore implements StoreInterface
                     'domain' => $this->configuration->getCookieDomain(),
                     'path' => $this->configuration->getCookiePath(),
                     // Browsers reject SameSite=None cookies without Secure, so force it on.
-                    'secure' => 'None' === $sameSite ? true : $this->configuration->getCookieSecure(),
+                    'secure' => 'none' === mb_strtolower($sameSite) ? true : $this->configuration->getCookieSecure(),
                     'httponly' => true,
                     'samesite' => $sameSite,
                 ]);
