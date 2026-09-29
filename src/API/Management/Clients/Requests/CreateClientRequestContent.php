@@ -34,6 +34,7 @@ use Auth0\SDK\API\Management\Types\ExpressConfiguration;
 use Auth0\SDK\API\Management\Types\B2BIntegrationConfiguration;
 use Auth0\SDK\API\Management\Types\ClientMyOrganizationPostConfiguration;
 use Auth0\SDK\API\Management\Types\AsyncApprovalNotificationsChannelsEnum;
+use Auth0\SDK\API\Management\Types\ClientOidcSupportPost;
 
 class CreateClientRequestContent extends JsonSerializableType
 {
@@ -390,6 +391,12 @@ class CreateClientRequestContent extends JsonSerializableType
     private ?array $asyncApprovalNotificationChannels;
 
     /**
+     * @var ?ClientOidcSupportPost $oidcSupport
+     */
+    #[JsonProperty('oidc_support')]
+    private ?ClientOidcSupportPost $oidcSupport;
+
+    /**
      * @param array{
      *   name: string,
      *   description?: ?string,
@@ -449,6 +456,7 @@ class CreateClientRequestContent extends JsonSerializableType
      *   b2BIntegrationConfiguration?: ?B2BIntegrationConfiguration,
      *   myOrganizationConfiguration?: ?ClientMyOrganizationPostConfiguration,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
+     *   oidcSupport?: ?ClientOidcSupportPost,
      * } $values
      */
     public function __construct(
@@ -512,6 +520,7 @@ class CreateClientRequestContent extends JsonSerializableType
         $this->b2BIntegrationConfiguration = $values['b2BIntegrationConfiguration'] ?? null;
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
+        $this->oidcSupport = $values['oidcSupport'] ?? null;
     }
 
     /**
@@ -1555,6 +1564,24 @@ class CreateClientRequestContent extends JsonSerializableType
     {
         $this->asyncApprovalNotificationChannels = $value;
         $this->_setField('asyncApprovalNotificationChannels');
+        return $this;
+    }
+
+    /**
+     * @return ?ClientOidcSupportPost
+     */
+    public function getOidcSupport(): ?ClientOidcSupportPost
+    {
+        return $this->oidcSupport;
+    }
+
+    /**
+     * @param ?ClientOidcSupportPost $value
+     */
+    public function setOidcSupport(?ClientOidcSupportPost $value = null): self
+    {
+        $this->oidcSupport = $value;
+        $this->_setField('oidcSupport');
         return $this;
     }
 }

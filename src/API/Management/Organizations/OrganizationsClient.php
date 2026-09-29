@@ -9,7 +9,6 @@ use Auth0\SDK\API\Management\Organizations\DiscoveryDomains\DiscoveryDomainsClie
 use Auth0\SDK\API\Management\Organizations\EnabledConnections\EnabledConnectionsClient;
 use Auth0\SDK\API\Management\Organizations\Invitations\InvitationsClient;
 use Auth0\SDK\API\Management\Organizations\Members\MembersClient;
-use Auth0\SDK\API\Management\Organizations\OrganizationTemplate\OrganizationTemplateClient;
 use Auth0\SDK\API\Management\Organizations\Groups\GroupsClient;
 use Auth0\SDK\API\Management\Organizations\Roles\RolesClient;
 use Psr\Http\Client\ClientInterface;
@@ -42,7 +41,6 @@ use Auth0\SDK\API\Management\Organizations\DiscoveryDomains\DiscoveryDomainsClie
 use Auth0\SDK\API\Management\Organizations\EnabledConnections\EnabledConnectionsClientInterface;
 use Auth0\SDK\API\Management\Organizations\Invitations\InvitationsClientInterface;
 use Auth0\SDK\API\Management\Organizations\Members\MembersClientInterface;
-use Auth0\SDK\API\Management\Organizations\OrganizationTemplate\OrganizationTemplateClientInterface;
 use Auth0\SDK\API\Management\Organizations\Groups\GroupsClientInterface;
 use Auth0\SDK\API\Management\Organizations\Roles\RolesClientInterface;
 
@@ -82,11 +80,6 @@ class OrganizationsClient implements OrganizationsClientInterface
      * @var MembersClient $members
      */
     public MembersClient $members;
-
-    /**
-     * @var OrganizationTemplateClient $organizationTemplate
-     */
-    public OrganizationTemplateClient $organizationTemplate;
 
     /**
      * @var GroupsClient $groups
@@ -137,7 +130,6 @@ class OrganizationsClient implements OrganizationsClientInterface
         $this->enabledConnections = new EnabledConnectionsClient($this->client, $this->options);
         $this->invitations = new InvitationsClient($this->client, $this->options);
         $this->members = new MembersClient($this->client, $this->options);
-        $this->organizationTemplate = new OrganizationTemplateClient($this->client, $this->options);
         $this->groups = new GroupsClient($this->client, $this->options);
         $this->roles = new RolesClient($this->client, $this->options);
     }
@@ -586,14 +578,6 @@ class OrganizationsClient implements OrganizationsClientInterface
     public function getMembers(): MembersClientInterface
     {
         return $this->members;
-    }
-
-    /**
-     * @return OrganizationTemplateClientInterface
-     */
-    public function getOrganizationTemplate(): OrganizationTemplateClientInterface
-    {
-        return $this->organizationTemplate;
     }
 
     /**

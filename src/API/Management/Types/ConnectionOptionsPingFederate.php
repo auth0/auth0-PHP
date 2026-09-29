@@ -48,6 +48,7 @@ class ConnectionOptionsPingFederate extends JsonSerializableType
      *   signatureAlgorithm?: ?value-of<ConnectionSignatureAlgorithmEnumSaml>,
      *   tenantDomain?: ?string,
      *   thumbprints?: ?array<string>,
+     *   thumbprintsSha384?: ?array<string>,
      *   upstreamParams?: ?array<string, (
      *    ConnectionUpstreamAlias
      *   |ConnectionUpstreamValue
@@ -74,6 +75,7 @@ class ConnectionOptionsPingFederate extends JsonSerializableType
         $this->signatureAlgorithm = $values['signatureAlgorithm'] ?? null;
         $this->tenantDomain = $values['tenantDomain'] ?? null;
         $this->thumbprints = $values['thumbprints'] ?? null;
+        $this->thumbprintsSha384 = $values['thumbprintsSha384'] ?? null;
         $this->upstreamParams = $values['upstreamParams'] ?? null;
         $this->nonPersistentAttrs = $values['nonPersistentAttrs'] ?? null;
         $this->pingFederateBaseUrl = $values['pingFederateBaseUrl'];

@@ -6,4 +6,5 @@ enum AsyncApprovalNotificationsChannelsEnum: string
 {
     case GuardianPush = "guardian-push";
     case Email = "email";
+    case MyAccount = "my-account";
 }
