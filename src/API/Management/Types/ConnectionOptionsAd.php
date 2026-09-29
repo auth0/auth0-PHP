@@ -112,6 +112,12 @@ class ConnectionOptionsAd extends JsonSerializableType
     private ?array $thumbprints;
 
     /**
+     * @var ?array<string> $thumbprintsSha384
+     */
+    #[JsonProperty('thumbprints_sha384'), ArrayType(['string'])]
+    private ?array $thumbprintsSha384;
+
+    /**
      * @var ?array<string, (
      *    ConnectionUpstreamAlias
      *   |ConnectionUpstreamValue
@@ -139,6 +145,7 @@ class ConnectionOptionsAd extends JsonSerializableType
      *   signInEndpoint?: ?string,
      *   tenantDomain?: ?string,
      *   thumbprints?: ?array<string>,
+     *   thumbprintsSha384?: ?array<string>,
      *   upstreamParams?: ?array<string, (
      *    ConnectionUpstreamAlias
      *   |ConnectionUpstreamValue
@@ -165,6 +172,7 @@ class ConnectionOptionsAd extends JsonSerializableType
         $this->signInEndpoint = $values['signInEndpoint'] ?? null;
         $this->tenantDomain = $values['tenantDomain'] ?? null;
         $this->thumbprints = $values['thumbprints'] ?? null;
+        $this->thumbprintsSha384 = $values['thumbprintsSha384'] ?? null;
         $this->upstreamParams = $values['upstreamParams'] ?? null;
     }
 
@@ -453,6 +461,24 @@ class ConnectionOptionsAd extends JsonSerializableType
     {
         $this->thumbprints = $value;
         $this->_setField('thumbprints');
+        return $this;
+    }
+
+    /**
+     * @return ?array<string>
+     */
+    public function getThumbprintsSha384(): ?array
+    {
+        return $this->thumbprintsSha384;
+    }
+
+    /**
+     * @param ?array<string> $value
+     */
+    public function setThumbprintsSha384(?array $value = null): self
+    {
+        $this->thumbprintsSha384 = $value;
+        $this->_setField('thumbprintsSha384');
         return $this;
     }
 

@@ -142,6 +142,7 @@ class ConnectionOptionsSaml extends JsonSerializableType
      *   signatureAlgorithm?: ?value-of<ConnectionSignatureAlgorithmEnumSaml>,
      *   tenantDomain?: ?string,
      *   thumbprints?: ?array<string>,
+     *   thumbprintsSha384?: ?array<string>,
      *   upstreamParams?: ?array<string, (
      *    ConnectionUpstreamAlias
      *   |ConnectionUpstreamValue
@@ -187,6 +188,7 @@ class ConnectionOptionsSaml extends JsonSerializableType
         $this->signatureAlgorithm = $values['signatureAlgorithm'] ?? null;
         $this->tenantDomain = $values['tenantDomain'] ?? null;
         $this->thumbprints = $values['thumbprints'] ?? null;
+        $this->thumbprintsSha384 = $values['thumbprintsSha384'] ?? null;
         $this->upstreamParams = $values['upstreamParams'] ?? null;
         $this->nonPersistentAttrs = $values['nonPersistentAttrs'] ?? null;
         $this->debug = $values['debug'] ?? null;

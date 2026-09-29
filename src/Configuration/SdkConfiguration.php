@@ -95,7 +95,7 @@ final class SdkConfiguration implements ConfigurableContract
      * @param int                              $cookieExpires                   Defaults to 0. How long, in seconds, before cookies expire. If set to 0 the cookie will expire at the end of the session (when the browser closes).
      * @param string                           $cookiePath                      Defaults to '/'. Specifies path on the domain where the cookies will work. Use a single slash ('/') for all paths on the domain.
      * @param null|string                      $cookieSameSite                  Defaults to 'lax'. Specifies whether cookies should be restricted to first-party or same-site context.
-     * @param bool                             $cookieSecure                    Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.
+     * @param bool                             $cookieSecure                    Defaults to false. Specifies whether cookies should ONLY be sent over secure connections. Enable this in production so session and token cookies are never sent over plaintext HTTP. When SameSite=None applies (e.g. responseMode 'form_post'), Secure is forced on regardless, as browsers reject SameSite=None cookies without it.
      * @param bool                             $persistUser                     Defaults to true. If true, the user data will persist in session storage.
      * @param bool                             $persistIdToken                  Defaults to true. If true, the Id Token will persist in session storage.
      * @param bool                             $persistAccessToken              Defaults to true. If true, the Access Token will persist in session storage.

@@ -339,6 +339,11 @@ final class CookieStore implements StoreInterface
             $options['samesite'] = 'Lax';
         }
 
+        // Browsers reject SameSite=None cookies without Secure, so force it on.
+        if ('none' === mb_strtolower($options['samesite'])) {
+            $options['secure'] = true;
+        }
+
         $domain = $this->configuration->getCookieDomain() ?? null;
         $httpHost = $_SERVER['HTTP_HOST'] ?? 'UNAVAILABLE';
 

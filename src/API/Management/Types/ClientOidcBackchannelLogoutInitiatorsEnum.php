@@ -13,4 +13,5 @@ enum ClientOidcBackchannelLogoutInitiatorsEnum: string
     case EmailIdentifierChanged = "email-identifier-changed";
     case MfaPhoneUnenrolled = "mfa-phone-unenrolled";
     case AccountDeactivated = "account-deactivated";
+    case ProfileChanged = "profile-changed";
 }

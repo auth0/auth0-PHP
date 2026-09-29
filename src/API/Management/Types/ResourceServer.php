@@ -123,6 +123,12 @@ class ResourceServer extends JsonSerializableType
     private ?string $consentPolicy;
 
     /**
+     * @var ?bool $requireConsentNonRepudiation When true, the resource server requires every consent approval to be digitally signed, so the approver cannot later deny a consent they granted. When false, consent decisions do not need a signature. Defaults to false. A configured value is still returned even after the related entitlement is disabled.
+     */
+    #[JsonProperty('require_consent_non_repudiation')]
+    private ?bool $requireConsentNonRepudiation;
+
+    /**
      * @var ?array<mixed> $authorizationDetails
      */
     #[JsonProperty('authorization_details'), ArrayType(['mixed'])]
@@ -173,6 +179,7 @@ class ResourceServer extends JsonSerializableType
      *   accessToken?: ?ResourceServerAccessToken,
      *   tokenEncryption?: ?ResourceServerTokenEncryption,
      *   consentPolicy?: ?value-of<ResourceServerConsentPolicyEnum>,
+     *   requireConsentNonRepudiation?: ?bool,
      *   authorizationDetails?: ?array<mixed>,
      *   proofOfPossession?: ?ResourceServerProofOfPossession,
      *   subjectTypeAuthorization?: ?ResourceServerSubjectTypeAuthorization,
@@ -202,6 +209,7 @@ class ResourceServer extends JsonSerializableType
         $this->accessToken = $values['accessToken'] ?? null;
         $this->tokenEncryption = $values['tokenEncryption'] ?? null;
         $this->consentPolicy = $values['consentPolicy'] ?? null;
+        $this->requireConsentNonRepudiation = $values['requireConsentNonRepudiation'] ?? null;
         $this->authorizationDetails = $values['authorizationDetails'] ?? null;
         $this->proofOfPossession = $values['proofOfPossession'] ?? null;
         $this->subjectTypeAuthorization = $values['subjectTypeAuthorization'] ?? null;
@@ -548,6 +556,24 @@ class ResourceServer extends JsonSerializableType
     {
         $this->consentPolicy = $value;
         $this->_setField('consentPolicy');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getRequireConsentNonRepudiation(): ?bool
+    {
+        return $this->requireConsentNonRepudiation;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setRequireConsentNonRepudiation(?bool $value = null): self
+    {
+        $this->requireConsentNonRepudiation = $value;
+        $this->_setField('requireConsentNonRepudiation');
         return $this;
     }
 

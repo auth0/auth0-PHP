@@ -1,5 +1,16 @@
 # Change Log
 
+## [9.3.0](https://github.com/auth0/auth0-PHP/tree/9.3.0) (2026-09-16)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.2.0...9.3.0)
+
+**Added**
+
+- feat: add Guardian MFA config, anonymous sessions, search APIs, and experimentation client [\#866](https://github.com/auth0/auth0-PHP/pull/866) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+**Changed**
+
+- docs: restore Auth API reference site and automate docs publish on release [\#865](https://github.com/auth0/auth0-PHP/pull/865) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [9.2.0](https://github.com/auth0/auth0-PHP/tree/9.2.0) (2026-09-02)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.1.0...9.2.0)
 
