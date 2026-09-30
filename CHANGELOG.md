@@ -1,5 +1,16 @@
 # Change Log
 
+## [9.4.0](https://github.com/auth0/auth0-PHP/tree/9.4.0) (2026-09-30)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.3.0...9.4.0)
+
+**Added**
+
+- feat: adds Experiment Center APIs (EA) and removes OrganizationTemplate [\#871](https://github.com/auth0/auth0-PHP/pull/871) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+**Fixed**
+
+- fix: force the Secure cookie flag when SameSite=None applies [\#861](https://github.com/auth0/auth0-PHP/pull/861) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [9.3.0](https://github.com/auth0/auth0-PHP/tree/9.3.0) (2026-09-16)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.2.0...9.3.0)
 
