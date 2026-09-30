@@ -13,8 +13,8 @@ class ListUserBlocksByIdentifierRequestParameters extends JsonSerializableType
 
     /**
      *
-     *           If true and Brute Force Protection is enabled and configured to block logins, will return a list of blocked IP addresses.
-     *           If true and Brute Force Protection is disabled, will return an empty list.
+     *           If true, returns only blocks that are currently enforced (e.g. subject to protection status, IP allowlist, etc.).
+     *           If false or omitted, returns all blocks regardless of enforcement state.
      *
      *
      * @var ?bool $considerBruteForceEnablement

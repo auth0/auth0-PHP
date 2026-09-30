@@ -88,7 +88,10 @@ enum OauthScope: string
     case UpdateEventStreams = "update:event_streams";
     case DeleteEventStreams = "delete:event_streams";
     case ReadEvents = "read:events";
+    case CreateExperimentation = "create:experimentation";
+    case ReadExperimentation = "read:experimentation";
     case UpdateExperimentation = "update:experimentation";
+    case DeleteExperimentation = "delete:experimentation";
     case CreateFlows = "create:flows";
     case ReadFlows = "read:flows";
     case UpdateFlows = "update:flows";
@@ -249,7 +252,6 @@ enum OauthScope: string
     case ReadOrganizationClients = "read:organization_clients";
     case UpdateOrganizationClients = "update:organization_clients";
     case DeleteOrganizationClients = "delete:organization_clients";
-    case ReadOrganizationTemplates = "read:organization_templates";
     case CreateNetworkAclKeys = "create:network_acl_keys";
     case ReadNetworkAclKeys = "read:network_acl_keys";
     case DeleteNetworkAclKeys = "delete:network_acl_keys";
