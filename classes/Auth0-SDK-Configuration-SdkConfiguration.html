@@ -3782,7 +3782,7 @@
                 : <span class="phpdocumentor-argument-list__argument__type">bool</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">false</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Defaults to false. Specifies whether cookies should ONLY be sent over secure connections.</p>
+                    <section class="phpdocumentor-description"><p>Defaults to false. Specifies whether cookies should ONLY be sent over secure connections. Enable this in production so session and token cookies are never sent over plaintext HTTP. When SameSite=None applies (e.g. responseMode 'form_post'), Secure is forced on regardless, as browsers reject SameSite=None cookies without it.</p>
 </section>
 
             </dd>
