@@ -147,8 +147,8 @@ final class CookieStore implements StoreInterface
         $stripped = stripslashes($decoded);
         $data = json_decode($stripped, true, 512);
 
-        /** @var array{v?: int, iv?: null|int|string, tag?: null|int|string, data: string} $data */
-        if (! isset($data['iv']) || ! isset($data['tag']) || ! is_string($data['iv']) || ! is_string($data['tag'])) {
+        /** @var array{v?: int, iv?: null|int|string, tag?: null|int|string, data?: mixed} $data */
+        if (! isset($data['iv']) || ! isset($data['tag']) || ! isset($data['data']) || ! is_string($data['iv']) || ! is_string($data['tag']) || ! is_string($data['data'])) {
             return null;
         }
 
@@ -420,8 +420,9 @@ final class CookieStore implements StoreInterface
         // If cookies were undecryptable, default to an empty state.
         $this->store = $data ?? [];
 
-        // If cookies were undecryptable, push the updated empty state to the browser.
+        // If cookies were undecryptable, force-clear them from the browser.
         if (null === $data) {
+            $this->dirty = true;
             $this->setState();
         }
 

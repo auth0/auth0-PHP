@@ -431,10 +431,12 @@ The following options must also be configured to use a `CookieStore`:
 
 - [`strategy`](#strategy-configuration) must be `SdkConfiguration::STRATEGY_REGULAR`.
 - `cookieSecret` - an encryption key for the session cookie.
-- `cookieDomain` - when sharing session cookies across multiple subdomains, use your FQDN with a dot in front, e.g. `.yourdomain.com`.
+- `cookieDomain` - use your FQDN with a leading dot, e.g. `.yourdomain.com`. Required when sharing session cookies across subdomains. Also required as a security measure for any application deployed on a subdomain. See the note below.
 - `cookieExpires` - the expiration time (in seconds) for the session cookie.
 - `cookiePath` - path to use for the session cookie.
 - `cookieSecure` - whether cookies should only be sent over secure connections.
+
+**Subdomain deployments:** if your application runs on a subdomain (e.g. `app.yourdomain.com`), always set `cookieDomain` to the parent domain (e.g. `.yourdomain.com`). Without it, the SDK writes host-only cookies and cannot clean up a same-named cookie planted by a sibling subdomain with a wider domain scope. With `cookieDomain` set, the SDK's delete headers carry the matching domain attribute and remove any attacker-planted cookie on the next response.
 
 ## PHP session storage
 

@@ -206,6 +206,30 @@ test('decrypt() returns null if a malformed data payload is encoded', function()
     expect($this->store->getState())->toBeEmpty();
 });
 
+test('decrypt() returns null when the data field is a non-string type', function(): void {
+    $cookieNamespace = $this->store->getNamespace() . '_0';
+    $_COOKIE[$cookieNamespace] = json_encode([
+        'iv'   => base64_encode('a'),
+        'tag'  => base64_encode(str_repeat("\0", 16)),
+        'data' => 0,
+    ]);
+
+    expect($this->store->getState())->toBeEmpty();
+});
+
+test('getState() removes undecryptable cookies from $_COOKIE', function(): void {
+    $cookieNamespace = $this->store->getNamespace() . '_0';
+    $_COOKIE[$cookieNamespace] = json_encode([
+        'iv'   => base64_encode('a'),
+        'tag'  => base64_encode(str_repeat("\0", 16)),
+        'data' => 0,
+    ]);
+
+    $this->store->getState();
+
+    expect(isset($_COOKIE[$cookieNamespace]))->toBeFalse();
+});
+
 test('configured SameSite() is reflected', function(): void {
     $this->configuration->setCookieSameSite('strict');
 
