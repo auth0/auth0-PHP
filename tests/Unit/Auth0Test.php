@@ -1038,6 +1038,134 @@ test('renew() succeeds under expected and valid conditions', function(): void {
     expect($request->getUri()->__toString())->toEqual('https://' . $this->configuration['domain'] . '/oauth/token');
 });
 
+test('renew() recomputes the backchannel key from the refreshed ID token', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $loginToken = (new TokenGenerator())->withHs256(['iss' => $iss, 'sid' => '__test_sid_1__']);
+    $renewedToken = (new TokenGenerator())->withHs256(['iss' => $iss, 'sid' => '__test_sid_2__']);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $loginToken . '"}'),
+        HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $renewedToken . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+    expect($auth0->getBackchannel())->toEqual(hash('sha256', implode('|', ['__test_sub__', $iss, '__test_sid_1__'])));
+
+    $auth0->renew();
+
+    expect($auth0->getBackchannel())->toEqual(hash('sha256', implode('|', ['__test_sub__', $iss, '__test_sid_2__'])));
+});
+
+test('renew() rejects an ID token with an invalid signature and clears the session', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $loginToken = (new TokenGenerator())->withHs256(['iss' => $iss]);
+    $forgedToken = (new TokenGenerator())->withHs256(['iss' => $iss], '__other_secret__');
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $loginToken . '"}'),
+        HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $forgedToken . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    expect(fn () => $auth0->renew())->toThrow(InvalidTokenException::class);
+
+    expect($auth0->getIdToken())->toBeNull();
+    expect($auth0->getAccessToken())->toBeNull();
+    expect($auth0->getRefreshToken())->toBeNull();
+});
+
+test('renew() rejects an expired ID token and clears the session', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $loginToken = (new TokenGenerator())->withHs256(['iss' => $iss]);
+    $expiredToken = (new TokenGenerator())->withHs256(['iss' => $iss, 'exp' => time() - 1000]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $loginToken . '"}'),
+        HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $expiredToken . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    expect(fn () => $auth0->renew())->toThrow(InvalidTokenException::class);
+
+    expect($auth0->getIdToken())->toBeNull();
+    expect($auth0->getAccessToken())->toBeNull();
+});
+
+test('renew() ignores a stale transient nonce and max_age left by an unrelated login', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $token = (new TokenGenerator())->withHs256(['iss' => $iss]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $token . '"}'),
+        HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $token . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__stale_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('max_age', '10');
+
+    $auth0->renew();
+
+    expect($auth0->getIdToken())->toEqual($token);
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toBeNull();
+    expect($auth0->configuration()->getTransientStorage()->get('max_age'))->toBeNull();
+});
+
 test('getCredentials() returns null when a session is not available', function(): void {
     $auth0 = new Auth0($this->configuration);
     expect($auth0->getCredentials())->toBeNull();

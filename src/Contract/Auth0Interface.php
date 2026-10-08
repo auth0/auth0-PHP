@@ -264,6 +264,7 @@ interface Auth0Interface
      * @throws \Auth0\SDK\Exception\StateException         if the Auth0 object does not have access token and refresh token, or the API did not renew tokens properly
      * @throws \Auth0\SDK\Exception\ConfigurationException when a Client ID is not configured
      * @throws \Auth0\SDK\Exception\ConfigurationException when a Client Secret is not configured
+     * @throws \Auth0\SDK\Exception\InvalidTokenException  when validation of a returned ID token fails
      * @throws \Auth0\SDK\Exception\NetworkException       when the API request fails due to a network error
      *
      * @see https://auth0.com/docs/tokens/refresh-token/current

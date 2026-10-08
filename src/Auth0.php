@@ -736,7 +736,28 @@ final class Auth0 implements Auth0Interface
         }
 
         if (isset($response['id_token'])) {
-            $this->setIdToken($response['id_token']);
+            // A refresh has no redirect, so any transient nonce/max_age belongs to an unrelated login.
+            $transientStore = $this->getTransientStore();
+
+            if ($transientStore instanceof TransientStoreHandler) {
+                $transientStore->delete('nonce');
+                $transientStore->delete('max_age');
+            }
+
+            try {
+                $token = $this->decode($response['id_token'], tokenMaxAge: Token::MAX_AGE_SKIP);
+
+                $sub = $token->getSubject() ?? '';
+                $iss = $token->getIssuer() ?? '';
+                $sid = $token->getIdentifier() ?? '';
+                $this->setBackchannel(hash('sha256', implode('|', [$sub, $iss, $sid])));
+
+                $this->setIdToken($response['id_token']);
+            } catch (Throwable $throwable) {
+                $this->clear();
+
+                throw $throwable;
+            }
         }
 
         if (isset($response['refresh_token'])) {
