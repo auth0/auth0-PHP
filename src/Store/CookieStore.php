@@ -376,6 +376,8 @@ final class CookieStore implements StoreInterface
      * @param null|mixed[] $state skip loading any persistent source state and inject a custom state
      *
      * @return array<mixed>
+     *
+     * @psalm-suppress TypeDoesNotContainType
      */
     public function getState(
         ?array $state = null,
@@ -402,6 +404,13 @@ final class CookieStore implements StoreInterface
                 break;
             }
 
+            // PHP parses a "name[x]" cookie into an array, which can never decrypt.
+            if (! is_string($_COOKIE[$cookieName])) {
+                $data = null;
+
+                break;
+            }
+
             // A chunked cookie was found; affix it's value to $data for decryption.
             $data .= $_COOKIE[$cookieName];
 
@@ -415,7 +424,7 @@ final class CookieStore implements StoreInterface
         }
 
         // Decrypt the combined values of the chunked cookies.
-        $data = $this->decrypt($data);
+        $data = null === $data ? null : $this->decrypt($data);
 
         // If cookies were undecryptable, default to an empty state.
         $this->store = $data ?? [];

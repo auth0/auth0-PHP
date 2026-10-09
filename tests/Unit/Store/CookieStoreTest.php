@@ -230,6 +230,36 @@ test('getState() removes undecryptable cookies from $_COOKIE', function(): void 
     expect(isset($_COOKIE[$cookieNamespace]))->toBeFalse();
 });
 
+test('getState() clears a cookie whose string data fails to decrypt', function(): void {
+    $cookieNamespace = $this->store->getNamespace() . '_0';
+    $_COOKIE[$cookieNamespace] = json_encode([
+        'v'    => CookieStore::VAL_CRYPTO_VERSION,
+        'iv'   => base64_encode(random_bytes(12)),
+        'tag'  => base64_encode(str_repeat("\0", CookieStore::VAL_CRYPTO_TAG_LENGTH_BYTES)),
+        'data' => base64_encode('not encrypted'),
+    ]);
+
+    expect($this->store->getState())->toBeEmpty();
+    expect(isset($_COOKIE[$cookieNamespace]))->toBeFalse();
+});
+
+test('getState() treats an array-valued cookie as undecryptable', function(): void {
+    $cookieNamespace = $this->store->getNamespace() . '_0';
+    $_COOKIE[$cookieNamespace] = ['x' => 'value'];
+
+    expect($this->store->getState())->toBeEmpty();
+    expect(isset($_COOKIE[$cookieNamespace]))->toBeFalse();
+});
+
+test('delete options keep the configured cookieDomain', function(): void {
+    $this->configuration->setCookieDomain('.example.com');
+
+    $options = $this->store->getCookieOptions(-1000);
+
+    expect($options['domain'])->toEqual('.example.com');
+    expect($options['expires'])->toBeLessThan(time());
+});
+
 test('configured SameSite() is reflected', function(): void {
     $this->configuration->setCookieSameSite('strict');
 

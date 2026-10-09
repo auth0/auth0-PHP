@@ -431,12 +431,34 @@ The following options must also be configured to use a `CookieStore`:
 
 - [`strategy`](#strategy-configuration) must be `SdkConfiguration::STRATEGY_REGULAR`.
 - `cookieSecret` - an encryption key for the session cookie.
-- `cookieDomain` - use your FQDN with a leading dot, e.g. `.yourdomain.com`. Required when sharing session cookies across subdomains. Also required as a security measure for any application deployed on a subdomain. See the note below.
+- `cookieDomain` - when sharing session cookies across multiple subdomains, use your FQDN with a dot in front, e.g. `.yourdomain.com`.
 - `cookieExpires` - the expiration time (in seconds) for the session cookie.
 - `cookiePath` - path to use for the session cookie.
 - `cookieSecure` - whether cookies should only be sent over secure connections.
 
-**Subdomain deployments:** if your application runs on a subdomain (e.g. `app.yourdomain.com`), always set `cookieDomain` to the parent domain (e.g. `.yourdomain.com`). Without it, the SDK writes host-only cookies and cannot clean up a same-named cookie planted by a sibling subdomain with a wider domain scope. With `cookieDomain` set, the SDK's delete headers carry the matching domain attribute and remove any attacker-planted cookie on the next response.
+**Subdomain deployments**
+
+If your application runs on a subdomain (e.g. `app.yourdomain.com`), other subdomains of the same parent domain can set cookies that your application receives. To prevent this, prefix the session and transient cookie names with `__Host-`. Browsers do not accept a `__Host-` cookie that another subdomain sets for the parent domain, so it never reaches your application.
+
+```php
+$configuration = new SdkConfiguration(
+    // ...other options...
+    sessionStorageId: '__Host-auth0_session',
+    transientStorageId: '__Host-auth0_transient',
+    cookieSecure: true,
+);
+```
+
+A `__Host-` cookie has some requirements.
+
+- `cookieSecure` must be `true`, so the application must be served over HTTPS.
+- `cookiePath` must be `/` (the default).
+- `cookieDomain` must not be set, so `__Host-` cannot be combined with sharing session cookies across subdomains.
+- The `Host` header must not include a port. If it does, the SDK adds a `Domain` attribute and the browser rejects the cookies.
+
+Changing the storage IDs signs out existing users once.
+
+Setting `cookieDomain` to the parent domain is not a substitute. It makes the session cookie visible to every subdomain, and the SDK can only remove a cookie that has the same name, domain and path as its delete header. Cookies with unusual names, such as `name[x]`, cannot be removed by the SDK at all.
 
 ## PHP session storage
 
