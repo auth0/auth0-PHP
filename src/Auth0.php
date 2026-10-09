@@ -113,9 +113,11 @@ final class Auth0 implements Auth0Interface
         ?int $tokenNow = null,
         ?int $tokenType = null,
     ): TokenInterface {
-        $store = $this->getTransientStore();
-
         $tokenType ??= Token::TYPE_ID_TOKEN;
+
+        // A transient nonce/max_age belongs to a login in progress and only applies to ID tokens.
+        $store = Token::TYPE_ID_TOKEN === $tokenType ? $this->getTransientStore() : null;
+
         $tokenNonce ??= $store?->getOnce('nonce') ?? null;
         $tokenMaxAge ??= $store?->getOnce('max_age') ?? null;
         $tokenIssuer = null;
@@ -614,18 +616,10 @@ final class Auth0 implements Auth0Interface
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
         if (isset($response['id_token'])) {
-            // A token exchange has no redirect, so a transient nonce/max_age is from an unrelated login.
-            // Clear them so decode() does not validate a CTE token against a stale value.
-            $transientStore = $this->getTransientStore();
-
-            if ($transientStore instanceof TransientStoreHandler) {
-                $transientStore->delete('nonce');
-                $transientStore->delete('max_age');
-            }
-
             try {
                 // A token exchange has no interactive max_age, so skip the auth_time check a configured tokenMaxAge would otherwise apply.
-                $token = $this->decode($response['id_token'], tokenMaxAge: Token::MAX_AGE_SKIP);
+                $token = new Token($this->configuration(), $response['id_token'], Token::TYPE_ID_TOKEN);
+                $token->verify()->validate(tokenMaxAge: Token::MAX_AGE_SKIP);
 
                 $sub = $token->getSubject() ?? '';
                 $iss = $token->getIssuer() ?? '';
@@ -635,7 +629,7 @@ final class Auth0 implements Auth0Interface
                 $user = $token->toArray();
                 $this->setIdToken($response['id_token']);
             } catch (Throwable $throwable) {
-                $this->clear();
+                $this->clear(false);
 
                 throw $throwable;
             }
@@ -736,25 +730,22 @@ final class Auth0 implements Auth0Interface
         }
 
         if (isset($response['id_token'])) {
-            // A refresh has no redirect, so any transient nonce/max_age belongs to an unrelated login.
-            $transientStore = $this->getTransientStore();
-
-            if ($transientStore instanceof TransientStoreHandler) {
-                $transientStore->delete('nonce');
-                $transientStore->delete('max_age');
-            }
-
             try {
-                $token = $this->decode($response['id_token'], tokenMaxAge: Token::MAX_AGE_SKIP);
+                // Validate the Token directly so decode() does not consume a nonce/max_age belonging to a login in progress.
+                $token = new Token($this->configuration(), $response['id_token'], Token::TYPE_ID_TOKEN);
+                $token->verify()->validate(tokenMaxAge: Token::MAX_AGE_SKIP);
 
-                $sub = $token->getSubject() ?? '';
-                $iss = $token->getIssuer() ?? '';
-                $sid = $token->getIdentifier() ?? '';
-                $this->setBackchannel(hash('sha256', implode('|', [$sub, $iss, $sid])));
+                // A refreshed token without a sid keeps the key from login.
+                if (null !== $token->getIdentifier()) {
+                    $sub = $token->getSubject() ?? '';
+                    $iss = $token->getIssuer() ?? '';
+                    $sid = $token->getIdentifier();
+                    $this->setBackchannel(hash('sha256', implode('|', [$sub, $iss, $sid])));
+                }
 
                 $this->setIdToken($response['id_token']);
             } catch (Throwable $throwable) {
-                $this->clear();
+                $this->clear(false);
 
                 throw $throwable;
             }
