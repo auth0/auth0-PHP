@@ -19,6 +19,8 @@ use Auth0\SDK\API\Management\Environments;
 use Auth0\SDK\API\Management\Core\Client\HttpMethod;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
+use Auth0\SDK\API\Management\ClientGrants\Requests\SearchClientGrantsRequestParameters;
+use Auth0\SDK\API\Management\Types\SearchClientGrantsResponseContent;
 use Auth0\SDK\API\Management\Types\GetClientGrantResponseContent;
 use Auth0\SDK\API\Management\ClientGrants\Requests\UpdateClientGrantRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateClientGrantResponseContent;
@@ -166,6 +168,51 @@ class ClientGrantsClient implements ClientGrantsClientInterface
             message: 'API request failed',
             statusCode: $statusCode,
             body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Search client grants using SCIM or Lucene filter syntax with low-latency, eventually consistent results. Use the parser parameter to specify "scim" or "lucene" syntax (default: "lucene"). This endpoint provides an alternative to the standard GET /client-grants endpoint with better performance for complex queries.
+     * Results may not reflect recent updates immediately.
+     *
+     * Example:
+     * ```php
+     * $client->clientGrants->search(
+     *     new SearchClientGrantsRequestParameters([
+     *         'q' => 'q',
+     *         'parser' => SearchParserEnum::Scim->value,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'take' => 1,
+     *         'from' => 'from',
+     *         'sort' => ClientGrantSortFieldEnum::Audience->value,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param SearchClientGrantsRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return Pager<ClientGrantResponseContent>
+     */
+    public function search(SearchClientGrantsRequestParameters $request = new SearchClientGrantsRequestParameters(), ?array $options = null): Pager
+    {
+        return new CursorPager(
+            request: $request,
+            getNextPage: fn (SearchClientGrantsRequestParameters $request) => $this->_search($request, $options),
+            setCursor: function (SearchClientGrantsRequestParameters $request, ?string $cursor) {
+                $request->setFrom($cursor);
+            },
+            /* @phpstan-ignore-next-line */
+            getNextCursor: fn (?SearchClientGrantsResponseContent $response) => $response?->getNext() ?? null,
+            /* @phpstan-ignore-next-line */
+            getItems: fn (?SearchClientGrantsResponseContent $response) => $response?->getClientGrants() ?? [],
         );
     }
 
@@ -400,6 +447,78 @@ class ClientGrantsClient implements ClientGrantsClientInterface
                     return null;
                 }
                 return ListClientGrantPaginatedResponseContent::fromJson($json);
+            }
+        } catch (JsonException $e) {
+            throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Search client grants using SCIM or Lucene filter syntax with low-latency, eventually consistent results. Use the parser parameter to specify "scim" or "lucene" syntax (default: "lucene"). This endpoint provides an alternative to the standard GET /client-grants endpoint with better performance for complex queries.
+     * Results may not reflect recent updates immediately.
+     *
+     * @param SearchClientGrantsRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?SearchClientGrantsResponseContent
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    private function _search(SearchClientGrantsRequestParameters $request = new SearchClientGrantsRequestParameters(), ?array $options = null): ?SearchClientGrantsResponseContent
+    {
+        $options = array_merge($this->options, $options ?? []);
+        $query = [];
+        if ($request->getQ() != null) {
+            $query['q'] = $request->getQ();
+        }
+        if ($request->getParser() != null) {
+            $query['parser'] = $request->getParser();
+        }
+        if ($request->getFields() != null) {
+            $query['fields'] = $request->getFields();
+        }
+        if ($request->getIncludeFields() != null) {
+            $query['include_fields'] = $request->getIncludeFields();
+        }
+        if ($request->getTake() != null) {
+            $query['take'] = $request->getTake();
+        }
+        if ($request->getFrom() != null) {
+            $query['from'] = $request->getFrom();
+        }
+        if ($request->getSort() != null) {
+            $query['sort'] = $request->getSort();
+        }
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "client-grants/search",
+                    method: HttpMethod::GET,
+                    query: $query,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                $json = $response->getBody()->getContents();
+                if (empty($json)) {
+                    return null;
+                }
+                return SearchClientGrantsResponseContent::fromJson($json);
             }
         } catch (JsonException $e) {
             throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);

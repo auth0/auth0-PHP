@@ -241,6 +241,12 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     private ?bool $authorizationResponseIssParameterSupported;
 
     /**
+     * @var ?bool $dpopStrictRefreshTokenBinding Enables strict DPoP refresh token binding per RFC 9449: all refresh tokens issued to public clients that present a DPoP proof are bound to the sender's key, and the binding is validated on every subsequent exchange. When disabled, DPoP refresh token binding may still apply for specific audiences for backwards compatibility.
+     */
+    #[JsonProperty('dpop_strict_refresh_token_binding')]
+    private ?bool $dpopStrictRefreshTokenBinding;
+
+    /**
      * Controls whether a confirmation prompt is shown during login flows when the redirect URI uses non-verifiable callback URIs (for example, a custom URI schema such as `myapp://`, or `localhost`).
      * If set to true, a confirmation prompt will not be shown. We recommend that this is set to false for improved protection from malicious apps.
      * See https://auth0.com/docs/secure/security-guidance/measures-against-app-impersonation for more information.
@@ -261,6 +267,12 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
      */
     #[JsonProperty('client_id_metadata_document_supported')]
     private ?bool $clientIdMetadataDocumentSupported;
+
+    /**
+     * @var ?bool $clientIdMetadataDocumentDynamicRegistrationSupported Whether the authorization server supports registering clients dynamically from a client_id URL. Requires client_id_metadata_document_supported to be enabled.
+     */
+    #[JsonProperty('client_id_metadata_document_dynamic_registration_supported')]
+    private ?bool $clientIdMetadataDocumentDynamicRegistrationSupported;
 
     /**
      * @var ?bool $enableAiGuide Whether Auth0 Guide (AI-powered assistance) is enabled for this tenant.
@@ -330,9 +342,11 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
      *   mtls?: ?TenantSettingsMtls,
      *   pushedAuthorizationRequestsSupported?: ?bool,
      *   authorizationResponseIssParameterSupported?: ?bool,
+     *   dpopStrictRefreshTokenBinding?: ?bool,
      *   skipNonVerifiableCallbackUriConfirmationPrompt?: ?bool,
      *   resourceParameterProfile?: ?value-of<TenantSettingsResourceParameterProfile>,
      *   clientIdMetadataDocumentSupported?: ?bool,
+     *   clientIdMetadataDocumentDynamicRegistrationSupported?: ?bool,
      *   enableAiGuide?: ?bool,
      *   phoneConsolidatedExperience?: ?bool,
      *   includeSessionMetadataInTenantLogs?: ?bool,
@@ -379,9 +393,11 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
         $this->mtls = $values['mtls'] ?? null;
         $this->pushedAuthorizationRequestsSupported = $values['pushedAuthorizationRequestsSupported'] ?? null;
         $this->authorizationResponseIssParameterSupported = $values['authorizationResponseIssParameterSupported'] ?? null;
+        $this->dpopStrictRefreshTokenBinding = $values['dpopStrictRefreshTokenBinding'] ?? null;
         $this->skipNonVerifiableCallbackUriConfirmationPrompt = $values['skipNonVerifiableCallbackUriConfirmationPrompt'] ?? null;
         $this->resourceParameterProfile = $values['resourceParameterProfile'] ?? null;
         $this->clientIdMetadataDocumentSupported = $values['clientIdMetadataDocumentSupported'] ?? null;
+        $this->clientIdMetadataDocumentDynamicRegistrationSupported = $values['clientIdMetadataDocumentDynamicRegistrationSupported'] ?? null;
         $this->enableAiGuide = $values['enableAiGuide'] ?? null;
         $this->phoneConsolidatedExperience = $values['phoneConsolidatedExperience'] ?? null;
         $this->includeSessionMetadataInTenantLogs = $values['includeSessionMetadataInTenantLogs'] ?? null;
@@ -1040,6 +1056,24 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     /**
      * @return ?bool
      */
+    public function getDpopStrictRefreshTokenBinding(): ?bool
+    {
+        return $this->dpopStrictRefreshTokenBinding;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setDpopStrictRefreshTokenBinding(?bool $value = null): self
+    {
+        $this->dpopStrictRefreshTokenBinding = $value;
+        $this->_setField('dpopStrictRefreshTokenBinding');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
     public function getSkipNonVerifiableCallbackUriConfirmationPrompt(): ?bool
     {
         return $this->skipNonVerifiableCallbackUriConfirmationPrompt;
@@ -1088,6 +1122,24 @@ class UpdateTenantSettingsRequestContent extends JsonSerializableType
     {
         $this->clientIdMetadataDocumentSupported = $value;
         $this->_setField('clientIdMetadataDocumentSupported');
+        return $this;
+    }
+
+    /**
+     * @return ?bool
+     */
+    public function getClientIdMetadataDocumentDynamicRegistrationSupported(): ?bool
+    {
+        return $this->clientIdMetadataDocumentDynamicRegistrationSupported;
+    }
+
+    /**
+     * @param ?bool $value
+     */
+    public function setClientIdMetadataDocumentDynamicRegistrationSupported(?bool $value = null): self
+    {
+        $this->clientIdMetadataDocumentDynamicRegistrationSupported = $value;
+        $this->_setField('clientIdMetadataDocumentDynamicRegistrationSupported');
         return $this;
     }
 

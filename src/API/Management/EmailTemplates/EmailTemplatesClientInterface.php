@@ -21,6 +21,11 @@ interface EmailTemplatesClientInterface
      * $client->emailTemplates->create(
      *     new CreateEmailTemplateRequestContent([
      *         'template' => EmailTemplateNameEnum::VerifyEmail->value,
+     *         'body' => null,
+     *         'from' => null,
+     *         'subject' => null,
+     *         'syntax' => null,
+     *         'enabled' => null,
      *     ]),
      * );
      * ```
@@ -70,6 +75,11 @@ interface EmailTemplatesClientInterface
      *     EmailTemplateNameEnum::VerifyEmail->value,
      *     new SetEmailTemplateRequestContent([
      *         'template' => EmailTemplateNameEnum::VerifyEmail->value,
+     *         'body' => null,
+     *         'from' => null,
+     *         'subject' => null,
+     *         'syntax' => null,
+     *         'enabled' => null,
      *     ]),
      * );
      * ```

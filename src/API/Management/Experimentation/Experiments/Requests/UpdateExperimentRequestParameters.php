@@ -8,6 +8,7 @@ use Auth0\SDK\API\Management\Types\AuthenticationFlowEnum;
 use Auth0\SDK\API\Management\Types\AllocationRequestItem;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Types\DefaultConfigEnum;
+use Auth0\SDK\API\Management\Types\ExperimentTransitionStatusEnum;
 
 class UpdateExperimentRequestParameters extends JsonSerializableType
 {
@@ -48,6 +49,12 @@ class UpdateExperimentRequestParameters extends JsonSerializableType
     private ?array $levels;
 
     /**
+     * @var ?value-of<ExperimentTransitionStatusEnum> $status
+     */
+    #[JsonProperty('status')]
+    private ?string $status;
+
+    /**
      * @param array{
      *   name?: ?string,
      *   description?: ?string,
@@ -55,6 +62,7 @@ class UpdateExperimentRequestParameters extends JsonSerializableType
      *   allocations?: ?array<AllocationRequestItem>,
      *   defaultConfig?: ?value-of<DefaultConfigEnum>,
      *   levels?: ?array<int>,
+     *   status?: ?value-of<ExperimentTransitionStatusEnum>,
      * } $values
      */
     public function __construct(
@@ -66,6 +74,7 @@ class UpdateExperimentRequestParameters extends JsonSerializableType
         $this->allocations = $values['allocations'] ?? null;
         $this->defaultConfig = $values['defaultConfig'] ?? null;
         $this->levels = $values['levels'] ?? null;
+        $this->status = $values['status'] ?? null;
     }
 
     /**
@@ -173,6 +182,24 @@ class UpdateExperimentRequestParameters extends JsonSerializableType
     {
         $this->levels = $value;
         $this->_setField('levels');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ExperimentTransitionStatusEnum>
+     */
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param ?value-of<ExperimentTransitionStatusEnum> $value
+     */
+    public function setStatus(?string $value = null): self
+    {
+        $this->status = $value;
+        $this->_setField('status');
         return $this;
     }
 }

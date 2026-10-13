@@ -28,6 +28,7 @@ use Auth0\SDK\API\Management\Types\ClientTokenExchangeConfiguration;
 use Auth0\SDK\API\Management\Types\CreateTokenQuota;
 use Auth0\SDK\API\Management\Types\CreateIdentityAssertionAuthorizationGrant;
 use Auth0\SDK\API\Management\Types\CreateAnonymousSessions;
+use Auth0\SDK\API\Management\Types\ClientAnonymousSessionTransferNetworkBindingEnum;
 use Auth0\SDK\API\Management\Types\ClientThirdPartySecurityModeEnum;
 use Auth0\SDK\API\Management\Types\ClientRedirectionPolicyEnum;
 use Auth0\SDK\API\Management\Types\ExpressConfiguration;
@@ -355,6 +356,12 @@ class CreateClientRequestContent extends JsonSerializableType
     private ?CreateAnonymousSessions $anonymousSessions;
 
     /**
+     * @var ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum> $enforceAnonSessionTransferNetworkBinding
+     */
+    #[JsonProperty('enforce_anon_session_transfer_network_binding')]
+    private ?string $enforceAnonSessionTransferNetworkBinding;
+
+    /**
      * @var ?value-of<ClientThirdPartySecurityModeEnum> $thirdPartySecurityMode
      */
     #[JsonProperty('third_party_security_mode')]
@@ -450,6 +457,7 @@ class CreateClientRequestContent extends JsonSerializableType
      *   resourceServerIdentifier?: ?string,
      *   identityAssertionAuthorizationGrant?: ?CreateIdentityAssertionAuthorizationGrant,
      *   anonymousSessions?: ?CreateAnonymousSessions,
+     *   enforceAnonSessionTransferNetworkBinding?: ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum>,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   expressConfiguration?: ?ExpressConfiguration,
@@ -514,6 +522,7 @@ class CreateClientRequestContent extends JsonSerializableType
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
         $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
         $this->anonymousSessions = $values['anonymousSessions'] ?? null;
+        $this->enforceAnonSessionTransferNetworkBinding = $values['enforceAnonSessionTransferNetworkBinding'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
@@ -1456,6 +1465,24 @@ class CreateClientRequestContent extends JsonSerializableType
     {
         $this->anonymousSessions = $value;
         $this->_setField('anonymousSessions');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum>
+     */
+    public function getEnforceAnonSessionTransferNetworkBinding(): ?string
+    {
+        return $this->enforceAnonSessionTransferNetworkBinding;
+    }
+
+    /**
+     * @param ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum> $value
+     */
+    public function setEnforceAnonSessionTransferNetworkBinding(?string $value = null): self
+    {
+        $this->enforceAnonSessionTransferNetworkBinding = $value;
+        $this->_setField('enforceAnonSessionTransferNetworkBinding');
         return $this;
     }
 

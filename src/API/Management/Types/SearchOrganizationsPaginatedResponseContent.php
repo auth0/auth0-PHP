@@ -9,7 +9,7 @@ use Auth0\SDK\API\Management\Core\Types\ArrayType;
 class SearchOrganizationsPaginatedResponseContent extends JsonSerializableType
 {
     /**
-     * @var array<SearchOrganization> $organizations
+     * @var array<SearchOrganization> $organizations Array of organization objects matching the search criteria.
      */
     #[JsonProperty('organizations'), ArrayType([SearchOrganization::class])]
     private array $organizations;

@@ -23,8 +23,6 @@ use Auth0\SDK\API\Management\Experimentation\Experiments\Requests\UpdateExperime
 use Auth0\SDK\API\Management\Types\UpdateExperimentResponseContent;
 use Auth0\SDK\API\Management\Experimentation\Experiments\Requests\AdvanceRampRequestContent;
 use Auth0\SDK\API\Management\Types\AdvanceRampResponseContent;
-use Auth0\SDK\API\Management\Experimentation\Experiments\Requests\UpdateExperimentStatusRequestContent;
-use Auth0\SDK\API\Management\Types\UpdateExperimentStatusResponseContent;
 use Auth0\SDK\API\Management\Types\ValidateExperimentResponseContent;
 
 class ExperimentsClient implements ExperimentsClientInterface
@@ -373,66 +371,6 @@ class ExperimentsClient implements ExperimentsClientInterface
                     return null;
                 }
                 return AdvanceRampResponseContent::fromJson($json);
-            }
-        } catch (JsonException $e) {
-            throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
-        } catch (ClientExceptionInterface $e) {
-            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
-        }
-        throw new Auth0ApiException(
-            message: 'API request failed',
-            statusCode: $statusCode,
-            body: $response->getBody()->getContents(),
-        );
-    }
-
-    /**
-     * Transitions an experiment through its lifecycle: draft → active, active → paused, paused → active, active/paused → completed. Activation runs full readiness validation.
-     *
-     * Example:
-     * ```php
-     * $client->experimentation->experiments->updateStatus(
-     *     'id',
-     *     new UpdateExperimentStatusRequestContent([
-     *         'status' => ExperimentTransitionStatusEnum::Active->value,
-     *     ]),
-     * );
-     * ```
-     *
-     * @param string $id The ID of the experiment to transition.
-     * @param UpdateExperimentStatusRequestContent $request
-     * @param ?array{
-     *   baseUrl?: string,
-     *   maxRetries?: int,
-     *   timeout?: float,
-     *   headers?: array<string, string>,
-     *   queryParameters?: array<string, mixed>,
-     *   bodyProperties?: array<string, mixed>,
-     * } $options
-     * @return ?UpdateExperimentStatusResponseContent
-     * @throws Auth0Exception
-     * @throws Auth0ApiException
-     */
-    public function updateStatus(string $id, UpdateExperimentStatusRequestContent $request, ?array $options = null): ?UpdateExperimentStatusResponseContent
-    {
-        $options = array_merge($this->options, $options ?? []);
-        try {
-            $response = $this->client->sendRequest(
-                new JsonApiRequest(
-                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "experimentation/experiments/" . RawClient::encodePathParam($id) . "/status",
-                    method: HttpMethod::POST,
-                    body: $request,
-                ),
-                $options,
-            );
-            $statusCode = $response->getStatusCode();
-            if ($statusCode >= 200 && $statusCode < 400) {
-                $json = $response->getBody()->getContents();
-                if (empty($json)) {
-                    return null;
-                }
-                return UpdateExperimentStatusResponseContent::fromJson($json);
             }
         } catch (JsonException $e) {
             throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
