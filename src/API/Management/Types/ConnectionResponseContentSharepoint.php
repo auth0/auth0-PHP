@@ -35,6 +35,7 @@ class ConnectionResponseContentSharepoint extends JsonSerializableType
 
     /**
      * @param array{
+     *   displayName: string,
      *   id: string,
      *   name: string,
      *   strategy: value-of<ConnectionResponseContentSharepointStrategy>,
@@ -42,7 +43,6 @@ class ConnectionResponseContentSharepoint extends JsonSerializableType
      *   connectedAccounts?: ?ConnectionConnectedAccountsPurpose,
      *   realms?: ?array<string>,
      *   enabledClients?: ?array<string>,
-     *   displayName?: ?string,
      *   isDomainConnection?: ?bool,
      *   metadata?: ?array<string, ?string>,
      *   options?: ?ConnectionOptionsSharepoint,
@@ -54,11 +54,11 @@ class ConnectionResponseContentSharepoint extends JsonSerializableType
     ) {
         $this->authentication = $values['authentication'] ?? null;
         $this->connectedAccounts = $values['connectedAccounts'] ?? null;
+        $this->displayName = $values['displayName'];
         $this->id = $values['id'];
         $this->realms = $values['realms'] ?? null;
         $this->name = $values['name'];
         $this->enabledClients = $values['enabledClients'] ?? null;
-        $this->displayName = $values['displayName'] ?? null;
         $this->isDomainConnection = $values['isDomainConnection'] ?? null;
         $this->metadata = $values['metadata'] ?? null;
         $this->strategy = $values['strategy'];

@@ -6,6 +6,7 @@ use Auth0\SDK\API\Management\Actions\ActionsClient;
 use Auth0\SDK\API\Management\Agents\AgentsClient;
 use Auth0\SDK\API\Management\Branding\BrandingClient;
 use Auth0\SDK\API\Management\ClientGrants\ClientGrantsClient;
+use Auth0\SDK\API\Management\ClientProfiles\ClientProfilesClient;
 use Auth0\SDK\API\Management\Clients\ClientsClient;
 use Auth0\SDK\API\Management\ConnectionProfiles\ConnectionProfilesClient;
 use Auth0\SDK\API\Management\Connections\ConnectionsClient;
@@ -55,6 +56,7 @@ use Auth0\SDK\API\Management\Actions\ActionsClientInterface;
 use Auth0\SDK\API\Management\Agents\AgentsClientInterface;
 use Auth0\SDK\API\Management\Branding\BrandingClientInterface;
 use Auth0\SDK\API\Management\ClientGrants\ClientGrantsClientInterface;
+use Auth0\SDK\API\Management\ClientProfiles\ClientProfilesClientInterface;
 use Auth0\SDK\API\Management\Clients\ClientsClientInterface;
 use Auth0\SDK\API\Management\ConnectionProfiles\ConnectionProfilesClientInterface;
 use Auth0\SDK\API\Management\Connections\ConnectionsClientInterface;
@@ -120,6 +122,11 @@ class Management implements ManagementInterface
      * @var ClientGrantsClient $clientGrants
      */
     public ClientGrantsClient $clientGrants;
+
+    /**
+     * @var ClientProfilesClient $clientProfiles
+     */
+    public ClientProfilesClient $clientProfiles;
 
     /**
      * @var ClientsClient $clients
@@ -398,6 +405,7 @@ class Management implements ManagementInterface
         $this->agents = new AgentsClient($this->client, $this->options);
         $this->branding = new BrandingClient($this->client, $this->options);
         $this->clientGrants = new ClientGrantsClient($this->client, $this->options);
+        $this->clientProfiles = new ClientProfilesClient($this->client, $this->options);
         $this->clients = new ClientsClient($this->client, $this->options);
         $this->connectionProfiles = new ConnectionProfilesClient($this->client, $this->options);
         $this->connections = new ConnectionsClient($this->client, $this->options);
@@ -473,6 +481,14 @@ class Management implements ManagementInterface
     public function getClientGrants(): ClientGrantsClientInterface
     {
         return $this->clientGrants;
+    }
+
+    /**
+     * @return ClientProfilesClientInterface
+     */
+    public function getClientProfiles(): ClientProfilesClientInterface
+    {
+        return $this->clientProfiles;
     }
 
     /**

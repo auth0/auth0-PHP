@@ -12,8 +12,6 @@ use Auth0\SDK\API\Management\Experimentation\Experiments\Requests\UpdateExperime
 use Auth0\SDK\API\Management\Types\UpdateExperimentResponseContent;
 use Auth0\SDK\API\Management\Experimentation\Experiments\Requests\AdvanceRampRequestContent;
 use Auth0\SDK\API\Management\Types\AdvanceRampResponseContent;
-use Auth0\SDK\API\Management\Experimentation\Experiments\Requests\UpdateExperimentStatusRequestContent;
-use Auth0\SDK\API\Management\Types\UpdateExperimentStatusResponseContent;
 use Auth0\SDK\API\Management\Types\ValidateExperimentResponseContent;
 
 interface ExperimentsClientInterface
@@ -170,33 +168,6 @@ interface ExperimentsClientInterface
      * @return ?AdvanceRampResponseContent
      */
     public function advanceRamp(string $id, AdvanceRampRequestContent $request, ?array $options = null): ?AdvanceRampResponseContent;
-
-    /**
-     * Transitions an experiment through its lifecycle: draft → active, active → paused, paused → active, active/paused → completed. Activation runs full readiness validation.
-     *
-     * Example:
-     * ```php
-     * $client->experimentation->experiments->updateStatus(
-     *     'id',
-     *     new UpdateExperimentStatusRequestContent([
-     *         'status' => ExperimentTransitionStatusEnum::Active->value,
-     *     ]),
-     * );
-     * ```
-     *
-     * @param string $id The ID of the experiment to transition.
-     * @param UpdateExperimentStatusRequestContent $request
-     * @param ?array{
-     *   baseUrl?: string,
-     *   maxRetries?: int,
-     *   timeout?: float,
-     *   headers?: array<string, string>,
-     *   queryParameters?: array<string, mixed>,
-     *   bodyProperties?: array<string, mixed>,
-     * } $options
-     * @return ?UpdateExperimentStatusResponseContent
-     */
-    public function updateStatus(string $id, UpdateExperimentStatusRequestContent $request, ?array $options = null): ?UpdateExperimentStatusResponseContent;
 
     /**
      * Checks whether an experiment is ready to be activated. Returns is_valid boolean and an errors array describing any blockers. Read-only; no state is modified.

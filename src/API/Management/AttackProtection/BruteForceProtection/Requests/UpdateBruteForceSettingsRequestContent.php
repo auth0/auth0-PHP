@@ -7,6 +7,7 @@ use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 use Auth0\SDK\API\Management\Types\BruteForceProtectionShieldsEnum;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use Auth0\SDK\API\Management\Types\BruteForceProtectionModeEnum;
+use Auth0\SDK\API\Management\Types\BruteForceProtectionFormSubmissionModeEnum;
 
 class UpdateBruteForceSettingsRequestContent extends JsonSerializableType
 {
@@ -44,12 +45,19 @@ class UpdateBruteForceSettingsRequestContent extends JsonSerializableType
     private ?int $maxAttempts;
 
     /**
+     * @var ?value-of<BruteForceProtectionFormSubmissionModeEnum> $formSubmissionMode
+     */
+    #[JsonProperty('form_submission_mode')]
+    private ?string $formSubmissionMode;
+
+    /**
      * @param array{
      *   enabled?: ?bool,
      *   shields?: ?array<value-of<BruteForceProtectionShieldsEnum>>,
      *   allowlist?: ?array<string>,
      *   mode?: ?value-of<BruteForceProtectionModeEnum>,
      *   maxAttempts?: ?int,
+     *   formSubmissionMode?: ?value-of<BruteForceProtectionFormSubmissionModeEnum>,
      * } $values
      */
     public function __construct(
@@ -60,6 +68,7 @@ class UpdateBruteForceSettingsRequestContent extends JsonSerializableType
         $this->allowlist = $values['allowlist'] ?? null;
         $this->mode = $values['mode'] ?? null;
         $this->maxAttempts = $values['maxAttempts'] ?? null;
+        $this->formSubmissionMode = $values['formSubmissionMode'] ?? null;
     }
 
     /**
@@ -149,6 +158,24 @@ class UpdateBruteForceSettingsRequestContent extends JsonSerializableType
     {
         $this->maxAttempts = $value;
         $this->_setField('maxAttempts');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<BruteForceProtectionFormSubmissionModeEnum>
+     */
+    public function getFormSubmissionMode(): ?string
+    {
+        return $this->formSubmissionMode;
+    }
+
+    /**
+     * @param ?value-of<BruteForceProtectionFormSubmissionModeEnum> $value
+     */
+    public function setFormSubmissionMode(?string $value = null): self
+    {
+        $this->formSubmissionMode = $value;
+        $this->_setField('formSubmissionMode');
         return $this;
     }
 }

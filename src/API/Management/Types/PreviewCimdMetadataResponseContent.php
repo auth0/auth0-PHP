@@ -15,6 +15,12 @@ class PreviewCimdMetadataResponseContent extends JsonSerializableType
     private ?string $clientId;
 
     /**
+     * @var ?value-of<CimdExternalMetadataCreatedByEnum> $externalMetadataCreatedBy
+     */
+    #[JsonProperty('external_metadata_created_by')]
+    private ?string $externalMetadataCreatedBy;
+
+    /**
      * @var ?array<string> $errors Array of retrieval errors (populated when the metadata document could not be fetched). When present, validation is omitted.
      */
     #[JsonProperty('errors'), ArrayType(['string'])]
@@ -35,6 +41,7 @@ class PreviewCimdMetadataResponseContent extends JsonSerializableType
     /**
      * @param array{
      *   clientId?: ?string,
+     *   externalMetadataCreatedBy?: ?value-of<CimdExternalMetadataCreatedByEnum>,
      *   errors?: ?array<string>,
      *   validation?: ?CimdValidationResult,
      *   mappedFields?: ?CimdMappedClientFields,
@@ -44,6 +51,7 @@ class PreviewCimdMetadataResponseContent extends JsonSerializableType
         array $values = [],
     ) {
         $this->clientId = $values['clientId'] ?? null;
+        $this->externalMetadataCreatedBy = $values['externalMetadataCreatedBy'] ?? null;
         $this->errors = $values['errors'] ?? null;
         $this->validation = $values['validation'] ?? null;
         $this->mappedFields = $values['mappedFields'] ?? null;
@@ -64,6 +72,24 @@ class PreviewCimdMetadataResponseContent extends JsonSerializableType
     {
         $this->clientId = $value;
         $this->_setField('clientId');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<CimdExternalMetadataCreatedByEnum>
+     */
+    public function getExternalMetadataCreatedBy(): ?string
+    {
+        return $this->externalMetadataCreatedBy;
+    }
+
+    /**
+     * @param ?value-of<CimdExternalMetadataCreatedByEnum> $value
+     */
+    public function setExternalMetadataCreatedBy(?string $value = null): self
+    {
+        $this->externalMetadataCreatedBy = $value;
+        $this->_setField('externalMetadataCreatedBy');
         return $this;
     }
 

@@ -4,56 +4,58 @@ namespace Auth0\SDK\API\Management\Types;
 
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
-use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use DateTime;
 use Auth0\SDK\API\Management\Core\Types\Date;
 
-class UpdateFeatureFlagStatusResponseContent extends JsonSerializableType
+/**
+ * An attack protection policy override for CAPTCHA.
+ */
+class AttackProtectionCaptchaPolicy extends JsonSerializableType
 {
     /**
-     * @var string $id
+     * @var string $id System-generated identifier for the policy.
      */
     #[JsonProperty('id')]
     private string $id;
 
     /**
-     * @var string $name
+     * @var string $name Human-readable policy name.
      */
     #[JsonProperty('name')]
     private string $name;
 
     /**
-     * @var ?string $description
+     * @var ?string $description Description of the policy's purpose.
      */
     #[JsonProperty('description')]
     private ?string $description;
 
     /**
-     * @var value-of<FeatureFlagTypeEnum> $type
+     * @var int $priority Conflict resolution order. Lower number takes higher precedence.
      */
-    #[JsonProperty('type')]
-    private string $type;
+    #[JsonProperty('priority')]
+    private int $priority;
 
     /**
-     * @var value-of<FeatureFlagStatusEnum> $status
+     * @var AttackProtectionCaptchaPolicyMatch $match
      */
-    #[JsonProperty('status')]
-    private string $status;
+    #[JsonProperty('match')]
+    private AttackProtectionCaptchaPolicyMatch $match;
 
     /**
-     * @var ?array<string, FeatureFlagConfigParam> $parameters
+     * @var AttackProtectionCaptchaPolicyAction $action
      */
-    #[JsonProperty('parameters'), ArrayType(['string' => FeatureFlagConfigParam::class])]
-    private ?array $parameters;
+    #[JsonProperty('action')]
+    private AttackProtectionCaptchaPolicyAction $action;
 
     /**
-     * @var DateTime $createdAt
+     * @var DateTime $createdAt ISO 8601 timestamp when the policy was created.
      */
     #[JsonProperty('created_at'), Date(Date::TYPE_DATETIME)]
     private DateTime $createdAt;
 
     /**
-     * @var DateTime $updatedAt
+     * @var DateTime $updatedAt ISO 8601 timestamp when the policy was last updated.
      */
     #[JsonProperty('updated_at'), Date(Date::TYPE_DATETIME)]
     private DateTime $updatedAt;
@@ -62,12 +64,12 @@ class UpdateFeatureFlagStatusResponseContent extends JsonSerializableType
      * @param array{
      *   id: string,
      *   name: string,
-     *   type: value-of<FeatureFlagTypeEnum>,
-     *   status: value-of<FeatureFlagStatusEnum>,
+     *   priority: int,
+     *   match: AttackProtectionCaptchaPolicyMatch,
+     *   action: AttackProtectionCaptchaPolicyAction,
      *   createdAt: DateTime,
      *   updatedAt: DateTime,
      *   description?: ?string,
-     *   parameters?: ?array<string, FeatureFlagConfigParam>,
      * } $values
      */
     public function __construct(
@@ -76,9 +78,9 @@ class UpdateFeatureFlagStatusResponseContent extends JsonSerializableType
         $this->id = $values['id'];
         $this->name = $values['name'];
         $this->description = $values['description'] ?? null;
-        $this->type = $values['type'];
-        $this->status = $values['status'];
-        $this->parameters = $values['parameters'] ?? null;
+        $this->priority = $values['priority'];
+        $this->match = $values['match'];
+        $this->action = $values['action'];
         $this->createdAt = $values['createdAt'];
         $this->updatedAt = $values['updatedAt'];
     }
@@ -138,56 +140,56 @@ class UpdateFeatureFlagStatusResponseContent extends JsonSerializableType
     }
 
     /**
-     * @return value-of<FeatureFlagTypeEnum>
+     * @return int
      */
-    public function getType(): string
+    public function getPriority(): int
     {
-        return $this->type;
+        return $this->priority;
     }
 
     /**
-     * @param value-of<FeatureFlagTypeEnum> $value
+     * @param int $value
      */
-    public function setType(string $value): self
+    public function setPriority(int $value): self
     {
-        $this->type = $value;
-        $this->_setField('type');
+        $this->priority = $value;
+        $this->_setField('priority');
         return $this;
     }
 
     /**
-     * @return value-of<FeatureFlagStatusEnum>
+     * @return AttackProtectionCaptchaPolicyMatch
      */
-    public function getStatus(): string
+    public function getMatch(): AttackProtectionCaptchaPolicyMatch
     {
-        return $this->status;
+        return $this->match;
     }
 
     /**
-     * @param value-of<FeatureFlagStatusEnum> $value
+     * @param AttackProtectionCaptchaPolicyMatch $value
      */
-    public function setStatus(string $value): self
+    public function setMatch(AttackProtectionCaptchaPolicyMatch $value): self
     {
-        $this->status = $value;
-        $this->_setField('status');
+        $this->match = $value;
+        $this->_setField('match');
         return $this;
     }
 
     /**
-     * @return ?array<string, FeatureFlagConfigParam>
+     * @return AttackProtectionCaptchaPolicyAction
      */
-    public function getParameters(): ?array
+    public function getAction(): AttackProtectionCaptchaPolicyAction
     {
-        return $this->parameters;
+        return $this->action;
     }
 
     /**
-     * @param ?array<string, FeatureFlagConfigParam> $value
+     * @param AttackProtectionCaptchaPolicyAction $value
      */
-    public function setParameters(?array $value = null): self
+    public function setAction(AttackProtectionCaptchaPolicyAction $value): self
     {
-        $this->parameters = $value;
-        $this->_setField('parameters');
+        $this->action = $value;
+        $this->_setField('action');
         return $this;
     }
 
