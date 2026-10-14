@@ -258,13 +258,15 @@ interface Auth0Interface
     /**
      * Renews the access token and ID token using an existing refresh token.
      * Scope "offline_access" must be declared in order to obtain refresh token for later token renewal.
+     * If a returned ID token cannot be verified or validated, the session is cleared before the exception is thrown.
      *
      * @param null|array<null|int|string> $params Optional. Additional parameters to include with the request.
      *
      * @throws \Auth0\SDK\Exception\StateException         if the Auth0 object does not have access token and refresh token, or the API did not renew tokens properly
      * @throws \Auth0\SDK\Exception\ConfigurationException when a Client ID is not configured
      * @throws \Auth0\SDK\Exception\ConfigurationException when a Client Secret is not configured
-     * @throws \Auth0\SDK\Exception\NetworkException       when the API request fails due to a network error
+     * @throws \Auth0\SDK\Exception\InvalidTokenException  when validation of a returned ID token fails
+     * @throws \Auth0\SDK\Exception\NetworkException       when the API request, or the fetch of the signing keys for a returned ID token, fails due to a network error
      *
      * @see https://auth0.com/docs/tokens/refresh-token/current
      */
