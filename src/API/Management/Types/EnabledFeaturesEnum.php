@@ -6,4 +6,5 @@ enum EnabledFeaturesEnum: string
 {
     case Scim = "scim";
     case UniversalLogout = "universal_logout";
+    case DirectorySync = "directory_sync";
 }

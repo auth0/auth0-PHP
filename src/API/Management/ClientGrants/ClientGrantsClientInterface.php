@@ -7,6 +7,7 @@ use Auth0\SDK\API\Management\Core\Pagination\Pager;
 use Auth0\SDK\API\Management\Types\ClientGrantResponseContent;
 use Auth0\SDK\API\Management\ClientGrants\Requests\CreateClientGrantRequestContent;
 use Auth0\SDK\API\Management\Types\CreateClientGrantResponseContent;
+use Auth0\SDK\API\Management\ClientGrants\Requests\SearchClientGrantsRequestParameters;
 use Auth0\SDK\API\Management\Types\GetClientGrantResponseContent;
 use Auth0\SDK\API\Management\ClientGrants\Requests\UpdateClientGrantRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateClientGrantResponseContent;
@@ -70,6 +71,38 @@ interface ClientGrantsClientInterface
      * @return ?CreateClientGrantResponseContent
      */
     public function create(CreateClientGrantRequestContent $request, ?array $options = null): ?CreateClientGrantResponseContent;
+
+    /**
+     * Search client grants using SCIM or Lucene filter syntax with low-latency, eventually consistent results. Use the parser parameter to specify "scim" or "lucene" syntax (default: "lucene"). This endpoint provides an alternative to the standard GET /client-grants endpoint with better performance for complex queries.
+     * Results may not reflect recent updates immediately.
+     *
+     * Example:
+     * ```php
+     * $client->clientGrants->search(
+     *     new SearchClientGrantsRequestParameters([
+     *         'q' => 'q',
+     *         'parser' => SearchParserEnum::Scim->value,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'take' => 1,
+     *         'from' => 'from',
+     *         'sort' => ClientGrantSortFieldEnum::Audience->value,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param SearchClientGrantsRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return Pager<ClientGrantResponseContent>
+     */
+    public function search(SearchClientGrantsRequestParameters $request = new SearchClientGrantsRequestParameters(), ?array $options = null): Pager;
 
     /**
      * Retrieve a single [client grant](https://auth0.com/docs/get-started/applications/application-access-to-apis-client-grants), including the

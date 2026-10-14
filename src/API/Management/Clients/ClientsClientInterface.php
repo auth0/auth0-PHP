@@ -11,6 +11,8 @@ use Auth0\SDK\API\Management\Clients\Requests\PreviewCimdMetadataRequestContent;
 use Auth0\SDK\API\Management\Types\PreviewCimdMetadataResponseContent;
 use Auth0\SDK\API\Management\Clients\Requests\RegisterCimdClientRequestContent;
 use Auth0\SDK\API\Management\Types\RegisterCimdClientResponseContent;
+use Auth0\SDK\API\Management\Clients\Requests\SearchClientsRequestParameters;
+use Auth0\SDK\API\Management\Types\ClientSearchResponse;
 use Auth0\SDK\API\Management\Clients\Requests\GetClientRequestParameters;
 use Auth0\SDK\API\Management\Types\GetClientResponseContent;
 use Auth0\SDK\API\Management\Clients\Requests\UpdateClientRequestContent;
@@ -180,6 +182,48 @@ interface ClientsClientInterface
      * @return ?RegisterCimdClientResponseContent
      */
     public function registerCimdClient(RegisterCimdClientRequestContent $request, ?array $options = null): ?RegisterCimdClientResponseContent;
+
+    /**
+     * Search clients using SCIM or Lucene filter syntax with low-latency, eventually consistent results.
+     * Use the parser parameter to specify "scim" or "lucene" syntax (default: "lucene").
+     * This endpoint provides an alternative to the standard GET /clients endpoint with better performance
+     * for complex queries. Results may not reflect recent updates immediately.
+     *
+     * - This endpoint only supports `read:clients` and `read:client_summary` scopes. The `read:client_keys` and `read:client_credentials` scopes are not supported.
+     * - The following fields are never returned by this endpoint:
+     *   - `client_secret`
+     *   - `encryption_key`
+     *   - `signing_keys`
+     *   - `owners`
+     *   - `addons`
+     *
+     * Example:
+     * ```php
+     * $client->clients->search(
+     *     new SearchClientsRequestParameters([
+     *         'q' => 'q',
+     *         'parser' => SearchParserEnum::Scim->value,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'take' => 1,
+     *         'from' => 'from',
+     *         'sort' => ClientSortFieldEnum::Name->value,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param SearchClientsRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return Pager<ClientSearchResponse>
+     */
+    public function search(SearchClientsRequestParameters $request = new SearchClientsRequestParameters(), ?array $options = null): Pager;
 
     /**
      * Retrieve client details by ID. Clients are SSO connections or Applications linked with your Auth0 tenant. A list of fields to include or exclude may also be specified.

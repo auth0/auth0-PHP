@@ -248,6 +248,10 @@ enum OauthScope: string
     case ReadVdcsTemplates = "read:vdcs_templates";
     case UpdateVdcsTemplates = "update:vdcs_templates";
     case DeleteVdcsTemplates = "delete:vdcs_templates";
+    case CreateClientProfiles = "create:client_profiles";
+    case ReadClientProfiles = "read:client_profiles";
+    case UpdateClientProfiles = "update:client_profiles";
+    case DeleteClientProfiles = "delete:client_profiles";
     case CreateOrganizationClients = "create:organization_clients";
     case ReadOrganizationClients = "read:organization_clients";
     case UpdateOrganizationClients = "update:organization_clients";

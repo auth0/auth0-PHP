@@ -375,6 +375,12 @@ class RotateClientSecretResponseContent extends JsonSerializableType
     private ?AnonymousSessions $anonymousSessions;
 
     /**
+     * @var ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum> $enforceAnonSessionTransferNetworkBinding
+     */
+    #[JsonProperty('enforce_anon_session_transfer_network_binding')]
+    private ?string $enforceAnonSessionTransferNetworkBinding;
+
+    /**
      * @var ?value-of<ClientThirdPartySecurityModeEnum> $thirdPartySecurityMode
      */
     #[JsonProperty('third_party_security_mode')]
@@ -409,6 +415,12 @@ class RotateClientSecretResponseContent extends JsonSerializableType
      */
     #[JsonProperty('external_metadata_created_by')]
     private ?string $externalMetadataCreatedBy;
+
+    /**
+     * @var ?value-of<ClientExternalMetadataStatusEnum> $externalMetadataStatus
+     */
+    #[JsonProperty('external_metadata_status')]
+    private ?string $externalMetadataStatus;
 
     /**
      * @var ?string $externalClientId An alternate client identifier to be used during authorization flows. Only supports CIMD-based client identifiers.
@@ -484,12 +496,14 @@ class RotateClientSecretResponseContent extends JsonSerializableType
      *   myOrganizationConfiguration?: ?ClientMyOrganizationResponseConfiguration,
      *   identityAssertionAuthorizationGrant?: ?IdentityAssertionAuthorizationGrant,
      *   anonymousSessions?: ?AnonymousSessions,
+     *   enforceAnonSessionTransferNetworkBinding?: ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum>,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   resourceServerIdentifier?: ?string,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
      *   externalMetadataType?: ?value-of<ClientExternalMetadataTypeEnum>,
      *   externalMetadataCreatedBy?: ?value-of<ClientExternalMetadataCreatedByEnum>,
+     *   externalMetadataStatus?: ?value-of<ClientExternalMetadataStatusEnum>,
      *   externalClientId?: ?string,
      *   jwksUri?: ?string,
      * } $values
@@ -557,12 +571,14 @@ class RotateClientSecretResponseContent extends JsonSerializableType
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
         $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
         $this->anonymousSessions = $values['anonymousSessions'] ?? null;
+        $this->enforceAnonSessionTransferNetworkBinding = $values['enforceAnonSessionTransferNetworkBinding'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
         $this->externalMetadataType = $values['externalMetadataType'] ?? null;
         $this->externalMetadataCreatedBy = $values['externalMetadataCreatedBy'] ?? null;
+        $this->externalMetadataStatus = $values['externalMetadataStatus'] ?? null;
         $this->externalClientId = $values['externalClientId'] ?? null;
         $this->jwksUri = $values['jwksUri'] ?? null;
     }
@@ -1648,6 +1664,24 @@ class RotateClientSecretResponseContent extends JsonSerializableType
     }
 
     /**
+     * @return ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum>
+     */
+    public function getEnforceAnonSessionTransferNetworkBinding(): ?string
+    {
+        return $this->enforceAnonSessionTransferNetworkBinding;
+    }
+
+    /**
+     * @param ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum> $value
+     */
+    public function setEnforceAnonSessionTransferNetworkBinding(?string $value = null): self
+    {
+        $this->enforceAnonSessionTransferNetworkBinding = $value;
+        $this->_setField('enforceAnonSessionTransferNetworkBinding');
+        return $this;
+    }
+
+    /**
      * @return ?value-of<ClientThirdPartySecurityModeEnum>
      */
     public function getThirdPartySecurityMode(): ?string
@@ -1752,6 +1786,24 @@ class RotateClientSecretResponseContent extends JsonSerializableType
     {
         $this->externalMetadataCreatedBy = $value;
         $this->_setField('externalMetadataCreatedBy');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientExternalMetadataStatusEnum>
+     */
+    public function getExternalMetadataStatus(): ?string
+    {
+        return $this->externalMetadataStatus;
+    }
+
+    /**
+     * @param ?value-of<ClientExternalMetadataStatusEnum> $value
+     */
+    public function setExternalMetadataStatus(?string $value = null): self
+    {
+        $this->externalMetadataStatus = $value;
+        $this->_setField('externalMetadataStatus');
         return $this;
     }
 

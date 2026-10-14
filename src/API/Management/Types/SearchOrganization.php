@@ -4,8 +4,6 @@ namespace Auth0\SDK\API\Management\Types;
 
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
-use Auth0\SDK\API\Management\Core\Types\ArrayType;
-use Auth0\SDK\API\Management\Core\Types\Union;
 
 class SearchOrganization extends JsonSerializableType
 {
@@ -34,12 +32,6 @@ class SearchOrganization extends JsonSerializableType
     private ?OrganizationBranding $branding;
 
     /**
-     * @var ?array<string, ?string> $metadata
-     */
-    #[JsonProperty('metadata'), ArrayType(['string' => new Union('string', 'null')])]
-    private ?array $metadata;
-
-    /**
      * @var ?TokenQuota $tokenQuota
      */
     #[JsonProperty('token_quota')]
@@ -63,7 +55,6 @@ class SearchOrganization extends JsonSerializableType
      *   name?: ?string,
      *   displayName?: ?string,
      *   branding?: ?OrganizationBranding,
-     *   metadata?: ?array<string, ?string>,
      *   tokenQuota?: ?TokenQuota,
      *   thirdPartyClientAccess?: ?value-of<OrganizationThirdPartyClientAccessEnum>,
      *   isAppEntitlementActive?: ?bool,
@@ -76,7 +67,6 @@ class SearchOrganization extends JsonSerializableType
         $this->name = $values['name'] ?? null;
         $this->displayName = $values['displayName'] ?? null;
         $this->branding = $values['branding'] ?? null;
-        $this->metadata = $values['metadata'] ?? null;
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->thirdPartyClientAccess = $values['thirdPartyClientAccess'] ?? null;
         $this->isAppEntitlementActive = $values['isAppEntitlementActive'] ?? null;
@@ -151,24 +141,6 @@ class SearchOrganization extends JsonSerializableType
     {
         $this->branding = $value;
         $this->_setField('branding');
-        return $this;
-    }
-
-    /**
-     * @return ?array<string, ?string>
-     */
-    public function getMetadata(): ?array
-    {
-        return $this->metadata;
-    }
-
-    /**
-     * @param ?array<string, ?string> $value
-     */
-    public function setMetadata(?array $value = null): self
-    {
-        $this->metadata = $value;
-        $this->_setField('metadata');
         return $this;
     }
 

@@ -24,6 +24,10 @@ use Auth0\SDK\API\Management\Clients\Requests\PreviewCimdMetadataRequestContent;
 use Auth0\SDK\API\Management\Types\PreviewCimdMetadataResponseContent;
 use Auth0\SDK\API\Management\Clients\Requests\RegisterCimdClientRequestContent;
 use Auth0\SDK\API\Management\Types\RegisterCimdClientResponseContent;
+use Auth0\SDK\API\Management\Clients\Requests\SearchClientsRequestParameters;
+use Auth0\SDK\API\Management\Types\ClientSearchResponse;
+use Auth0\SDK\API\Management\Core\Pagination\CursorPager;
+use Auth0\SDK\API\Management\Types\SearchClientsResponseContent;
 use Auth0\SDK\API\Management\Clients\Requests\GetClientRequestParameters;
 use Auth0\SDK\API\Management\Types\GetClientResponseContent;
 use Auth0\SDK\API\Management\Clients\Requests\UpdateClientRequestContent;
@@ -352,6 +356,61 @@ class ClientsClient implements ClientsClientInterface
             message: 'API request failed',
             statusCode: $statusCode,
             body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Search clients using SCIM or Lucene filter syntax with low-latency, eventually consistent results.
+     * Use the parser parameter to specify "scim" or "lucene" syntax (default: "lucene").
+     * This endpoint provides an alternative to the standard GET /clients endpoint with better performance
+     * for complex queries. Results may not reflect recent updates immediately.
+     *
+     * - This endpoint only supports `read:clients` and `read:client_summary` scopes. The `read:client_keys` and `read:client_credentials` scopes are not supported.
+     * - The following fields are never returned by this endpoint:
+     *   - `client_secret`
+     *   - `encryption_key`
+     *   - `signing_keys`
+     *   - `owners`
+     *   - `addons`
+     *
+     * Example:
+     * ```php
+     * $client->clients->search(
+     *     new SearchClientsRequestParameters([
+     *         'q' => 'q',
+     *         'parser' => SearchParserEnum::Scim->value,
+     *         'fields' => 'fields',
+     *         'includeFields' => true,
+     *         'take' => 1,
+     *         'from' => 'from',
+     *         'sort' => ClientSortFieldEnum::Name->value,
+     *     ]),
+     * );
+     * ```
+     *
+     * @param SearchClientsRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return Pager<ClientSearchResponse>
+     */
+    public function search(SearchClientsRequestParameters $request = new SearchClientsRequestParameters(), ?array $options = null): Pager
+    {
+        return new CursorPager(
+            request: $request,
+            getNextPage: fn (SearchClientsRequestParameters $request) => $this->_search($request, $options),
+            setCursor: function (SearchClientsRequestParameters $request, ?string $cursor) {
+                $request->setFrom($cursor);
+            },
+            /* @phpstan-ignore-next-line */
+            getNextCursor: fn (?SearchClientsResponseContent $response) => $response?->getNext() ?? null,
+            /* @phpstan-ignore-next-line */
+            getItems: fn (?SearchClientsResponseContent $response) => $response?->getClients() ?? [],
         );
     }
 
@@ -726,6 +785,88 @@ class ClientsClient implements ClientsClientInterface
                     return null;
                 }
                 return ListClientsOffsetPaginatedResponseContent::fromJson($json);
+            }
+        } catch (JsonException $e) {
+            throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Search clients using SCIM or Lucene filter syntax with low-latency, eventually consistent results.
+     * Use the parser parameter to specify "scim" or "lucene" syntax (default: "lucene").
+     * This endpoint provides an alternative to the standard GET /clients endpoint with better performance
+     * for complex queries. Results may not reflect recent updates immediately.
+     *
+     * - This endpoint only supports `read:clients` and `read:client_summary` scopes. The `read:client_keys` and `read:client_credentials` scopes are not supported.
+     * - The following fields are never returned by this endpoint:
+     *   - `client_secret`
+     *   - `encryption_key`
+     *   - `signing_keys`
+     *   - `owners`
+     *   - `addons`
+     *
+     * @param SearchClientsRequestParameters $request
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?SearchClientsResponseContent
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    private function _search(SearchClientsRequestParameters $request = new SearchClientsRequestParameters(), ?array $options = null): ?SearchClientsResponseContent
+    {
+        $options = array_merge($this->options, $options ?? []);
+        $query = [];
+        if ($request->getQ() != null) {
+            $query['q'] = $request->getQ();
+        }
+        if ($request->getParser() != null) {
+            $query['parser'] = $request->getParser();
+        }
+        if ($request->getFields() != null) {
+            $query['fields'] = $request->getFields();
+        }
+        if ($request->getIncludeFields() != null) {
+            $query['include_fields'] = $request->getIncludeFields();
+        }
+        if ($request->getTake() != null) {
+            $query['take'] = $request->getTake();
+        }
+        if ($request->getFrom() != null) {
+            $query['from'] = $request->getFrom();
+        }
+        if ($request->getSort() != null) {
+            $query['sort'] = $request->getSort();
+        }
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "clients/search",
+                    method: HttpMethod::GET,
+                    query: $query,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                $json = $response->getBody()->getContents();
+                if (empty($json)) {
+                    return null;
+                }
+                return SearchClientsResponseContent::fromJson($json);
             }
         } catch (JsonException $e) {
             throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);

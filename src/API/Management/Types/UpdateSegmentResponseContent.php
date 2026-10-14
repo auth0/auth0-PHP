@@ -35,6 +35,12 @@ class UpdateSegmentResponseContent extends JsonSerializableType
     private string $type;
 
     /**
+     * @var value-of<SegmentStatusEnum> $status
+     */
+    #[JsonProperty('status')]
+    private string $status;
+
+    /**
      * @var array<SegmentRule> $rules
      */
     #[JsonProperty('rules'), ArrayType([SegmentRule::class])]
@@ -57,6 +63,7 @@ class UpdateSegmentResponseContent extends JsonSerializableType
      *   id: string,
      *   name: string,
      *   type: value-of<SegmentTypeEnum>,
+     *   status: value-of<SegmentStatusEnum>,
      *   rules: array<SegmentRule>,
      *   createdAt: DateTime,
      *   updatedAt: DateTime,
@@ -70,6 +77,7 @@ class UpdateSegmentResponseContent extends JsonSerializableType
         $this->name = $values['name'];
         $this->description = $values['description'] ?? null;
         $this->type = $values['type'];
+        $this->status = $values['status'];
         $this->rules = $values['rules'];
         $this->createdAt = $values['createdAt'];
         $this->updatedAt = $values['updatedAt'];
@@ -144,6 +152,24 @@ class UpdateSegmentResponseContent extends JsonSerializableType
     {
         $this->type = $value;
         $this->_setField('type');
+        return $this;
+    }
+
+    /**
+     * @return value-of<SegmentStatusEnum>
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param value-of<SegmentStatusEnum> $value
+     */
+    public function setStatus(string $value): self
+    {
+        $this->status = $value;
+        $this->_setField('status');
         return $this;
     }
 
