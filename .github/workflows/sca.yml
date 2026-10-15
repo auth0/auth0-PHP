@@ -19,8 +19,12 @@ jobs:
   # ── SCA / Snyk scan via reusable workflow ───────────────────────────────────
   sca:
     uses: auth0/devsecops-tooling/.github/workflows/sca-scan.yml@e29f26478db18ff0bcbe4bc447a8fbd54fbeec9e
-    # All inputs are optional — defaults shown. To override, uncomment `with:` and any line below.
-    # with:
+    # All inputs are optional — defaults shown. To override, uncomment any line below.
+    with:
+      # Generate composer.lock for the root package only. A non-empty value skips the
+      # reusable workflow's "Handle Missing Lockfiles" step, which runs composer in every
+      # folder (including examples/, which Snyk excludes) and fails on blocked advisories.
+      pre-scan-commands: composer install --no-scripts --no-autoloader --no-plugins --ignore-platform-reqs --no-dev
     #   node-version:     '16'
     #   java-version:     '11'
     #   go-version:       '1.22'
@@ -31,6 +35,5 @@ jobs:
     #   dotnet-install-dir: '/usr/share/dotnet/'
     #   snyk-version:     'v1.1292.0'
     #   additional-arguments: ''   # extra Snyk CLI flags, e.g. '--severity-threshold=high'
-    #   pre-scan-commands:    ''   # shell commands to run before Snyk (e.g. 'npm ci')
     #   runner:           'ubuntu-latest'
     secrets: inherit
