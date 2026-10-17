@@ -143,7 +143,7 @@ $user = $auth0->getUser();
 ```
 
 > [!NOTE]
-> The session user is populated from the returned ID token, so your Token Exchange Profile must issue one. When you do not pass a `scope`, the SDK sends its configured `scope` on the exchange so Auth0 returns an ID token. Make sure that scope includes `openid`.
+> The session user is populated from the returned ID token, so your Token Exchange Profile must issue one. When you do not pass a `scope`, the SDK sends its configured `scope` on the exchange so Auth0 returns an ID token. Make sure that scope includes `openid`. The configured `audience` and `organization` are sent the same way when you do not pass them, as `login()` does.
 
 ### Actor tokens (delegation)
 
