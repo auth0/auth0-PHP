@@ -1960,6 +1960,65 @@ test('loginWithCustomTokenExchange() honors an explicit scope over the configure
     expect($requestBody)->not()->toContain('scope=openid+profile+email');
 });
 
+test('loginWithCustomTokenExchange() sends the configured audience and organization when the caller passes none', function(): void {
+    $auth0 = new Auth0($this->configuration + [
+        'audience' => ['__test_audience__'],
+        'organization' => ['org_123'],
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+    ]);
+
+    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
+
+    $request = $httpClient->getLastRequest()->getLastRequest();
+    $requestBody = explode('&', $request->getBody()->__toString());
+
+    expect($requestBody)->toContain('audience=__test_audience__');
+    expect($requestBody)->toContain('organization=org_123');
+});
+
+test('loginWithCustomTokenExchange() honors an explicit audience and organization over the configured ones', function(): void {
+    $auth0 = new Auth0($this->configuration + [
+        'audience' => ['__test_audience__'],
+        'organization' => ['org_123', 'org_456'],
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+    ]);
+
+    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token', null, null, ['audience' => '__test_other_audience__', 'organization' => 'org_456']);
+
+    $request = $httpClient->getLastRequest()->getLastRequest();
+    $requestBody = explode('&', $request->getBody()->__toString());
+
+    expect($requestBody)->toContain('audience=__test_other_audience__');
+    expect($requestBody)->toContain('organization=org_456');
+    expect($requestBody)->not()->toContain('audience=__test_audience__');
+    expect($requestBody)->not()->toContain('organization=org_123');
+});
+
+test('loginWithCustomTokenExchange() sends no audience or organization when none is configured', function(): void {
+    $auth0 = new Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+    ]);
+
+    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
+
+    $request = $httpClient->getLastRequest()->getLastRequest();
+    $requestBody = $request->getBody()->__toString();
+
+    expect($requestBody)->not()->toContain('audience=');
+    expect($requestBody)->not()->toContain('organization=');
+});
+
 test('loginWithCustomTokenExchange() throws when the token exchange response has no access token', function(): void {
     $auth0 = new Auth0($this->configuration);
 

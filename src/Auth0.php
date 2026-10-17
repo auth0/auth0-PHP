@@ -601,6 +601,15 @@ final class Auth0 implements Auth0Interface
             $params['scope'] = $this->configuration()->formatScope();
         }
 
+        // Send the configured audience and organization as login() does, since the ID token is validated against the configured organization.
+        if (! isset($params['audience']) || '' === $params['audience']) {
+            $params['audience'] = $this->configuration()->defaultAudience();
+        }
+
+        if (! isset($params['organization']) || '' === $params['organization']) {
+            $params['organization'] = $this->configuration()->defaultOrganization();
+        }
+
         $response = $this->authentication()->customTokenExchange($subjectToken, $subjectTokenType, $actorToken, $actorTokenType, $params);
 
         if (! HttpResponse::wasSuccessful($response)) {
