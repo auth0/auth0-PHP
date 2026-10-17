@@ -706,7 +706,7 @@ final class Auth0 implements Auth0Interface
         $refreshToken = $this->getState()->getRefreshToken();
 
         if (null === $refreshToken) {
-            $this->clear();
+            $this->clear(false);
 
             throw Exception\StateException::failedRenewTokenMissingRefreshToken();
         }
@@ -717,7 +717,7 @@ final class Auth0 implements Auth0Interface
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
         if (! isset($response['access_token']) || '' === trim($response['access_token'])) {
-            $this->clear();
+            $this->clear(false);
 
             throw Exception\StateException::failedRenewTokenMissingAccessToken();
         }

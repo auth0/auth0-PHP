@@ -1199,6 +1199,67 @@ test('renew() leaves the transient nonce and max_age of a login in progress unto
     expect($auth0->configuration()->getTransientStorage()->get('max_age'))->toEqual('10');
 });
 
+test('renew() leaves the transient state of a login in progress untouched when there is no refresh token', function(): void {
+    $auth0 = new Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3"}'),
+        HttpResponseGenerator::create('{}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__other_login_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__other_login_code_verifier__');
+
+    expect(fn () => $auth0->renew())->toThrow(StateException::class, StateException::MSG_FAILED_RENEW_TOKEN_MISSING_REFRESH_TOKEN);
+
+    expect($auth0->getAccessToken())->toBeNull();
+    expect($auth0->configuration()->getTransientStorage()->get('state'))->toEqual('__other_login_state__');
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+    expect($auth0->configuration()->getTransientStorage()->get('code_verifier'))->toEqual('__other_login_code_verifier__');
+});
+
+test('renew() leaves the transient state of a login in progress untouched when the refresh token is rejected', function(): void {
+    $auth0 = new Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4"}'),
+        HttpResponseGenerator::create('{}'),
+        HttpResponseGenerator::create('{"error":"invalid_grant","error_description":"Unknown or invalid refresh token."}', 403),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__other_login_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__other_login_code_verifier__');
+
+    expect(fn () => $auth0->renew())->toThrow(StateException::class, StateException::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
+
+    expect($auth0->getRefreshToken())->toBeNull();
+    expect($auth0->configuration()->getTransientStorage()->get('state'))->toEqual('__other_login_state__');
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+    expect($auth0->configuration()->getTransientStorage()->get('code_verifier'))->toEqual('__other_login_code_verifier__');
+});
+
 test('renew() keeps the existing backchannel key when the refreshed ID token has no sid', function(): void {
     $iss = 'https://' . $this->configuration['domain'] . '/';
     $loginToken = (new TokenGenerator())->withHs256(['iss' => $iss, 'sid' => '__test_sid_1__']);
