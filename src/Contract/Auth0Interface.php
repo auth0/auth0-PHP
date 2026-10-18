@@ -219,7 +219,7 @@ interface Auth0Interface
      *
      * @throws \Auth0\SDK\Exception\ArgumentException      when `subjectToken` is blank, `subjectTokenType` is blank or not a valid URI, or the actor token and its type are not supplied together
      * @throws \Auth0\SDK\Exception\ConfigurationException when used without statefulness being configured
-     * @throws \Auth0\SDK\Exception\StateException         if the token exchange request fails, or an access token is missing from the response
+     * @throws \Auth0\SDK\Exception\StateException         if the token exchange request fails, or an access token or ID token is missing from the response
      * @throws \Auth0\SDK\Exception\InvalidTokenException  when validation of a returned ID token fails
      * @throws \Auth0\SDK\Exception\NetworkException       when the API request fails due to a network error
      *

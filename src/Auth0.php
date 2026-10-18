@@ -641,6 +641,12 @@ final class Auth0 implements Auth0Interface
             throw Exception\StateException::badAccessToken();
         }
 
+        if (! isset($response['id_token'])) {
+            $this->clear(false);
+
+            throw Exception\StateException::missingIdToken();
+        }
+
         $this->setAccessToken($response['access_token']);
 
         if (isset($response['scope'])) {
