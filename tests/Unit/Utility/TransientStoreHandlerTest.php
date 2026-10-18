@@ -54,6 +54,17 @@ test('getOnce() assigns data correctly and is only retrievable once', function(s
     fn() => uniqid(),
 ]]);
 
+test('delete() removes stored data', function(string $key, string $value): void {
+    $this->transient->store($key, $value);
+    $this->transient->delete($key);
+
+    expect($this->transient->isset($key))->toBeFalse();
+    expect($this->store->get($key))->toBeNull();
+})->with(['random data' => [
+    fn() => uniqid(),
+    fn() => uniqid(),
+]]);
+
 test('verify() correctly verifies data', function(string $key, string $value): void {
     $this->transient->store($key, $value);
 
