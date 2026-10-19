@@ -6,6 +6,7 @@ use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 use Auth0\SDK\API\Management\Types\FeatureFlagConfigParam;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
+use Auth0\SDK\API\Management\Types\FeatureFlagStatusEnum;
 
 class UpdateFeatureFlagRequestContent extends JsonSerializableType
 {
@@ -28,10 +29,17 @@ class UpdateFeatureFlagRequestContent extends JsonSerializableType
     private ?array $parameters;
 
     /**
+     * @var ?value-of<FeatureFlagStatusEnum> $status Target lifecycle status (draft → active, draft → archived, active → archived). Activating a flag requires at least 2 variations. When combined with field edits, the edits and the transition are applied together; if the transition is rejected, no edits are applied.
+     */
+    #[JsonProperty('status')]
+    private ?string $status;
+
+    /**
      * @param array{
      *   name?: ?string,
      *   description?: ?string,
      *   parameters?: ?array<string, FeatureFlagConfigParam>,
+     *   status?: ?value-of<FeatureFlagStatusEnum>,
      * } $values
      */
     public function __construct(
@@ -40,6 +48,7 @@ class UpdateFeatureFlagRequestContent extends JsonSerializableType
         $this->name = $values['name'] ?? null;
         $this->description = $values['description'] ?? null;
         $this->parameters = $values['parameters'] ?? null;
+        $this->status = $values['status'] ?? null;
     }
 
     /**
@@ -93,6 +102,24 @@ class UpdateFeatureFlagRequestContent extends JsonSerializableType
     {
         $this->parameters = $value;
         $this->_setField('parameters');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<FeatureFlagStatusEnum>
+     */
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param ?value-of<FeatureFlagStatusEnum> $value
+     */
+    public function setStatus(?string $value = null): self
+    {
+        $this->status = $value;
+        $this->_setField('status');
         return $this;
     }
 }

@@ -6,6 +6,7 @@ use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 use Auth0\SDK\API\Management\Types\SegmentRule;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
+use Auth0\SDK\API\Management\Types\SegmentStatusEnum;
 
 class UpdateSegmentRequestContent extends JsonSerializableType
 {
@@ -28,10 +29,17 @@ class UpdateSegmentRequestContent extends JsonSerializableType
     private ?array $rules;
 
     /**
+     * @var ?value-of<SegmentStatusEnum> $status Target lifecycle status. Archiving removes the segment from the active pool and is terminal (an archived segment cannot return to active). When combined with field edits, the edits apply first and the transition follows.
+     */
+    #[JsonProperty('status')]
+    private ?string $status;
+
+    /**
      * @param array{
      *   name?: ?string,
      *   description?: ?string,
      *   rules?: ?array<SegmentRule>,
+     *   status?: ?value-of<SegmentStatusEnum>,
      * } $values
      */
     public function __construct(
@@ -40,6 +48,7 @@ class UpdateSegmentRequestContent extends JsonSerializableType
         $this->name = $values['name'] ?? null;
         $this->description = $values['description'] ?? null;
         $this->rules = $values['rules'] ?? null;
+        $this->status = $values['status'] ?? null;
     }
 
     /**
@@ -93,6 +102,24 @@ class UpdateSegmentRequestContent extends JsonSerializableType
     {
         $this->rules = $value;
         $this->_setField('rules');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<SegmentStatusEnum>
+     */
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param ?value-of<SegmentStatusEnum> $value
+     */
+    public function setStatus(?string $value = null): self
+    {
+        $this->status = $value;
+        $this->_setField('status');
         return $this;
     }
 }

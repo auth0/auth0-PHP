@@ -33,7 +33,7 @@ class ListRolesRequestParameters extends JsonSerializableType
     private ?string $type;
 
     /**
-     * @var ?string $ownerId Filter organization-level roles by owner ID. Required when type is "organization".
+     * @var ?string $ownerId Filter organization-level roles by owner ID. Use an organization ID to filter that organization's roles, or "auth0" to retrieve Auth0-managed System Roles. Required when type is "organization".
      */
     private ?string $ownerId;
 

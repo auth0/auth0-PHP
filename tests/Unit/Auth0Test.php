@@ -438,6 +438,36 @@ test('handleBackchannelLogout() handles a valid request', function(): void {
     expect($item->isHit())->toBeTrue();
 });
 
+test('handleBackchannelLogout() leaves the transient nonce and max_age of a login in progress untouched', function(): void {
+    $iss = 'https://' . uniqid() . '.ISS';
+
+    $logoutToken = TokenGenerator::create(
+        tokenType: TokenGenerator::TOKEN_LOGOUT,
+        algorithm: TokenGenerator::ALG_RS256,
+        claims: [
+            'sub' => 'SUB' . uniqid(),
+            'iss' => $iss . '/',
+            'sid' => 'SID' . uniqid(),
+        ],
+    );
+
+    $auth0 = new \Auth0\SDK\Auth0(array_merge($this->configuration, [
+        'strategy' => \Auth0\SDK\Configuration\SdkConfiguration::STRATEGY_REGULAR,
+        'domain' => $iss,
+        'tokenJwksUri' => $logoutToken->jwks,
+        'tokenCache' => $logoutToken->cached,
+        'backchannelLogoutCache' => new ArrayAdapter(),
+    ]));
+
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('max_age', '10');
+
+    $auth0->handleBackchannelLogout($logoutToken->token);
+
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+    expect($auth0->configuration()->getTransientStorage()->get('max_age'))->toEqual('10');
+});
+
 test('handleBackchannelLogout() stores the cache entry with the configured relative TTL', function(): void {
     $sub = 'SUB' . uniqid();
     $iss = 'https://' . uniqid() . '.ISS';
@@ -1038,6 +1068,201 @@ test('renew() succeeds under expected and valid conditions', function(): void {
     expect($request->getUri()->__toString())->toEqual('https://' . $this->configuration['domain'] . '/oauth/token');
 });
 
+test('renew() recomputes the backchannel key from the refreshed ID token', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $loginToken = (new TokenGenerator())->withHs256(['iss' => $iss, 'sid' => '__test_sid_1__']);
+    $renewedToken = (new TokenGenerator())->withHs256(['iss' => $iss, 'sid' => '__test_sid_2__']);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $loginToken . '"}'),
+        HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $renewedToken . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+    expect($auth0->getBackchannel())->toEqual(hash('sha256', implode('|', ['__test_sub__', $iss, '__test_sid_1__'])));
+
+    $auth0->renew();
+
+    expect($auth0->getBackchannel())->toEqual(hash('sha256', implode('|', ['__test_sub__', $iss, '__test_sid_2__'])));
+});
+
+test('renew() rejects an ID token with an invalid signature and clears the session', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $loginToken = (new TokenGenerator())->withHs256(['iss' => $iss]);
+    $forgedToken = (new TokenGenerator())->withHs256(['iss' => $iss], '__other_secret__');
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $loginToken . '"}'),
+        HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $forgedToken . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+
+    expect(fn () => $auth0->renew())->toThrow(InvalidTokenException::class);
+
+    expect($auth0->getIdToken())->toBeNull();
+    expect($auth0->getAccessToken())->toBeNull();
+    expect($auth0->getRefreshToken())->toBeNull();
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+});
+
+test('renew() rejects an expired ID token and clears the session', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $loginToken = (new TokenGenerator())->withHs256(['iss' => $iss]);
+    $expiredToken = (new TokenGenerator())->withHs256(['iss' => $iss, 'exp' => time() - 1000]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $loginToken . '"}'),
+        HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $expiredToken . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    expect(fn () => $auth0->renew())->toThrow(InvalidTokenException::class);
+
+    expect($auth0->getIdToken())->toBeNull();
+    expect($auth0->getAccessToken())->toBeNull();
+});
+
+test('renew() leaves the transient nonce and max_age of a login in progress untouched', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $token = (new TokenGenerator())->withHs256(['iss' => $iss]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $token . '"}'),
+        HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $token . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('max_age', '10');
+
+    $auth0->renew();
+
+    expect($auth0->getIdToken())->toEqual($token);
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+    expect($auth0->configuration()->getTransientStorage()->get('max_age'))->toEqual('10');
+});
+
+test('renew() keeps the existing backchannel key when the refreshed ID token has no sid', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $loginToken = (new TokenGenerator())->withHs256(['iss' => $iss, 'sid' => '__test_sid_1__']);
+    $renewedToken = (new TokenGenerator())->withHs256(['iss' => $iss, 'sid' => null]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $loginToken . '"}'),
+        HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $renewedToken . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $loginBackchannel = $auth0->getBackchannel();
+
+    $auth0->renew();
+
+    expect($auth0->getIdToken())->toEqual($renewedToken);
+    expect($auth0->getBackchannel())->toEqual($loginBackchannel);
+});
+
+test('renew() does not apply the configured `tokenMaxAge` to the refreshed ID token', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $loginToken = (new TokenGenerator())->withHs256(['iss' => $iss, 'auth_time' => time()]);
+    $renewedToken = (new TokenGenerator())->withHs256(['iss' => $iss, 'auth_time' => time() - 1000]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+        'tokenMaxAge' => 10,
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $loginToken . '"}'),
+        HttpResponseGenerator::create('{"access_token":"__test_access_token__","id_token":"' . $renewedToken . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $auth0->renew();
+
+    expect($auth0->getIdToken())->toEqual($renewedToken);
+});
+
 test('getCredentials() returns null when a session is not available', function(): void {
     $auth0 = new Auth0($this->configuration);
     expect($auth0->getCredentials())->toBeNull();
@@ -1402,6 +1627,29 @@ test('getBearerToken() successfully finds a candidate token in $_GET', function(
     fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
 ]]);
 
+test('getBearerToken() leaves the transient nonce and max_age of a login in progress untouched', function(
+    TokenGeneratorResponse $candidate
+): void {
+    $testParameterName = uniqid();
+    $_GET[$testParameterName] = $candidate->token;
+
+    $auth0 = new Auth0(array_merge($this->configuration, [
+        'domain' => 'https://domain.test',
+        'tokenJwksUri' => $candidate->jwks,
+        'tokenCache' => $candidate->cached
+    ]));
+
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('max_age', '10');
+
+    $this->assertIsObject($auth0->getBearerToken([$testParameterName]));
+
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+    expect($auth0->configuration()->getTransientStorage()->get('max_age'))->toEqual('10');
+})->with(['mocked rs256 bearer token' => [
+    fn() => TokenGenerator::create(TokenGenerator::TOKEN_ACCESS, TokenGenerator::ALG_RS256)
+]]);
+
 test('getBearerToken() successfully finds a candidate token in $_POST', function(
     TokenGeneratorResponse $candidate
 ): void {
@@ -1610,7 +1858,7 @@ test('loginWithCustomTokenExchange() ignores a stale transient nonce from an aba
         'tokenAlgorithm' => 'HS256',
     ]);
 
-    // A prior abandoned login() left a nonce in transient storage. decode() must not validate the CTE token against it.
+    // A login() left a nonce in transient storage. The CTE token must not be validated against it, and it must be left in place.
     $auth0->configuration()->getTransientStorage()->set('nonce', '__stale_nonce__');
 
     $httpClient = $auth0->authentication()->getHttpClient();
@@ -1620,6 +1868,7 @@ test('loginWithCustomTokenExchange() ignores a stale transient nonce from an aba
 
     expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
     $this->assertArrayHasKey('sub', $auth0->getUser());
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__stale_nonce__');
 });
 
 test('loginWithCustomTokenExchange() skips the auth_time check when tokenMaxAge is configured', function(): void {
@@ -1749,6 +1998,29 @@ test('loginWithCustomTokenExchange() clears state and rethrows when the id token
 
     $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
 })->throws(InvalidTokenException::class);
+
+test('loginWithCustomTokenExchange() leaves transient storage intact when the id token is invalid', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"BAD' . $token . '","expires_in":300}'),
+    ]);
+
+    expect(fn () => $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toThrow(InvalidTokenException::class);
+
+    expect($auth0->getIdToken())->toBeNull();
+    expect($auth0->getAccessToken())->toBeNull();
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+});
 
 test('loginWithCustomTokenExchange() regenerates the session when using SessionStore', function(): void {
     $auth0 = new Auth0($this->configuration);

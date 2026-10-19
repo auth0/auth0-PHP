@@ -6,6 +6,7 @@ use Auth0\SDK\API\Management\Actions\ActionsClientInterface;
 use Auth0\SDK\API\Management\Agents\AgentsClientInterface;
 use Auth0\SDK\API\Management\Branding\BrandingClientInterface;
 use Auth0\SDK\API\Management\ClientGrants\ClientGrantsClientInterface;
+use Auth0\SDK\API\Management\ClientProfiles\ClientProfilesClientInterface;
 use Auth0\SDK\API\Management\Clients\ClientsClientInterface;
 use Auth0\SDK\API\Management\ConnectionProfiles\ConnectionProfilesClientInterface;
 use Auth0\SDK\API\Management\Connections\ConnectionsClientInterface;
@@ -71,6 +72,11 @@ interface ManagementInterface
      * @return ClientGrantsClientInterface
      */
     public function getClientGrants(): ClientGrantsClientInterface;
+
+    /**
+     * @return ClientProfilesClientInterface
+     */
+    public function getClientProfiles(): ClientProfilesClientInterface;
 
     /**
      * @return ClientsClientInterface
