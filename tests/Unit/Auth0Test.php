@@ -1961,17 +1961,25 @@ test('loginWithCustomTokenExchange() honors an explicit scope over the configure
 });
 
 test('loginWithCustomTokenExchange() sends the configured audience and organization when the caller passes none', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'org_id' => 'org_123',
+    ]);
+
     $auth0 = new Auth0($this->configuration + [
         'audience' => ['__test_audience__'],
         'organization' => ['org_123'],
+        'tokenAlgorithm' => 'HS256',
     ]);
 
     $httpClient = $auth0->authentication()->getHttpClient();
     $httpClient->mockResponses([
-        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
     ]);
 
-    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    expect($auth0->isAuthenticated())->toBeTrue();
+    expect($auth0->getUser()['org_id'])->toEqual('org_123');
 
     $request = $httpClient->getLastRequest()->getLastRequest();
     $requestBody = explode('&', $request->getBody()->__toString());
@@ -1981,17 +1989,24 @@ test('loginWithCustomTokenExchange() sends the configured audience and organizat
 });
 
 test('loginWithCustomTokenExchange() honors an explicit audience and organization over the configured ones', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'org_id' => 'org_456',
+    ]);
+
     $auth0 = new Auth0($this->configuration + [
         'audience' => ['__test_audience__'],
         'organization' => ['org_123', 'org_456'],
+        'tokenAlgorithm' => 'HS256',
     ]);
 
     $httpClient = $auth0->authentication()->getHttpClient();
     $httpClient->mockResponses([
-        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
     ]);
 
-    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token', null, null, ['audience' => '__test_other_audience__', 'organization' => 'org_456']);
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token', null, null, ['audience' => '__test_other_audience__', 'organization' => 'org_456']))->toBeTrue();
+    expect($auth0->getUser()['org_id'])->toEqual('org_456');
 
     $request = $httpClient->getLastRequest()->getLastRequest();
     $requestBody = explode('&', $request->getBody()->__toString());
@@ -2003,14 +2018,20 @@ test('loginWithCustomTokenExchange() honors an explicit audience and organizatio
 });
 
 test('loginWithCustomTokenExchange() sends no audience or organization when none is configured', function(): void {
-    $auth0 = new Auth0($this->configuration);
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
 
     $httpClient = $auth0->authentication()->getHttpClient();
     $httpClient->mockResponses([
-        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
     ]);
 
-    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
 
     $request = $httpClient->getLastRequest()->getLastRequest();
     $requestBody = $request->getBody()->__toString();
