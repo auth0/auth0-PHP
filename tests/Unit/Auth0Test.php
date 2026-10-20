@@ -545,13 +545,10 @@ test('decode() compares `auth_time` against `tokenMaxAge` configuration', functi
     $auth0->decode($token, null, null, null, null, null, $now);
 })->throws(InvalidTokenException::class);
 
-test('decode() converts a string `max_age` value from transient storage into an int', function(): void {
-    $now = time();
-    $maxAge = 10;
-    $drift = 100;
-
+test('decode() leaves the transient nonce and max_age of a login in progress untouched', function(): void {
     $token = (new TokenGenerator())->withHs256([
-        'auth_time' => $now - $drift,
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'auth_time' => time() - 100,
     ]);
 
     $auth0 = new Auth0($this->configuration + [
@@ -559,11 +556,14 @@ test('decode() converts a string `max_age` value from transient storage into an 
         'tokenLeeway' => 0,
     ]);
 
-    $storage = $auth0->configuration()->getTransientStorage();
-    $storage->set('max_age', '10');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('max_age', '10');
 
-    $auth0->decode($token, null, null, null, null, null, $now);
-})->throws(InvalidTokenException::class);
+    expect($auth0->decode($token)->getSubject())->toEqual('__test_sub__');
+
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+    expect($auth0->configuration()->getTransientStorage()->get('max_age'))->toEqual('10');
+});
 
 test('decode() compares `org_id` against `organization` configuration', function(): void {
     $orgId = 'org_' . uniqid();
@@ -813,6 +813,53 @@ test('exchange() throws an exception with a bad id token', function(): void {
 
     $auth0->exchange();
 })->throws(InvalidTokenException::class);
+
+test('exchange() throws an exception when the id token nonce does not match the transient nonce', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponse(HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6"}'));
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__other_login_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    $auth0->exchange();
+})->throws(InvalidTokenException::class, sprintf(InvalidTokenException::MSG_MISMATCHED_NONCE_CLAIM, '__other_login_nonce__', '__test_nonce__'));
+
+test('exchange() converts a string `max_age` value from transient storage into an int', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'auth_time' => time() - 100,
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+        'tokenLeeway' => 0,
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponse(HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6"}'));
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('max_age',  '10');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    $auth0->exchange();
+})->throws(InvalidTokenException::class, 'Authentication Time (auth_time) claim in the token indicates that too much time has passed');
 
 test('exchange() succeeds with a valid id token', function(): void {
     $token = (new TokenGenerator())->withHs256([

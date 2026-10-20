@@ -114,18 +114,7 @@ final class Auth0 implements Auth0Interface
         ?int $tokenType = null,
     ): TokenInterface {
         $tokenType ??= Token::TYPE_ID_TOKEN;
-
-        // A transient nonce/max_age belongs to a login in progress and only applies to ID tokens.
-        $store = Token::TYPE_ID_TOKEN === $tokenType ? $this->getTransientStore() : null;
-
-        $tokenNonce ??= $store?->getOnce('nonce') ?? null;
-        $tokenMaxAge ??= $store?->getOnce('max_age') ?? null;
         $tokenIssuer = null;
-
-        // If pulled from transient storage, $tokenMaxAge might be a string.
-        if (null !== $tokenMaxAge) {
-            $tokenMaxAge = (int) $tokenMaxAge;
-        }
 
         $token = new Token($this->configuration(), $token, $tokenType);
 
@@ -140,12 +129,6 @@ final class Auth0 implements Auth0Interface
                 $tokenLeeway,
                 $tokenNow,
             );
-
-        // Ensure transient-stored values are cleared, even if overriding values were passed to the  method.
-        if ($this->configuration()->usingStatefulness() && $store instanceof TransientStoreHandler) {
-            $store->delete('max_age');
-            $store->delete('nonce');
-        }
 
         return $token;
     }
@@ -212,7 +195,14 @@ final class Auth0 implements Auth0Interface
             }
 
             try {
-                $token = $this->decode($response['id_token']);
+                // The transient nonce and max_age belong to the login this callback completes, so only its ID token is checked against them.
+                $tokenMaxAge = $store->getOnce('max_age');
+
+                $token = $this->decode(
+                    token: $response['id_token'],
+                    tokenNonce: $store->getOnce('nonce'),
+                    tokenMaxAge: null !== $tokenMaxAge ? (int) $tokenMaxAge : null,
+                );
 
                 $sub = $token->getSubject() ?? '';
                 $iss = $token->getIssuer() ?? '';
