@@ -2083,6 +2083,34 @@ test('loginWithCustomTokenExchange() leaves transient storage intact when the id
     expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
 });
 
+test('loginWithCustomTokenExchange() leaves transient storage intact when the response has no access token', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__other_login_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__other_login_code_verifier__');
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"id_token":"' . $token . '","refresh_token":"4.5.6","expires_in":300}'),
+    ]);
+
+    expect(fn () => $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toThrow(StateException::class, StateException::MSG_BAD_ACCESS_TOKEN);
+
+    expect($auth0->getIdToken())->toBeNull();
+    expect($auth0->getAccessToken())->toBeNull();
+    expect($auth0->getRefreshToken())->toBeNull();
+    expect($auth0->configuration()->getTransientStorage()->get('state'))->toEqual('__other_login_state__');
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+    expect($auth0->configuration()->getTransientStorage()->get('code_verifier'))->toEqual('__other_login_code_verifier__');
+});
+
 test('loginWithCustomTokenExchange() regenerates the session when using SessionStore', function(): void {
     $auth0 = new Auth0($this->configuration);
     $auth0->configuration()->setSessionStorage(new SessionStore($auth0->configuration()));

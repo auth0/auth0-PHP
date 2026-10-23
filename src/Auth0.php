@@ -636,7 +636,7 @@ final class Auth0 implements Auth0Interface
         }
 
         if (! isset($response['access_token']) || '' === trim($response['access_token'])) {
-            $this->clear();
+            $this->clear(false);
 
             throw Exception\StateException::badAccessToken();
         }
