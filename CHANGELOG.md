@@ -1,5 +1,17 @@
 # Change Log
 
+## [9.5.0](https://github.com/auth0/auth0-PHP/tree/9.5.0) (2026-10-14)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.4.0...9.5.0)
+
+**Added**
+
+- feat: add Application Profiles, CAPTCHA policies and client search, and remove experiment status endpoints [\#875](https://github.com/auth0/auth0-PHP/pull/875) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+**Fixed**
+
+- fix: verify and validate the ID token returned by renew() [\#874](https://github.com/auth0/auth0-PHP/pull/874) ([kishore7snehil](https://github.com/kishore7snehil))
+- fix: guard non-string data field in CookieStore decrypt and clear undecryptable cookies [\#873](https://github.com/auth0/auth0-PHP/pull/873) ([kishore7snehil](https://github.com/kishore7snehil))
+
 ## [9.4.0](https://github.com/auth0/auth0-PHP/tree/9.4.0) (2026-09-30)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.3.0...9.4.0)
 

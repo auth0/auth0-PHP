@@ -68,6 +68,7 @@ class SegmentsClient implements SegmentsClientInterface
      *         'from' => 'from',
      *         'take' => 1,
      *         'type' => SegmentTypeFilterEnum::Auth0->value,
+     *         'status' => SegmentStatusEnum::Active->value,
      *     ]),
      * );
      * ```
@@ -348,6 +349,9 @@ class SegmentsClient implements SegmentsClientInterface
         }
         if ($request->getType() != null) {
             $query['type'] = $request->getType();
+        }
+        if ($request->getStatus() != null) {
+            $query['status'] = $request->getStatus();
         }
         try {
             $response = $this->client->sendRequest(

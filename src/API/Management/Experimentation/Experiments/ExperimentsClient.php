@@ -113,6 +113,7 @@ class ExperimentsClient implements ExperimentsClientInterface
      *         'name' => 'name',
      *         'featureFlagId' => 'feature_flag_id',
      *         'authenticationFlow' => AuthenticationFlowEnum::Authentication->value,
+     *         'allocationStrategy' => AllocationStrategyEnum::Percentage->value,
      *     ]),
      * );
      * ```
