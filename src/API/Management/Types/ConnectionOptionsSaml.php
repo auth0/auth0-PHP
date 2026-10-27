@@ -18,6 +18,18 @@ class ConnectionOptionsSaml extends JsonSerializableType
     use ConnectionOptionsCommon;
 
     /**
+     * @var ?string $clientId
+     */
+    #[JsonProperty('client_id')]
+    private ?string $clientId;
+
+    /**
+     * @var ?string $clientSecret
+     */
+    #[JsonProperty('client_secret')]
+    private ?string $clientSecret;
+
+    /**
      * @var ?bool $debug
      */
     #[JsonProperty('debug')]
@@ -148,6 +160,8 @@ class ConnectionOptionsSaml extends JsonSerializableType
      *   |ConnectionUpstreamValue
      * )|null>,
      *   nonPersistentAttrs?: ?array<string>,
+     *   clientId?: ?string,
+     *   clientSecret?: ?string,
      *   debug?: ?bool,
      *   deflate?: ?bool,
      *   destinationUrl?: ?string,
@@ -191,6 +205,8 @@ class ConnectionOptionsSaml extends JsonSerializableType
         $this->thumbprintsSha384 = $values['thumbprintsSha384'] ?? null;
         $this->upstreamParams = $values['upstreamParams'] ?? null;
         $this->nonPersistentAttrs = $values['nonPersistentAttrs'] ?? null;
+        $this->clientId = $values['clientId'] ?? null;
+        $this->clientSecret = $values['clientSecret'] ?? null;
         $this->debug = $values['debug'] ?? null;
         $this->deflate = $values['deflate'] ?? null;
         $this->destinationUrl = $values['destinationUrl'] ?? null;
@@ -208,6 +224,42 @@ class ConnectionOptionsSaml extends JsonSerializableType
         $this->signingKey = $values['signingKey'] ?? null;
         $this->signOutEndpoint = $values['signOutEndpoint'] ?? null;
         $this->userIdAttribute = $values['userIdAttribute'] ?? null;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getClientId(): ?string
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setClientId(?string $value = null): self
+    {
+        $this->clientId = $value;
+        $this->_setField('clientId');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getClientSecret(): ?string
+    {
+        return $this->clientSecret;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setClientSecret(?string $value = null): self
+    {
+        $this->clientSecret = $value;
+        $this->_setField('clientSecret');
+        return $this;
     }
 
     /**
