@@ -20,6 +20,12 @@ class UpdateConnectionRequestContentSaml extends JsonSerializableType
     private ?ConnectionOptionsSaml $options;
 
     /**
+     * @var ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp
+     */
+    #[JsonProperty('cross_app_access_requesting_app')]
+    private ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp;
+
+    /**
      * @var ?ConnectionCrossAppAccessResourceApp $crossAppAccessResourceApp
      */
     #[JsonProperty('cross_app_access_resource_app')]
@@ -38,6 +44,7 @@ class UpdateConnectionRequestContentSaml extends JsonSerializableType
      *   isDomainConnection?: ?bool,
      *   metadata?: ?array<string, ?string>,
      *   options?: ?ConnectionOptionsSaml,
+     *   crossAppAccessRequestingApp?: ?CrossAppAccessRequestingApp,
      *   crossAppAccessResourceApp?: ?ConnectionCrossAppAccessResourceApp,
      *   showAsButton?: ?bool,
      * } $values
@@ -50,6 +57,7 @@ class UpdateConnectionRequestContentSaml extends JsonSerializableType
         $this->isDomainConnection = $values['isDomainConnection'] ?? null;
         $this->metadata = $values['metadata'] ?? null;
         $this->options = $values['options'] ?? null;
+        $this->crossAppAccessRequestingApp = $values['crossAppAccessRequestingApp'] ?? null;
         $this->crossAppAccessResourceApp = $values['crossAppAccessResourceApp'] ?? null;
         $this->showAsButton = $values['showAsButton'] ?? null;
     }
@@ -69,6 +77,24 @@ class UpdateConnectionRequestContentSaml extends JsonSerializableType
     {
         $this->options = $value;
         $this->_setField('options');
+        return $this;
+    }
+
+    /**
+     * @return ?CrossAppAccessRequestingApp
+     */
+    public function getCrossAppAccessRequestingApp(): ?CrossAppAccessRequestingApp
+    {
+        return $this->crossAppAccessRequestingApp;
+    }
+
+    /**
+     * @param ?CrossAppAccessRequestingApp $value
+     */
+    public function setCrossAppAccessRequestingApp(?CrossAppAccessRequestingApp $value = null): self
+    {
+        $this->crossAppAccessRequestingApp = $value;
+        $this->_setField('crossAppAccessRequestingApp');
         return $this;
     }
 

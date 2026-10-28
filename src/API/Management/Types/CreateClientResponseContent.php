@@ -387,6 +387,12 @@ class CreateClientResponseContent extends JsonSerializableType
     private ?string $thirdPartySecurityMode;
 
     /**
+     * @var ?ClientOidcSupport $oidcSupport
+     */
+    #[JsonProperty('oidc_support')]
+    private ?ClientOidcSupport $oidcSupport;
+
+    /**
      * @var ?value-of<ClientRedirectionPolicyEnum> $redirectionPolicy
      */
     #[JsonProperty('redirection_policy')]
@@ -498,6 +504,7 @@ class CreateClientResponseContent extends JsonSerializableType
      *   anonymousSessions?: ?AnonymousSessions,
      *   enforceAnonSessionTransferNetworkBinding?: ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum>,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
+     *   oidcSupport?: ?ClientOidcSupport,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   resourceServerIdentifier?: ?string,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
@@ -573,6 +580,7 @@ class CreateClientResponseContent extends JsonSerializableType
         $this->anonymousSessions = $values['anonymousSessions'] ?? null;
         $this->enforceAnonSessionTransferNetworkBinding = $values['enforceAnonSessionTransferNetworkBinding'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
+        $this->oidcSupport = $values['oidcSupport'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
@@ -1696,6 +1704,24 @@ class CreateClientResponseContent extends JsonSerializableType
     {
         $this->thirdPartySecurityMode = $value;
         $this->_setField('thirdPartySecurityMode');
+        return $this;
+    }
+
+    /**
+     * @return ?ClientOidcSupport
+     */
+    public function getOidcSupport(): ?ClientOidcSupport
+    {
+        return $this->oidcSupport;
+    }
+
+    /**
+     * @param ?ClientOidcSupport $value
+     */
+    public function setOidcSupport(?ClientOidcSupport $value = null): self
+    {
+        $this->oidcSupport = $value;
+        $this->_setField('oidcSupport');
         return $this;
     }
 
