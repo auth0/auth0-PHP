@@ -258,8 +258,7 @@ interface Auth0Interface
     /**
      * Renews the access token and ID token using an existing refresh token.
      * Scope "offline_access" must be declared in order to obtain refresh token for later token renewal.
-     * If a returned ID token cannot be verified or validated, the session is cleared before the exception is thrown.
-     * If there is no refresh token, or the API does not return an access token, the session is also cleared before the exception is thrown, and the transient state of a login in progress is kept.
+     * If there is no refresh token, the API does not return an access token, or a returned ID token cannot be verified or validated, the session is cleared before the exception is thrown, and the transient state of a login in progress is kept.
      *
      * @param null|array<null|int|string> $params Optional. Additional parameters to include with the request.
      *
