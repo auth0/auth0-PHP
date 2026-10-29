@@ -143,7 +143,7 @@ $user = $auth0->getUser();
 ```
 
 > [!NOTE]
-> The session user is populated from the returned ID token, so your Token Exchange Profile must issue one. When you do not pass a `scope`, the SDK sends its configured `scope` on the exchange so Auth0 returns an ID token. Make sure that scope includes `openid`. If the response has no ID token, the method throws a `StateException` and no session is established.
+> The session user is populated from the returned ID token, so your Token Exchange Profile must issue one. When you do not pass a `scope`, the SDK sends its configured `scope` on the exchange so Auth0 returns an ID token. Make sure that scope includes `openid`, and include it in any `scope` you pass yourself. A scope like `read:data write:data` from the `customTokenExchange()` example above returns no ID token, and the method then throws a `StateException`. When the exchange fails, any existing session is left in place.
 
 ### Actor tokens (delegation)
 

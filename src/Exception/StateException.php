@@ -55,7 +55,7 @@ final class StateException extends Exception implements Auth0Exception
     /**
      * @var string
      */
-    public const MSG_MISSING_ID_TOKEN = 'Token exchange did not return an ID token, so no session was established';
+    public const MSG_MISSING_ID_TOKEN = 'Token exchange did not return an ID token; no session was established';
 
     /**
      * @var string
