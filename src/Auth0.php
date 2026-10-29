@@ -713,6 +713,13 @@ final class Auth0 implements Auth0Interface
 
         $response = $this->authentication()->refreshToken($refreshToken, $params);
 
+        // A rate limit or server error says nothing about the refresh token, so keep the session for a later retry.
+        if (429 === $response->getStatusCode() || $response->getStatusCode() >= 500) {
+            $this->deferStateSaving(false);
+
+            throw Exception\StateException::failedRenewTokenMissingAccessToken();
+        }
+
         $response = HttpResponse::decodeContent($response);
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
