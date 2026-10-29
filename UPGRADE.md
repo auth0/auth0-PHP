@@ -34,6 +34,12 @@ If you previously passed any of these through `$params`, the value was silently 
 
 If you ran any build from 8.10.0 onward with a persistent backchannel logout cache (Redis, filesystem, etc.), those entries still carry the old long expiry and will not be cleaned up automatically. Flush the backchannel logout cache once after upgrading to clear them.
 
+#### ID token nonce and max_age checks
+
+`Auth0::exchange()` now checks the callback's ID token against the `nonce` and `max_age` that `Auth0::login()` stored, and `Auth0::decode()` no longer reads or deletes them. Previously `decode()` checked every ID token against the stored values, so decoding the session's ID token while another tab had a login in progress failed with a nonce mismatch and broke that tab's callback.
+
+If your application handles the callback itself and decodes the ID token with `decode()` instead of calling `exchange()`, the stored values are no longer checked for you. Pass the nonce and max_age your application sent with the authorization request as `tokenNonce` and `tokenMaxAge`. When no `tokenMaxAge` is passed, `decode()` still applies the `tokenMaxAge` set in your configuration.
+
 ### Management API
 
 The Management API was regenerated using [Fern](https://github.com/fern-api/fern) in v9, with new client initialization, renamed endpoints, typed request/response structures, and updated pagination. See [v9_MIGRATION_GUIDE.md](v9_MIGRATION_GUIDE.md) for the complete details.

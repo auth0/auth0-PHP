@@ -721,7 +721,7 @@ final class Auth0 implements Auth0Interface
 
         if (isset($response['id_token'])) {
             try {
-                // Validate the Token directly so decode() does not consume a nonce/max_age belonging to a login in progress.
+                // A refreshed ID token keeps the auth_time of the original login, so skip the auth_time check a configured tokenMaxAge would otherwise apply.
                 $token = new Token($this->configuration(), $response['id_token'], Token::TYPE_ID_TOKEN);
                 $token->verify()->validate(tokenMaxAge: Token::MAX_AGE_SKIP);
 
