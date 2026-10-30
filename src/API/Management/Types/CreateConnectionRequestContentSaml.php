@@ -20,6 +20,12 @@ class CreateConnectionRequestContentSaml extends JsonSerializableType
     private string $strategy;
 
     /**
+     * @var ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp
+     */
+    #[JsonProperty('cross_app_access_requesting_app')]
+    private ?CrossAppAccessRequestingApp $crossAppAccessRequestingApp;
+
+    /**
      * @var ?ConnectionCrossAppAccessResourceApp $crossAppAccessResourceApp
      */
     #[JsonProperty('cross_app_access_resource_app')]
@@ -45,6 +51,7 @@ class CreateConnectionRequestContentSaml extends JsonSerializableType
      *   displayName?: ?string,
      *   isDomainConnection?: ?bool,
      *   metadata?: ?array<string, ?string>,
+     *   crossAppAccessRequestingApp?: ?CrossAppAccessRequestingApp,
      *   crossAppAccessResourceApp?: ?ConnectionCrossAppAccessResourceApp,
      *   options?: ?ConnectionOptionsSaml,
      *   showAsButton?: ?bool,
@@ -59,6 +66,7 @@ class CreateConnectionRequestContentSaml extends JsonSerializableType
         $this->isDomainConnection = $values['isDomainConnection'] ?? null;
         $this->metadata = $values['metadata'] ?? null;
         $this->strategy = $values['strategy'];
+        $this->crossAppAccessRequestingApp = $values['crossAppAccessRequestingApp'] ?? null;
         $this->crossAppAccessResourceApp = $values['crossAppAccessResourceApp'] ?? null;
         $this->options = $values['options'] ?? null;
         $this->showAsButton = $values['showAsButton'] ?? null;
@@ -79,6 +87,24 @@ class CreateConnectionRequestContentSaml extends JsonSerializableType
     {
         $this->strategy = $value;
         $this->_setField('strategy');
+        return $this;
+    }
+
+    /**
+     * @return ?CrossAppAccessRequestingApp
+     */
+    public function getCrossAppAccessRequestingApp(): ?CrossAppAccessRequestingApp
+    {
+        return $this->crossAppAccessRequestingApp;
+    }
+
+    /**
+     * @param ?CrossAppAccessRequestingApp $value
+     */
+    public function setCrossAppAccessRequestingApp(?CrossAppAccessRequestingApp $value = null): self
+    {
+        $this->crossAppAccessRequestingApp = $value;
+        $this->_setField('crossAppAccessRequestingApp');
         return $this;
     }
 

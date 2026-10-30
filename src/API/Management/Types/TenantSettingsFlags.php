@@ -125,7 +125,7 @@ class TenantSettingsFlags extends JsonSerializableType
     private ?bool $dashboardLogStreamsNext;
 
     /**
-     * @var ?bool $dashboardInsightsView Enables new insights activity page view
+     * @var ?bool $dashboardInsightsView Deprecated. This flag has no effect and is retained only for backward compatibility
      */
     #[JsonProperty('dashboard_insights_view')]
     private ?bool $dashboardInsightsView;

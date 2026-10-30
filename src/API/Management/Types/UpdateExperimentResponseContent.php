@@ -59,7 +59,7 @@ class UpdateExperimentResponseContent extends JsonSerializableType
     private string $status;
 
     /**
-     * @var bool $isValid
+     * @var bool $isValid Whether the experiment is valid and ready to activate, as of its last update. It can lag changes made later to related entities. Call POST /experiments/{id}/validate for the current result.
      */
     #[JsonProperty('is_valid')]
     private bool $isValid;

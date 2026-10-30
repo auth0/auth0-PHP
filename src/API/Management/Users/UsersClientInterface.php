@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\Users\Requests\GetUserRequestParameters;
 use Auth0\SDK\API\Management\Types\GetUserResponseContent;
 use Auth0\SDK\API\Management\Users\Requests\UpdateUserRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateUserResponseContent;
+use Auth0\SDK\API\Management\Types\ConsentSigningKey;
 use Auth0\SDK\API\Management\Types\RegenerateUsersRecoveryCodeResponseContent;
 use Auth0\SDK\API\Management\Users\Requests\RevokeUserAccessRequestContent;
 use Auth0\SDK\API\Management\Users\AuthenticationMethods\AuthenticationMethodsClientInterface;
@@ -304,6 +305,78 @@ interface UsersClientInterface
      * @return ?UpdateUserResponseContent
      */
     public function update(string $id, UpdateUserRequestContent $request = new UpdateUserRequestContent(), ?array $options = null): ?UpdateUserResponseContent;
+
+    /**
+     * Retrieve all consent signing keys registered for a user. Returns an empty array when the user has no keys registered.
+     *
+     * Example:
+     * ```php
+     * $client->users->listConsentSigningKeys(
+     *     'id',
+     * );
+     * ```
+     *
+     * @param string $id The ID of the user.
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?array<ConsentSigningKey>
+     */
+    public function listConsentSigningKeys(string $id, ?array $options = null): ?array;
+
+    /**
+     * Retrieve a single consent signing key for a user by its key identifier (kid). Returns 404 if the key does not exist.
+     *
+     * Example:
+     * ```php
+     * $client->users->getConsentSigningKey(
+     *     'id',
+     *     'kid',
+     * );
+     * ```
+     *
+     * @param string $id The ID of the user.
+     * @param string $kid The key identifier of the consent signing key.
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?ConsentSigningKey
+     */
+    public function getConsentSigningKey(string $id, string $kid, ?array $options = null): ?ConsentSigningKey;
+
+    /**
+     * Remove a single consent signing key for a user by its key identifier (kid). The operation is idempotent and returns 204 whether or not the key existed.
+     *
+     * Example:
+     * ```php
+     * $client->users->deleteConsentSigningKey(
+     *     'id',
+     *     'kid',
+     * );
+     * ```
+     *
+     * @param string $id The ID of the user.
+     * @param string $kid The key identifier of the consent signing key.
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     */
+    public function deleteConsentSigningKey(string $id, string $kid, ?array $options = null): void;
 
     /**
      * Remove an existing multi-factor authentication (MFA) [recovery code](https://auth0.com/docs/secure/multi-factor-authentication/reset-user-mfa) and generate a new one. If a user cannot access the original device or account used for MFA enrollment, they can use a recovery code to authenticate.
