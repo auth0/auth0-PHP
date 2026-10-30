@@ -33,10 +33,11 @@ A guide to migrating the Auth0 PHP SDK from `auth0-PHP` (v8.x) to `auth0-php-sdk
 
 This major version change does not affect the Authentication API. Any code written for the Authentication API in the v8.x version should work in the v9.x version with minimal changes.
 
-Two behavior notes to be aware of:
+Three behavior notes to be aware of:
 
 - `client_id`, `response_type`, and `response_mode` can no longer be overridden via the `$params` argument on login and authorization request methods. See [UPGRADE.md](UPGRADE.md#reserved-authorization-parameters) for details.
 - `Auth0::handleBackchannelLogout()` now expires cache entries after the configured relative duration. If you ran a persistent backchannel logout cache on an earlier build, flush it once after upgrading. See [UPGRADE.md](UPGRADE.md#backchannel-logout-cache-expiry) for details.
+- `Auth0::decode()` no longer checks the `nonce` and `max_age` stored by `Auth0::login()`, and `Auth0::exchange()` checks them for the callback's ID token instead. If you decode the callback's ID token yourself, pass `tokenNonce` and `tokenMaxAge`. See [UPGRADE.md](UPGRADE.md#id-token-nonce-and-max_age-checks) for details.
 
 ### Management API
 
