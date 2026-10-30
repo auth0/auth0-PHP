@@ -81,6 +81,12 @@ class ConnectionOptionsAuth0 extends JsonSerializableType
     private ?ConnectionMfa $mfa;
 
     /**
+     * @var ?ConnectionOtpSettings $otpSettings
+     */
+    #[JsonProperty('otp_settings')]
+    private ?ConnectionOtpSettings $otpSettings;
+
+    /**
      * @var ?ConnectionPasskeyOptions $passkeyOptions
      */
     #[JsonProperty('passkey_options')]
@@ -160,6 +166,7 @@ class ConnectionOptionsAuth0 extends JsonSerializableType
      *   enabledDatabaseCustomization?: ?bool,
      *   importMode?: ?bool,
      *   mfa?: ?ConnectionMfa,
+     *   otpSettings?: ?ConnectionOtpSettings,
      *   passkeyOptions?: ?ConnectionPasskeyOptions,
      *   passwordPolicy?: ?value-of<ConnectionPasswordPolicyEnum>,
      *   passwordComplexityOptions?: ?ConnectionPasswordComplexityOptions,
@@ -188,6 +195,7 @@ class ConnectionOptionsAuth0 extends JsonSerializableType
         $this->enabledDatabaseCustomization = $values['enabledDatabaseCustomization'] ?? null;
         $this->importMode = $values['importMode'] ?? null;
         $this->mfa = $values['mfa'] ?? null;
+        $this->otpSettings = $values['otpSettings'] ?? null;
         $this->passkeyOptions = $values['passkeyOptions'] ?? null;
         $this->passwordPolicy = $values['passwordPolicy'] ?? null;
         $this->passwordComplexityOptions = $values['passwordComplexityOptions'] ?? null;
@@ -396,6 +404,24 @@ class ConnectionOptionsAuth0 extends JsonSerializableType
     {
         $this->mfa = $value;
         $this->_setField('mfa');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionOtpSettings
+     */
+    public function getOtpSettings(): ?ConnectionOtpSettings
+    {
+        return $this->otpSettings;
+    }
+
+    /**
+     * @param ?ConnectionOtpSettings $value
+     */
+    public function setOtpSettings(?ConnectionOtpSettings $value = null): self
+    {
+        $this->otpSettings = $value;
+        $this->_setField('otpSettings');
         return $this;
     }
 

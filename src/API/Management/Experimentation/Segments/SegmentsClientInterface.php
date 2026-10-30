@@ -23,6 +23,7 @@ interface SegmentsClientInterface
      *         'from' => 'from',
      *         'take' => 1,
      *         'type' => SegmentTypeFilterEnum::Auth0->value,
+     *         'status' => SegmentStatusEnum::Active->value,
      *     ]),
      * );
      * ```
