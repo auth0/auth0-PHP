@@ -209,7 +209,7 @@ interface Auth0Interface
     ): string;
 
     /**
-     * Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured.
+     * Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured. A failed exchange leaves any existing session in place.
      *
      * @param string                      $subjectToken     the token being exchanged
      * @param string                      $subjectTokenType a URI identifying the type of `subjectToken`. Any custom URI scheme is accepted (e.g. `urn:acme:token`).
