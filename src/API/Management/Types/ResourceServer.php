@@ -159,6 +159,12 @@ class ResourceServer extends JsonSerializableType
     private ?string $clientId;
 
     /**
+     * @var ?value-of<ResourceServerTypeEnum> $type
+     */
+    #[JsonProperty('type')]
+    private ?string $type;
+
+    /**
      * @param array{
      *   id?: ?string,
      *   name?: ?string,
@@ -185,6 +191,7 @@ class ResourceServer extends JsonSerializableType
      *   subjectTypeAuthorization?: ?ResourceServerSubjectTypeAuthorization,
      *   authorizationPolicy?: ?ResourceServerAuthorizationPolicy,
      *   clientId?: ?string,
+     *   type?: ?value-of<ResourceServerTypeEnum>,
      * } $values
      */
     public function __construct(
@@ -215,6 +222,7 @@ class ResourceServer extends JsonSerializableType
         $this->subjectTypeAuthorization = $values['subjectTypeAuthorization'] ?? null;
         $this->authorizationPolicy = $values['authorizationPolicy'] ?? null;
         $this->clientId = $values['clientId'] ?? null;
+        $this->type = $values['type'] ?? null;
     }
 
     /**
@@ -664,6 +672,24 @@ class ResourceServer extends JsonSerializableType
     {
         $this->clientId = $value;
         $this->_setField('clientId');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ResourceServerTypeEnum>
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param ?value-of<ResourceServerTypeEnum> $value
+     */
+    public function setType(?string $value = null): self
+    {
+        $this->type = $value;
+        $this->_setField('type');
         return $this;
     }
 

@@ -14,6 +14,7 @@ use Auth0\SDK\API\Management\Types\ResourceServerConsentPolicyEnum;
 use Auth0\SDK\API\Management\Types\ResourceServerProofOfPossession;
 use Auth0\SDK\API\Management\Types\ResourceServerSubjectTypeAuthorization;
 use Auth0\SDK\API\Management\Types\ResourceServerAuthorizationPolicy;
+use Auth0\SDK\API\Management\Types\ResourceServerTypeEnum;
 
 class UpdateResourceServerRequestContent extends JsonSerializableType
 {
@@ -138,6 +139,12 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
     private ?ResourceServerAuthorizationPolicy $authorizationPolicy;
 
     /**
+     * @var ?value-of<ResourceServerTypeEnum> $type
+     */
+    #[JsonProperty('type')]
+    private ?string $type;
+
+    /**
      * @param array{
      *   name?: ?string,
      *   scopes?: ?array<ResourceServerScope>,
@@ -159,6 +166,7 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
      *   proofOfPossession?: ?ResourceServerProofOfPossession,
      *   subjectTypeAuthorization?: ?ResourceServerSubjectTypeAuthorization,
      *   authorizationPolicy?: ?ResourceServerAuthorizationPolicy,
+     *   type?: ?value-of<ResourceServerTypeEnum>,
      * } $values
      */
     public function __construct(
@@ -184,6 +192,7 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
         $this->proofOfPossession = $values['proofOfPossession'] ?? null;
         $this->subjectTypeAuthorization = $values['subjectTypeAuthorization'] ?? null;
         $this->authorizationPolicy = $values['authorizationPolicy'] ?? null;
+        $this->type = $values['type'] ?? null;
     }
 
     /**
@@ -543,6 +552,24 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
     {
         $this->authorizationPolicy = $value;
         $this->_setField('authorizationPolicy');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ResourceServerTypeEnum>
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param ?value-of<ResourceServerTypeEnum> $value
+     */
+    public function setType(?string $value = null): self
+    {
+        $this->type = $value;
+        $this->_setField('type');
         return $this;
     }
 }

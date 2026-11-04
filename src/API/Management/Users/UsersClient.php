@@ -40,6 +40,7 @@ use Auth0\SDK\API\Management\Users\Requests\GetUserRequestParameters;
 use Auth0\SDK\API\Management\Types\GetUserResponseContent;
 use Auth0\SDK\API\Management\Users\Requests\UpdateUserRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateUserResponseContent;
+use Auth0\SDK\API\Management\Types\ConsentSigningKey;
 use Auth0\SDK\API\Management\Types\RegenerateUsersRecoveryCodeResponseContent;
 use Auth0\SDK\API\Management\Users\Requests\RevokeUserAccessRequestContent;
 use Auth0\SDK\API\Management\Users\AuthenticationMethods\AuthenticationMethodsClientInterface;
@@ -642,6 +643,168 @@ class UsersClient implements UsersClientInterface
             }
         } catch (JsonException $e) {
             throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Retrieve all consent signing keys registered for a user. Returns an empty array when the user has no keys registered.
+     *
+     * Example:
+     * ```php
+     * $client->users->listConsentSigningKeys(
+     *     'id',
+     * );
+     * ```
+     *
+     * @param string $id The ID of the user.
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?array<ConsentSigningKey>
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    public function listConsentSigningKeys(string $id, ?array $options = null): ?array
+    {
+        $options = array_merge($this->options, $options ?? []);
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "users/" . RawClient::encodePathParam($id) . "/consent-signing-keys",
+                    method: HttpMethod::GET,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                $json = $response->getBody()->getContents();
+                if (empty($json)) {
+                    return null;
+                }
+                return JsonDecoder::decodeArray($json, [ConsentSigningKey::class]); // @phpstan-ignore-line
+            }
+        } catch (JsonException $e) {
+            throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Retrieve a single consent signing key for a user by its key identifier (kid). Returns 404 if the key does not exist.
+     *
+     * Example:
+     * ```php
+     * $client->users->getConsentSigningKey(
+     *     'id',
+     *     'kid',
+     * );
+     * ```
+     *
+     * @param string $id The ID of the user.
+     * @param string $kid The key identifier of the consent signing key.
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @return ?ConsentSigningKey
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    public function getConsentSigningKey(string $id, string $kid, ?array $options = null): ?ConsentSigningKey
+    {
+        $options = array_merge($this->options, $options ?? []);
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "users/" . RawClient::encodePathParam($id) . "/consent-signing-keys/" . RawClient::encodePathParam($kid),
+                    method: HttpMethod::GET,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                $json = $response->getBody()->getContents();
+                if (empty($json)) {
+                    return null;
+                }
+                return ConsentSigningKey::fromJson($json);
+            }
+        } catch (JsonException $e) {
+            throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
+        } catch (ClientExceptionInterface $e) {
+            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
+        }
+        throw new Auth0ApiException(
+            message: 'API request failed',
+            statusCode: $statusCode,
+            body: $response->getBody()->getContents(),
+        );
+    }
+
+    /**
+     * Remove a single consent signing key for a user by its key identifier (kid). The operation is idempotent and returns 204 whether or not the key existed.
+     *
+     * Example:
+     * ```php
+     * $client->users->deleteConsentSigningKey(
+     *     'id',
+     *     'kid',
+     * );
+     * ```
+     *
+     * @param string $id The ID of the user.
+     * @param string $kid The key identifier of the consent signing key.
+     * @param ?array{
+     *   baseUrl?: string,
+     *   maxRetries?: int,
+     *   timeout?: float,
+     *   headers?: array<string, string>,
+     *   queryParameters?: array<string, mixed>,
+     *   bodyProperties?: array<string, mixed>,
+     * } $options
+     * @throws Auth0Exception
+     * @throws Auth0ApiException
+     */
+    public function deleteConsentSigningKey(string $id, string $kid, ?array $options = null): void
+    {
+        $options = array_merge($this->options, $options ?? []);
+        try {
+            $response = $this->client->sendRequest(
+                new JsonApiRequest(
+                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
+                    path: "users/" . RawClient::encodePathParam($id) . "/consent-signing-keys/" . RawClient::encodePathParam($kid),
+                    method: HttpMethod::DELETE,
+                ),
+                $options,
+            );
+            $statusCode = $response->getStatusCode();
+            if ($statusCode >= 200 && $statusCode < 400) {
+                return;
+            }
         } catch (ClientExceptionInterface $e) {
             throw new Auth0Exception(message: $e->getMessage(), previous: $e);
         }

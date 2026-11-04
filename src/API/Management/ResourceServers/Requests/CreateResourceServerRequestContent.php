@@ -14,6 +14,7 @@ use Auth0\SDK\API\Management\Types\ResourceServerConsentPolicyEnum;
 use Auth0\SDK\API\Management\Types\ResourceServerProofOfPossession;
 use Auth0\SDK\API\Management\Types\ResourceServerSubjectTypeAuthorization;
 use Auth0\SDK\API\Management\Types\ResourceServerAuthorizationPolicy;
+use Auth0\SDK\API\Management\Types\ResourceServerTypeEnum;
 
 class CreateResourceServerRequestContent extends JsonSerializableType
 {
@@ -144,6 +145,12 @@ class CreateResourceServerRequestContent extends JsonSerializableType
     private ?ResourceServerAuthorizationPolicy $authorizationPolicy;
 
     /**
+     * @var ?value-of<ResourceServerTypeEnum> $type
+     */
+    #[JsonProperty('type')]
+    private ?string $type;
+
+    /**
      * @param array{
      *   identifier: string,
      *   name?: ?string,
@@ -166,6 +173,7 @@ class CreateResourceServerRequestContent extends JsonSerializableType
      *   proofOfPossession?: ?ResourceServerProofOfPossession,
      *   subjectTypeAuthorization?: ?ResourceServerSubjectTypeAuthorization,
      *   authorizationPolicy?: ?ResourceServerAuthorizationPolicy,
+     *   type?: ?value-of<ResourceServerTypeEnum>,
      * } $values
      */
     public function __construct(
@@ -192,6 +200,7 @@ class CreateResourceServerRequestContent extends JsonSerializableType
         $this->proofOfPossession = $values['proofOfPossession'] ?? null;
         $this->subjectTypeAuthorization = $values['subjectTypeAuthorization'] ?? null;
         $this->authorizationPolicy = $values['authorizationPolicy'] ?? null;
+        $this->type = $values['type'] ?? null;
     }
 
     /**
@@ -569,6 +578,24 @@ class CreateResourceServerRequestContent extends JsonSerializableType
     {
         $this->authorizationPolicy = $value;
         $this->_setField('authorizationPolicy');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ResourceServerTypeEnum>
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param ?value-of<ResourceServerTypeEnum> $value
+     */
+    public function setType(?string $value = null): self
+    {
+        $this->type = $value;
+        $this->_setField('type');
         return $this;
     }
 }

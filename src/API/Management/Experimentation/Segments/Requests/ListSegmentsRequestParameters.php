@@ -4,6 +4,7 @@ namespace Auth0\SDK\API\Management\Experimentation\Segments\Requests;
 
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Types\SegmentTypeFilterEnum;
+use Auth0\SDK\API\Management\Types\SegmentStatusEnum;
 
 class ListSegmentsRequestParameters extends JsonSerializableType
 {
@@ -23,10 +24,16 @@ class ListSegmentsRequestParameters extends JsonSerializableType
     private ?string $type;
 
     /**
+     * @var ?value-of<SegmentStatusEnum> $status Filter by status. Exact match.
+     */
+    private ?string $status;
+
+    /**
      * @param array{
      *   from?: ?string,
      *   take?: ?int,
      *   type?: ?value-of<SegmentTypeFilterEnum>,
+     *   status?: ?value-of<SegmentStatusEnum>,
      * } $values
      */
     public function __construct(
@@ -35,6 +42,7 @@ class ListSegmentsRequestParameters extends JsonSerializableType
         $this->from = $values['from'] ?? null;
         $this->take = $values['take'] ?? null;
         $this->type = $values['type'] ?? null;
+        $this->status = $values['status'] ?? null;
     }
 
     /**
@@ -88,6 +96,24 @@ class ListSegmentsRequestParameters extends JsonSerializableType
     {
         $this->type = $value;
         $this->_setField('type');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<SegmentStatusEnum>
+     */
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param ?value-of<SegmentStatusEnum> $value
+     */
+    public function setStatus(?string $value = null): self
+    {
+        $this->status = $value;
+        $this->_setField('status');
         return $this;
     }
 }
