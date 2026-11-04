@@ -69,7 +69,14 @@ function home(Auth0Interface $sdk): void {
             try {
                 $sdk->renew(); // Attempt to renew the session using an available refresh token.
             } catch (Throwable $exception) {
-                $sdk->clear(); // If the session cannot be renewed, clear it.
+                // A rate limit or server error keeps the session. Reloading would call the token endpoint again on every refresh, so ask the user to come back later.
+                if (null !== $sdk->getCredentials()) {
+                    http_response_code(503);
+                    header('Retry-After: 30');
+                    echo '<p>Your session could not be renewed right now. Please try again shortly.</p>';
+                    echo('<a href="/logout">Logout</a>');
+                    exit;
+                }
             }
 
             header("Refresh: 0");

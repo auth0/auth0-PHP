@@ -58,12 +58,14 @@ if ($auth0->getCredentials()) {
 ```PHP
 use Auth0\SDK\Auth0;
 use Auth0\SDK\Configuration\SdkConfiguration;
+use Auth0\SDK\Exception\StateException;
 
 $configuration = new SdkConfiguration(
     domain: '...',
     clientId: '...',
     clientSecret: '..',
     cookieSecret: '...',
+    redirectUri: '...',
 );
 
 // The `offline_access` scope is required to retrieve a refresh token.
@@ -74,7 +76,15 @@ $auth0 = new Auth0($configuration);
 $session = $auth0->getCredentials();
 
 if (null !== $session && $session->accessTokenExpired) {
-    $auth0->renew();
+    try {
+        $auth0->renew();
+    } catch (StateException $exception) {
+        // A rate limit or server error keeps the session, so wait before renewing again. Otherwise the session has ended, so the user has to log in.
+        if (null === $auth0->getCredentials()) {
+            header('Location: ' . $auth0->login());
+            exit;
+        }
+    }
 }
 ```
 
