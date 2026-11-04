@@ -11,7 +11,7 @@ use Auth0\SDK\API\Management\Types\RotateConnectionsKeysResponseContent;
 interface KeysClientInterface
 {
     /**
-     * Gets the connection keys for the Okta or OIDC connection strategy.
+     * Gets the connection keys for the Okta, OIDC, or SAML (samlp) connection strategy.
      *
      * Example:
      * ```php
@@ -34,7 +34,7 @@ interface KeysClientInterface
     public function get(string $id, ?array $options = null): ?array;
 
     /**
-     * Provision initial connection keys for Okta or OIDC connection strategies. This endpoint allows you to create keys before configuring the connection to use Private Key JWT authentication, enabling zero-downtime transitions.
+     * Provision initial connection keys for Okta, OIDC, or SAML (samlp) connection strategies. This endpoint allows you to create keys before configuring the connection to use Private Key JWT authentication, enabling zero-downtime transitions.
      *
      * Example:
      * ```php
@@ -59,7 +59,7 @@ interface KeysClientInterface
     public function create(string $id, ?PostConnectionKeysRequestContent $request = null, ?array $options = null): ?array;
 
     /**
-     * Rotates the connection keys for the Okta or OIDC connection strategies.
+     * Rotates the connection keys for the Okta, OIDC, or SAML (samlp) connection strategies.
      *
      * Example:
      * ```php

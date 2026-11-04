@@ -129,6 +129,24 @@ class ConnectionOptionsSaml extends JsonSerializableType
     private ?string $signOutEndpoint;
 
     /**
+     * @var ?value-of<ConnectionTokenEndpointAuthMethodEnum> $tokenEndpointAuthMethod
+     */
+    #[JsonProperty('token_endpoint_auth_method')]
+    private ?string $tokenEndpointAuthMethod;
+
+    /**
+     * @var ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum> $tokenEndpointAuthSigningAlg
+     */
+    #[JsonProperty('token_endpoint_auth_signing_alg')]
+    private ?string $tokenEndpointAuthSigningAlg;
+
+    /**
+     * @var ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc> $tokenEndpointJwtcaAudFormat
+     */
+    #[JsonProperty('token_endpoint_jwtca_aud_format')]
+    private ?string $tokenEndpointJwtcaAudFormat;
+
+    /**
      * @var ?string $userIdAttribute
      */
     #[JsonProperty('user_id_attribute')]
@@ -181,6 +199,9 @@ class ConnectionOptionsSaml extends JsonSerializableType
      *   signingCert?: ?string,
      *   signingKey?: ?ConnectionSigningKeySaml,
      *   signOutEndpoint?: ?string,
+     *   tokenEndpointAuthMethod?: ?value-of<ConnectionTokenEndpointAuthMethodEnum>,
+     *   tokenEndpointAuthSigningAlg?: ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum>,
+     *   tokenEndpointJwtcaAudFormat?: ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>,
      *   userIdAttribute?: ?string,
      * } $values
      */
@@ -223,6 +244,9 @@ class ConnectionOptionsSaml extends JsonSerializableType
         $this->signingCert = $values['signingCert'] ?? null;
         $this->signingKey = $values['signingKey'] ?? null;
         $this->signOutEndpoint = $values['signOutEndpoint'] ?? null;
+        $this->tokenEndpointAuthMethod = $values['tokenEndpointAuthMethod'] ?? null;
+        $this->tokenEndpointAuthSigningAlg = $values['tokenEndpointAuthSigningAlg'] ?? null;
+        $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
         $this->userIdAttribute = $values['userIdAttribute'] ?? null;
     }
 
@@ -553,6 +577,60 @@ class ConnectionOptionsSaml extends JsonSerializableType
     {
         $this->signOutEndpoint = $value;
         $this->_setField('signOutEndpoint');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ConnectionTokenEndpointAuthMethodEnum>
+     */
+    public function getTokenEndpointAuthMethod(): ?string
+    {
+        return $this->tokenEndpointAuthMethod;
+    }
+
+    /**
+     * @param ?value-of<ConnectionTokenEndpointAuthMethodEnum> $value
+     */
+    public function setTokenEndpointAuthMethod(?string $value = null): self
+    {
+        $this->tokenEndpointAuthMethod = $value;
+        $this->_setField('tokenEndpointAuthMethod');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum>
+     */
+    public function getTokenEndpointAuthSigningAlg(): ?string
+    {
+        return $this->tokenEndpointAuthSigningAlg;
+    }
+
+    /**
+     * @param ?value-of<ConnectionTokenEndpointAuthSigningAlgEnum> $value
+     */
+    public function setTokenEndpointAuthSigningAlg(?string $value = null): self
+    {
+        $this->tokenEndpointAuthSigningAlg = $value;
+        $this->_setField('tokenEndpointAuthSigningAlg');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>
+     */
+    public function getTokenEndpointJwtcaAudFormat(): ?string
+    {
+        return $this->tokenEndpointJwtcaAudFormat;
+    }
+
+    /**
+     * @param ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc> $value
+     */
+    public function setTokenEndpointJwtcaAudFormat(?string $value = null): self
+    {
+        $this->tokenEndpointJwtcaAudFormat = $value;
+        $this->_setField('tokenEndpointJwtcaAudFormat');
         return $this;
     }
 
