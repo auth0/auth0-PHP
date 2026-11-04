@@ -398,6 +398,12 @@ class UpdateClientRequestContent extends JsonSerializableType
     private ?string $redirectionPolicy;
 
     /**
+     * @var ?string $agentId ID of the agent to associate with this client, or null to remove the association.
+     */
+    #[JsonProperty('agent_id')]
+    private ?string $agentId;
+
+    /**
      * @var ?ClientOidcSupportPatch $oidcSupport
      */
     #[JsonProperty('oidc_support')]
@@ -464,6 +470,7 @@ class UpdateClientRequestContent extends JsonSerializableType
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
+     *   agentId?: ?string,
      *   oidcSupport?: ?ClientOidcSupportPatch,
      * } $values
      */
@@ -529,6 +536,7 @@ class UpdateClientRequestContent extends JsonSerializableType
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
+        $this->agentId = $values['agentId'] ?? null;
         $this->oidcSupport = $values['oidcSupport'] ?? null;
     }
 
@@ -1591,6 +1599,24 @@ class UpdateClientRequestContent extends JsonSerializableType
     {
         $this->redirectionPolicy = $value;
         $this->_setField('redirectionPolicy');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getAgentId(): ?string
+    {
+        return $this->agentId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setAgentId(?string $value = null): self
+    {
+        $this->agentId = $value;
+        $this->_setField('agentId');
         return $this;
     }
 

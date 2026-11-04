@@ -55,6 +55,11 @@ final class StateException extends Exception implements Auth0Exception
     /**
      * @var string
      */
+    public const MSG_MISSING_ID_TOKEN = 'Token exchange did not return an ID token; no session was established';
+
+    /**
+     * @var string
+     */
     public const MSG_MISSING_NONCE = 'Nonce was not found in the application storage';
 
     public static function badAccessToken(
@@ -103,6 +108,12 @@ final class StateException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(self::MSG_MISSING_CODE_VERIFIER, 0, $previous);
+    }
+
+    public static function missingIdToken(
+        ?Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_MISSING_ID_TOKEN, 0, $previous);
     }
 
     public static function missingNonce(
