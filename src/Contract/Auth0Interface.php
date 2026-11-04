@@ -34,8 +34,8 @@ interface Auth0Interface
      * @param string             $token             ID token to verify and decode
      * @param null|string[]      $tokenAudience     Optional. An array of allowed values for the 'aud' claim. Successful if ANY match.
      * @param null|array<string> $tokenOrganization Optional. An array of allowed values for the 'org_id' claim. Successful if ANY match.
-     * @param null|string        $tokenNonce        Optional. The value expected for the 'nonce' claim.
-     * @param null|int           $tokenMaxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.
+     * @param null|string        $tokenNonce        Optional. The value expected for the 'nonce' claim. Only checked when passed. To decode a callback ID token outside exchange(), pass the nonce that login() stored.
+     * @param null|int           $tokenMaxAge       Optional. Maximum window of time in seconds since the 'auth_time' to accept the token. Defaults to the configured tokenMaxAge. To decode a callback ID token outside exchange(), pass the max_age that login() stored.
      * @param null|int           $tokenLeeway       Optional. Leeway in seconds to allow during time calculations. Defaults to 60.
      * @param null|int           $tokenNow          Optional. Unix timestamp representing the current point in time to use for time calculations.
      *
