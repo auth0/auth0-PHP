@@ -63,6 +63,7 @@ interface ClientsClientInterface
      *         'isFirstParty' => true,
      *         'appType' => 'app_type',
      *         'externalClientId' => 'external_client_id',
+     *         'agentId' => 'agent_id',
      *         'q' => 'q',
      *     ]),
      * );

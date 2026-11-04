@@ -26,6 +26,7 @@ use Auth0\SDK\API\Management\LogStreams\LogStreamsClient;
 use Auth0\SDK\API\Management\Logs\LogsClient;
 use Auth0\SDK\API\Management\NetworkAcls\NetworkAclsClient;
 use Auth0\SDK\API\Management\Organizations\OrganizationsClient;
+use Auth0\SDK\API\Management\Portals\PortalsClient;
 use Auth0\SDK\API\Management\Prompts\PromptsClient;
 use Auth0\SDK\API\Management\RateLimitPolicies\RateLimitPoliciesClient;
 use Auth0\SDK\API\Management\RefreshTokens\RefreshTokensClient;
@@ -76,6 +77,7 @@ use Auth0\SDK\API\Management\LogStreams\LogStreamsClientInterface;
 use Auth0\SDK\API\Management\Logs\LogsClientInterface;
 use Auth0\SDK\API\Management\NetworkAcls\NetworkAclsClientInterface;
 use Auth0\SDK\API\Management\Organizations\OrganizationsClientInterface;
+use Auth0\SDK\API\Management\Portals\PortalsClientInterface;
 use Auth0\SDK\API\Management\Prompts\PromptsClientInterface;
 use Auth0\SDK\API\Management\RateLimitPolicies\RateLimitPoliciesClientInterface;
 use Auth0\SDK\API\Management\RefreshTokens\RefreshTokensClientInterface;
@@ -222,6 +224,11 @@ class Management implements ManagementInterface
      * @var OrganizationsClient $organizations
      */
     public OrganizationsClient $organizations;
+
+    /**
+     * @var PortalsClient $portals
+     */
+    public PortalsClient $portals;
 
     /**
      * @var PromptsClient $prompts
@@ -425,6 +432,7 @@ class Management implements ManagementInterface
         $this->logs = new LogsClient($this->client, $this->options);
         $this->networkAcls = new NetworkAclsClient($this->client, $this->options);
         $this->organizations = new OrganizationsClient($this->client, $this->options);
+        $this->portals = new PortalsClient($this->client, $this->options);
         $this->prompts = new PromptsClient($this->client, $this->options);
         $this->rateLimitPolicies = new RateLimitPoliciesClient($this->client, $this->options);
         $this->refreshTokens = new RefreshTokensClient($this->client, $this->options);
@@ -641,6 +649,14 @@ class Management implements ManagementInterface
     public function getOrganizations(): OrganizationsClientInterface
     {
         return $this->organizations;
+    }
+
+    /**
+     * @return PortalsClientInterface
+     */
+    public function getPortals(): PortalsClientInterface
+    {
+        return $this->portals;
     }
 
     /**

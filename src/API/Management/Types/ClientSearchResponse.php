@@ -363,6 +363,12 @@ class ClientSearchResponse extends JsonSerializableType
     private ?string $thirdPartySecurityMode;
 
     /**
+     * @var ?ClientOidcSupport $oidcSupport
+     */
+    #[JsonProperty('oidc_support')]
+    private ?ClientOidcSupport $oidcSupport;
+
+    /**
      * @var ?value-of<ClientRedirectionPolicyEnum> $redirectionPolicy
      */
     #[JsonProperty('redirection_policy')]
@@ -397,6 +403,12 @@ class ClientSearchResponse extends JsonSerializableType
      */
     #[JsonProperty('external_metadata_status')]
     private ?string $externalMetadataStatus;
+
+    /**
+     * @var ?string $agentId ID of the agent associated with this client.
+     */
+    #[JsonProperty('agent_id')]
+    private ?string $agentId;
 
     /**
      * @var ?string $externalClientId An alternate client identifier to be used during authorization flows. Only supports CIMD-based client identifiers.
@@ -470,12 +482,14 @@ class ClientSearchResponse extends JsonSerializableType
      *   anonymousSessions?: ?AnonymousSessions,
      *   enforceAnonSessionTransferNetworkBinding?: ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum>,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
+     *   oidcSupport?: ?ClientOidcSupport,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   resourceServerIdentifier?: ?string,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
      *   externalMetadataType?: ?value-of<ClientExternalMetadataTypeEnum>,
      *   externalMetadataCreatedBy?: ?value-of<ClientExternalMetadataCreatedByEnum>,
      *   externalMetadataStatus?: ?value-of<ClientExternalMetadataStatusEnum>,
+     *   agentId?: ?string,
      *   externalClientId?: ?string,
      *   jwksUri?: ?string,
      * } $values
@@ -541,12 +555,14 @@ class ClientSearchResponse extends JsonSerializableType
         $this->anonymousSessions = $values['anonymousSessions'] ?? null;
         $this->enforceAnonSessionTransferNetworkBinding = $values['enforceAnonSessionTransferNetworkBinding'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
+        $this->oidcSupport = $values['oidcSupport'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
         $this->externalMetadataType = $values['externalMetadataType'] ?? null;
         $this->externalMetadataCreatedBy = $values['externalMetadataCreatedBy'] ?? null;
         $this->externalMetadataStatus = $values['externalMetadataStatus'] ?? null;
+        $this->agentId = $values['agentId'] ?? null;
         $this->externalClientId = $values['externalClientId'] ?? null;
         $this->jwksUri = $values['jwksUri'] ?? null;
     }
@@ -1596,6 +1612,24 @@ class ClientSearchResponse extends JsonSerializableType
     }
 
     /**
+     * @return ?ClientOidcSupport
+     */
+    public function getOidcSupport(): ?ClientOidcSupport
+    {
+        return $this->oidcSupport;
+    }
+
+    /**
+     * @param ?ClientOidcSupport $value
+     */
+    public function setOidcSupport(?ClientOidcSupport $value = null): self
+    {
+        $this->oidcSupport = $value;
+        $this->_setField('oidcSupport');
+        return $this;
+    }
+
+    /**
      * @return ?value-of<ClientRedirectionPolicyEnum>
      */
     public function getRedirectionPolicy(): ?string
@@ -1700,6 +1734,24 @@ class ClientSearchResponse extends JsonSerializableType
     {
         $this->externalMetadataStatus = $value;
         $this->_setField('externalMetadataStatus');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getAgentId(): ?string
+    {
+        return $this->agentId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setAgentId(?string $value = null): self
+    {
+        $this->agentId = $value;
+        $this->_setField('agentId');
         return $this;
     }
 

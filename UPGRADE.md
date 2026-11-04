@@ -13,6 +13,8 @@ v9 adds support for [Custom Token Exchange](https://auth0.com/docs/authenticate/
 
 Both accept optional `actorToken` and `actorTokenType` parameters for delegation, validate that the token types are valid URIs, and support organizations. This is a new capability, so no changes are required to existing code. See [EXAMPLES.md](EXAMPLES.md#custom-token-exchange) for usage.
 
+`Auth0::loginWithCustomTokenExchange()` throws a `StateException` when the response has no ID token, so include `openid` in any `scope` you pass and in your configured `scope`. A failed exchange leaves any existing session in place.
+
 #### Reserved authorization parameters
 
 The `$params` argument accepted by `Auth0::login()`, `Auth0::signup()`, `Auth0::handleInvitation()`, `Authentication::getLoginLink()`, and the Pushed Authorization Request flow no longer lets callers override the following keys. They are always resolved from your SDK configuration:
@@ -33,6 +35,12 @@ If you previously passed any of these through `$params`, the value was silently 
 `backchannelLogoutExpires` can now also be set through the array configuration form, not just the `SdkConfiguration` constructor.
 
 If you ran any build from 8.10.0 onward with a persistent backchannel logout cache (Redis, filesystem, etc.), those entries still carry the old long expiry and will not be cleaned up automatically. Flush the backchannel logout cache once after upgrading to clear them.
+
+#### ID token nonce and max_age checks
+
+`Auth0::exchange()` now checks the callback's ID token against the `nonce` and `max_age` that `Auth0::login()` stored, and `Auth0::decode()` no longer reads or deletes them. Previously `decode()` checked every ID token against the stored values, so decoding the session's ID token while another tab had a login in progress failed with a nonce mismatch and broke that tab's callback.
+
+If your application handles the callback itself and decodes the ID token with `decode()` instead of calling `exchange()`, the stored values are no longer checked for you. Pass the nonce and max_age your application sent with the authorization request as `tokenNonce` and `tokenMaxAge`. When no `tokenMaxAge` is passed, `decode()` still applies the `tokenMaxAge` set in your configuration.
 
 ### Management API
 

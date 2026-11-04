@@ -2024,6 +2024,7 @@ $client->clients->list(
         'isFirstParty' => true,
         'appType' => 'app_type',
         'externalClientId' => 'external_client_id',
+        'agentId' => 'agent_id',
         'q' => 'q',
     ]),
 );
@@ -2106,6 +2107,14 @@ $client->clients->list(
 <dd>
 
 **$externalClientId:** `?string` — Optional filter by the <a href="https://drafts.oauth.net/draft-ietf-oauth-client-id-metadata-document/draft-ietf-oauth-client-id-metadata-document.html">Client ID Metadata Document</a> URI for CIMD-registered clients.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$agentId:** `?string` — Optional filter by the agent associated with the client.<br /><b>Additional Restrictions</b>:<br /><ul><li>Cannot be used in combination with other filters</li><li>Only <i>fields</i>, <i>include_fields</i>, <i>page</i>, <i>per_page</i>, and <i>include_totals</i> are supported alongside it</li><li>Checkpoint pagination (<i>from</i>, <i>take</i>) is not supported</li></ul>
     
 </dd>
 </dl>
@@ -2653,6 +2662,14 @@ See https://auth0.com/docs/secure/security-guidance/measures-against-app-imperso
 <dd>
 
 **$asyncApprovalNotificationChannels:** `?array` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$agentId:** `?string` — ID of the agent to associate with this client.
     
 </dd>
 </dl>
@@ -3610,6 +3627,14 @@ See https://auth0.com/docs/secure/security-guidance/measures-against-app-imperso
 <dd>
 
 **$redirectionPolicy:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$agentId:** `?string` — ID of the agent to associate with this client, or null to remove the association.
     
 </dd>
 </dl>
@@ -10408,6 +10433,297 @@ $client->organizations->update(
 </dl>
 </details>
 
+## Portals
+<details><summary><code>$client-&gt;portals-&gt;list() -> ?ListPortalsResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->portals->list();
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;portals-&gt;create($request) -> ?Portal</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->portals->create(
+    new CreatePortalRequestContent([
+        'slug' => 'slug',
+        'name' => 'name',
+        'client' => new PortalClientSecretPostRequest([
+            'tokenEndpointAuthMethod' => PortalClientSecretPostRequestTokenEndpointAuthMethod::ClientSecretPost->value,
+            'clientId' => 'client_id',
+            'clientSecret' => 'client_secret',
+        ]),
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$slug:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$client:** `PortalClientSecretPostRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$navigation:** `?PortalNavigation` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pages:** `?PortalPagesByType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customCode:** `?PortalCustomCode` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;portals-&gt;get($id) -> ?Portal</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->portals->get(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;portals-&gt;delete($id)</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->portals->delete(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;portals-&gt;update($id, $request) -> ?Portal</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->portals->update(
+    'id',
+    new UpdatePortalRequestContent([]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$slug:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$client:** `?PortalClientSecretPostRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$navigation:** `?PortalNavigation` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pages:** `?PortalPagesByType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customCode:** `?PortalCustomCode` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Prompts
 <details><summary><code>$client-&gt;prompts-&gt;getSettings() -> ?GetSettingsResponseContent</code></summary>
 <dl>
@@ -11481,6 +11797,22 @@ $client->resourceServers->create(
     
 </dd>
 </dl>
+
+<dl>
+<dd>
+
+**$agentSubjectClaims:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$type:** `?string` 
+    
+</dd>
+</dl>
 </dd>
 </dl>
 
@@ -11933,6 +12265,22 @@ $client->resourceServers->update(
 <dd>
 
 **$authorizationPolicy:** `?ResourceServerAuthorizationPolicy` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$agentSubjectClaims:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$type:** `?string` 
     
 </dd>
 </dl>
@@ -15864,6 +16212,192 @@ $client->users->update(
 </dl>
 </details>
 
+<details><summary><code>$client-&gt;users-&gt;listConsentSigningKeys($id) -> ?ListUserConsentSigningKeysResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieve all consent signing keys registered for a user. Returns an empty `keys` array when the user has no keys registered.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->users->listConsentSigningKeys(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The ID of the user.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;users-&gt;getConsentSigningKey($id, $kid) -> ?ConsentSigningKey</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Retrieve a single consent signing key for a user by its key identifier (kid). Returns 404 if the key does not exist.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->users->getConsentSigningKey(
+    'id',
+    'kid',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The ID of the user.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$kid:** `string` — The key identifier of the consent signing key.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;users-&gt;deleteConsentSigningKey($id, $kid)</code></summary>
+<dl>
+<dd>
+
+#### 📝 Description
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+Remove a single consent signing key for a user by its key identifier (kid). The operation is idempotent and returns 204 whether or not the key existed.
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->users->deleteConsentSigningKey(
+    'id',
+    'kid',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` — The ID of the user.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$kid:** `string` — The key identifier of the consent signing key.
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 <details><summary><code>$client-&gt;users-&gt;regenerateRecoveryCode($id) -> ?RegenerateUsersRecoveryCodeResponseContent</code></summary>
 <dl>
 <dd>
@@ -17651,7 +18185,7 @@ Action to take when a brute force protection threshold is violated.
 <dl>
 <dd>
 
-**$maxAttempts:** `?int` — Maximum number of unsuccessful attempts.
+**$formSubmissionMode:** `?string` 
     
 </dd>
 </dl>
@@ -17659,7 +18193,7 @@ Action to take when a brute force protection threshold is violated.
 <dl>
 <dd>
 
-**$formSubmissionMode:** `?string` 
+**$maxAttempts:** `?int` — Maximum number of unsuccessful attempts.
     
 </dd>
 </dl>
@@ -17812,348 +18346,6 @@ $client->attackProtection->captcha->update(
 <dd>
 
 **$simpleCaptcha:** `?array` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-## AttackProtection CaptchaPolicies
-<details><summary><code>$client-&gt;attackProtection-&gt;captchaPolicies-&gt;list() -> ?array</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Retrieve all CAPTCHA attack protection policies for the tenant, sorted by priority ascending.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```php
-$client->attackProtection->captchaPolicies->list();
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>$client-&gt;attackProtection-&gt;captchaPolicies-&gt;create($request) -> ?AttackProtectionCaptchaPolicy</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Create a new CAPTCHA attack protection policy for the tenant. The maximum number of policies per tenant is determined by the tenant's subscription.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```php
-$client->attackProtection->captchaPolicies->create(
-    new CreateAttackProtectionCaptchaPolicyRequestContent([
-        'name' => 'name',
-        'priority' => 1,
-        'match' => new AttackProtectionCaptchaPolicyMatch([]),
-        'action' => new AttackProtectionCaptchaPolicyActionInput([]),
-    ]),
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**$name:** `string` — Human-readable policy name.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$description:** `?string` — Description of the attack protection policy.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$priority:** `int` — Conflict resolution order. Lower number takes higher precedence. Must be unique per tenant.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$match_:** `AttackProtectionCaptchaPolicyMatch` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$action:** `AttackProtectionCaptchaPolicyActionInput` 
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>$client-&gt;attackProtection-&gt;captchaPolicies-&gt;get($id) -> ?AttackProtectionCaptchaPolicy</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Retrieve a single CAPTCHA attack protection policy for the tenant by ID.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```php
-$client->attackProtection->captchaPolicies->get(
-    'id',
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**$id:** `string` — ID of the CAPTCHA attack protection policy.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>$client-&gt;attackProtection-&gt;captchaPolicies-&gt;delete($id)</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Delete a CAPTCHA attack protection policy for the tenant.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```php
-$client->attackProtection->captchaPolicies->delete(
-    'id',
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**$id:** `string` — ID of the CAPTCHA attack protection policy.
-    
-</dd>
-</dl>
-</dd>
-</dl>
-
-
-</dd>
-</dl>
-</details>
-
-<details><summary><code>$client-&gt;attackProtection-&gt;captchaPolicies-&gt;update($id, $request) -> ?AttackProtectionCaptchaPolicy</code></summary>
-<dl>
-<dd>
-
-#### 📝 Description
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-Partially update a CAPTCHA attack protection policy. Only the provided fields are modified. A provided match or action replaces the stored value in full rather than merging with it; within action, a provider secret or API key that is omitted from a provided provider block keeps its stored value.
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### 🔌 Usage
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-```php
-$client->attackProtection->captchaPolicies->update(
-    'id',
-    new UpdateAttackProtectionCaptchaPolicyRequestContent([]),
-);
-```
-</dd>
-</dl>
-</dd>
-</dl>
-
-#### ⚙️ Parameters
-
-<dl>
-<dd>
-
-<dl>
-<dd>
-
-**$id:** `string` — ID of the CAPTCHA attack protection policy.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$name:** `?string` — Human-readable policy name.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$description:** `?string` — Description of the policy's purpose.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$priority:** `?int` — Conflict resolution order. Lower number takes higher precedence. Must be unique per tenant.
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$match_:** `?AttackProtectionCaptchaPolicyMatch` 
-    
-</dd>
-</dl>
-
-<dl>
-<dd>
-
-**$action:** `?AttackProtectionCaptchaPolicyActionInput` 
     
 </dd>
 </dl>
@@ -21611,7 +21803,7 @@ $client->connections->clients->update(
 <dl>
 <dd>
 
-Gets the connection keys for the Okta or OIDC connection strategy.
+Gets the connection keys for the Okta, OIDC, or SAML (samlp) connection strategy.
 </dd>
 </dl>
 </dd>
@@ -21667,7 +21859,7 @@ $client->connections->keys->get(
 <dl>
 <dd>
 
-Provision initial connection keys for Okta or OIDC connection strategies. This endpoint allows you to create keys before configuring the connection to use Private Key JWT authentication, enabling zero-downtime transitions.
+Provision initial connection keys for Okta, OIDC, or SAML (samlp) connection strategies. This endpoint allows you to create keys before configuring the connection to use Private Key JWT authentication, enabling zero-downtime transitions.
 </dd>
 </dl>
 </dd>
@@ -21732,7 +21924,7 @@ $client->connections->keys->create(
 <dl>
 <dd>
 
-Rotates the connection keys for the Okta or OIDC connection strategies.
+Rotates the connection keys for the Okta, OIDC, or SAML (samlp) connection strategies.
 </dd>
 </dl>
 </dd>
@@ -22846,6 +23038,7 @@ $client->experimentation->experiments->create(
         'name' => 'name',
         'featureFlagId' => 'feature_flag_id',
         'authenticationFlow' => AuthenticationFlowEnum::Authentication->value,
+        'allocationStrategy' => AllocationStrategyEnum::Percentage->value,
     ]),
 );
 ```
@@ -22902,7 +23095,7 @@ $client->experimentation->experiments->create(
 <dl>
 <dd>
 
-**$allocationStrategy:** `?string` — The traffic allocation strategy for this experiment
+**$allocationStrategy:** `string` — The traffic allocation strategy for this experiment
     
 </dd>
 </dl>
@@ -23673,6 +23866,7 @@ $client->experimentation->segments->list(
         'from' => 'from',
         'take' => 1,
         'type' => SegmentTypeFilterEnum::Auth0->value,
+        'status' => SegmentStatusEnum::Active->value,
     ]),
 );
 ```
@@ -23706,6 +23900,14 @@ $client->experimentation->segments->list(
 <dd>
 
 **$type:** `?string` — Filter by type. Exact match.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$status:** `?string` — Filter by status. Exact match.
     
 </dd>
 </dl>
@@ -25409,7 +25611,7 @@ $client->guardian->factors->set(
 <dl>
 <dd>
 
-**$name:** `string` — Factor name. Can be `sms`, `push-notification`, `email`, `duo` `otp` `webauthn-roaming`, `webauthn-platform`, or `recovery-code`.
+**$name:** `string` — Factor name. Can be `sms`, `push-notification`, `email`, `duo`, `otp`, `webauthn-roaming`, `webauthn-platform`, `recovery-code`, or `passkey`.
     
 </dd>
 </dl>

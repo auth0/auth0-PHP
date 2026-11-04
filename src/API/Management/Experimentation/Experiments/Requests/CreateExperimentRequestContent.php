@@ -43,10 +43,10 @@ class CreateExperimentRequestContent extends JsonSerializableType
     private ?string $defaultConfig;
 
     /**
-     * @var ?value-of<AllocationStrategyEnum> $allocationStrategy The traffic allocation strategy for this experiment
+     * @var value-of<AllocationStrategyEnum> $allocationStrategy The traffic allocation strategy for this experiment
      */
     #[JsonProperty('allocation_strategy')]
-    private ?string $allocationStrategy;
+    private string $allocationStrategy;
 
     /**
      * @var ?array<AllocationRequestItem> $allocations Traffic allocations mapping variations to weights or segments
@@ -65,9 +65,9 @@ class CreateExperimentRequestContent extends JsonSerializableType
      *   name: string,
      *   featureFlagId: string,
      *   authenticationFlow: value-of<AuthenticationFlowEnum>,
+     *   allocationStrategy: value-of<AllocationStrategyEnum>,
      *   description?: ?string,
      *   defaultConfig?: ?value-of<DefaultConfigEnum>,
-     *   allocationStrategy?: ?value-of<AllocationStrategyEnum>,
      *   allocations?: ?array<AllocationRequestItem>,
      *   levels?: ?array<int>,
      * } $values
@@ -80,7 +80,7 @@ class CreateExperimentRequestContent extends JsonSerializableType
         $this->featureFlagId = $values['featureFlagId'];
         $this->authenticationFlow = $values['authenticationFlow'];
         $this->defaultConfig = $values['defaultConfig'] ?? null;
-        $this->allocationStrategy = $values['allocationStrategy'] ?? null;
+        $this->allocationStrategy = $values['allocationStrategy'];
         $this->allocations = $values['allocations'] ?? null;
         $this->levels = $values['levels'] ?? null;
     }
@@ -176,17 +176,17 @@ class CreateExperimentRequestContent extends JsonSerializableType
     }
 
     /**
-     * @return ?value-of<AllocationStrategyEnum>
+     * @return value-of<AllocationStrategyEnum>
      */
-    public function getAllocationStrategy(): ?string
+    public function getAllocationStrategy(): string
     {
         return $this->allocationStrategy;
     }
 
     /**
-     * @param ?value-of<AllocationStrategyEnum> $value
+     * @param value-of<AllocationStrategyEnum> $value
      */
-    public function setAllocationStrategy(?string $value = null): self
+    public function setAllocationStrategy(string $value): self
     {
         $this->allocationStrategy = $value;
         $this->_setField('allocationStrategy');
