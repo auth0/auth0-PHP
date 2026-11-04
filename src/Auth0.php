@@ -591,6 +591,15 @@ final class Auth0 implements Auth0Interface
             $params['scope'] = $this->configuration()->formatScope();
         }
 
+        // Send the configured audience and organization as login() does, since the ID token is validated against the configured organization.
+        if (! isset($params['audience']) || '' === $params['audience']) {
+            $params['audience'] = $this->configuration()->defaultAudience();
+        }
+
+        if (! isset($params['organization']) || '' === $params['organization']) {
+            $params['organization'] = $this->configuration()->defaultOrganization();
+        }
+
         $response = $this->authentication()->customTokenExchange($subjectToken, $subjectTokenType, $actorToken, $actorTokenType, $params);
 
         if (! HttpResponse::wasSuccessful($response)) {
@@ -599,37 +608,33 @@ final class Auth0 implements Auth0Interface
 
         $response = HttpResponse::decodeContent($response);
 
-        $this->clear(false);
-        $this->deferStateSaving();
-
-        $user = null;
+        $token = null;
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
         if (isset($response['id_token'])) {
-            try {
-                // A token exchange has no interactive max_age, so skip the auth_time check a configured tokenMaxAge would otherwise apply.
-                $token = new Token($this->configuration(), $response['id_token'], Token::TYPE_ID_TOKEN);
-                $token->verify()->validate(tokenMaxAge: Token::MAX_AGE_SKIP);
-
-                $sub = $token->getSubject() ?? '';
-                $iss = $token->getIssuer() ?? '';
-                $sid = $token->getIdentifier() ?? '';
-                $this->setBackchannel(hash('sha256', implode('|', [$sub, $iss, $sid])));
-
-                $user = $token->toArray();
-                $this->setIdToken($response['id_token']);
-            } catch (Throwable $throwable) {
-                $this->clear(false);
-
-                throw $throwable;
-            }
+            // A token exchange has no interactive max_age, so skip the auth_time check a configured tokenMaxAge would otherwise apply.
+            $token = new Token($this->configuration(), $response['id_token'], Token::TYPE_ID_TOKEN);
+            $token->verify()->validate(tokenMaxAge: Token::MAX_AGE_SKIP);
         }
 
         if (! isset($response['access_token']) || '' === trim($response['access_token'])) {
-            $this->clear();
-
             throw Exception\StateException::badAccessToken();
         }
+
+        if (! isset($response['id_token']) || ! $token instanceof Token) {
+            throw Exception\StateException::missingIdToken();
+        }
+
+        // Clear only once the response is known to be usable, so a failed exchange leaves the existing session in place.
+        $this->clear(false);
+        $this->deferStateSaving();
+
+        $sub = $token->getSubject() ?? '';
+        $iss = $token->getIssuer() ?? '';
+        $sid = $token->getIdentifier() ?? '';
+        $this->setBackchannel(hash('sha256', implode('|', [$sub, $iss, $sid])));
+        $user = $token->toArray();
+        $this->setIdToken($response['id_token']);
 
         $this->setAccessToken($response['access_token']);
 
@@ -646,8 +651,8 @@ final class Auth0 implements Auth0Interface
             $this->setAccessTokenExpiration($expiresIn);
         }
 
-        /** @var null|array<array<mixed>|int|string> $user */
-        $this->setUser($user ?? []);
+        /** @var array<array<mixed>|int|string> $user */
+        $this->setUser($user);
         $this->deferStateSaving(false);
 
         // Rotate the session ID now that the auth state has changed, to prevent

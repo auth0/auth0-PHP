@@ -1959,27 +1959,41 @@ test('loginWithCustomTokenExchange() surfaces the act claim on the session user'
     expect($auth0->getUser()['act']['sub'])->toEqual('__test_actor__');
 });
 
-test('loginWithCustomTokenExchange() establishes a session from an access-token-only response', function(): void {
+test('loginWithCustomTokenExchange() throws without storing tokens when the response has no id token', function(string $body): void {
     $auth0 = new Auth0($this->configuration);
 
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+
     $httpClient = $auth0->authentication()->getHttpClient();
     $httpClient->mockResponses([
-        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+        HttpResponseGenerator::create($body),
     ]);
 
-    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
-    expect($auth0->getAccessToken())->toEqual('1.2.3');
-    expect($auth0->getIdToken())->toBeNull();
-    // No id token means no sub/iss/sid to build a backchannel key from.
+    expect(fn () => $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toThrow(StateException::class, StateException::MSG_MISSING_ID_TOKEN);
+
+    expect($auth0->isAuthenticated())->toBeFalse();
+    expect($auth0->getAccessToken())->toBeNull();
+    expect($auth0->getRefreshToken())->toBeNull();
     expect($auth0->getBackchannel())->toBeNull();
-});
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+})->with([
+    'no id_token key' => ['{"access_token":"1.2.3","refresh_token":"4.5.6","expires_in":300}'],
+    'null id_token' => ['{"access_token":"1.2.3","id_token":null,"refresh_token":"4.5.6","expires_in":300}'],
+]);
 
 test('loginWithCustomTokenExchange() sends the configured scope when the caller passes none', function(): void {
-    $auth0 = new Auth0($this->configuration + ['scope' => ['openid', 'profile', 'email']]);
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'scope' => ['openid', 'profile', 'email'],
+        'tokenAlgorithm' => 'HS256',
+    ]);
 
     $httpClient = $auth0->authentication()->getHttpClient();
     $httpClient->mockResponses([
-        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
     ]);
 
     $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
@@ -1991,11 +2005,18 @@ test('loginWithCustomTokenExchange() sends the configured scope when the caller 
 });
 
 test('loginWithCustomTokenExchange() honors an explicit scope over the configured one', function(): void {
-    $auth0 = new Auth0($this->configuration + ['scope' => ['openid', 'profile', 'email']]);
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'scope' => ['openid', 'profile', 'email'],
+        'tokenAlgorithm' => 'HS256',
+    ]);
 
     $httpClient = $auth0->authentication()->getHttpClient();
     $httpClient->mockResponses([
-        HttpResponseGenerator::create('{"access_token":"1.2.3","expires_in":300}'),
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
     ]);
 
     $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token', null, null, ['scope' => 'openid custom:scope']);
@@ -2005,6 +2026,86 @@ test('loginWithCustomTokenExchange() honors an explicit scope over the configure
 
     expect($requestBody)->toContain('scope=openid+custom%3Ascope');
     expect($requestBody)->not()->toContain('scope=openid+profile+email');
+});
+
+test('loginWithCustomTokenExchange() sends the configured audience and organization when the caller passes none', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'org_id' => 'org_123',
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'audience' => ['__test_audience__'],
+        'organization' => ['org_123'],
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    expect($auth0->isAuthenticated())->toBeTrue();
+    expect($auth0->getUser()['org_id'])->toEqual('org_123');
+
+    $request = $httpClient->getLastRequest()->getLastRequest();
+    $requestBody = explode('&', $request->getBody()->__toString());
+
+    expect($requestBody)->toContain('audience=__test_audience__');
+    expect($requestBody)->toContain('organization=org_123');
+});
+
+test('loginWithCustomTokenExchange() honors an explicit audience and organization over the configured ones', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'org_id' => 'org_456',
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'audience' => ['__test_audience__'],
+        'organization' => ['org_123', 'org_456'],
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token', null, null, ['audience' => '__test_other_audience__', 'organization' => 'org_456']))->toBeTrue();
+    expect($auth0->getUser()['org_id'])->toEqual('org_456');
+
+    $request = $httpClient->getLastRequest()->getLastRequest();
+    $requestBody = explode('&', $request->getBody()->__toString());
+
+    expect($requestBody)->toContain('audience=__test_other_audience__');
+    expect($requestBody)->toContain('organization=org_456');
+    expect($requestBody)->not()->toContain('audience=__test_audience__');
+    expect($requestBody)->not()->toContain('organization=org_123');
+});
+
+test('loginWithCustomTokenExchange() sends no audience or organization when none is configured', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","expires_in":300}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+
+    $request = $httpClient->getLastRequest()->getLastRequest();
+    $requestBody = $request->getBody()->__toString();
+
+    expect($requestBody)->not()->toContain('audience=');
+    expect($requestBody)->not()->toContain('organization=');
 });
 
 test('loginWithCustomTokenExchange() throws when the token exchange response has no access token', function(): void {
@@ -2029,23 +2130,6 @@ test('loginWithCustomTokenExchange() throws when the token exchange request fail
     $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
 })->throws(StateException::class, StateException::MSG_FAILED_TOKEN_EXCHANGE);
 
-test('loginWithCustomTokenExchange() clears state and rethrows when the id token is invalid', function(): void {
-    $token = (new TokenGenerator())->withHs256([
-        'iss' => 'https://' . $this->configuration['domain'] . '/'
-    ]);
-
-    $auth0 = new Auth0($this->configuration + [
-        'tokenAlgorithm' => 'HS256',
-    ]);
-
-    $httpClient = $auth0->authentication()->getHttpClient();
-    $httpClient->mockResponses([
-        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"BAD' . $token . '","expires_in":300}'),
-    ]);
-
-    $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token');
-})->throws(InvalidTokenException::class);
-
 test('loginWithCustomTokenExchange() leaves transient storage intact when the id token is invalid', function(): void {
     $token = (new TokenGenerator())->withHs256([
         'iss' => 'https://' . $this->configuration['domain'] . '/'
@@ -2069,13 +2153,90 @@ test('loginWithCustomTokenExchange() leaves transient storage intact when the id
     expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
 });
 
+test('loginWithCustomTokenExchange() keeps the existing session when the exchange response is unusable', function(string $body, string $exception, string $message): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+    $secondToken = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'sub' => '__second_sub__',
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6","expires_in":300}'),
+        HttpResponseGenerator::create(str_replace('__id_token__', $secondToken, $body)),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    $backchannel = $auth0->getBackchannel();
+
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+
+    expect(fn () => $auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toThrow($exception, $message);
+
+    expect($auth0->isAuthenticated())->toBeTrue();
+    expect($auth0->getIdToken())->toEqual($token);
+    expect($auth0->getAccessToken())->toEqual('1.2.3');
+    expect($auth0->getRefreshToken())->toEqual('4.5.6');
+    expect($auth0->getBackchannel())->toEqual($backchannel);
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+})->with([
+    'no access token' => ['{"id_token":"__id_token__","expires_in":300}', StateException::class, StateException::MSG_BAD_ACCESS_TOKEN],
+    'no id token' => ['{"access_token":"7.8.9","expires_in":300}', StateException::class, StateException::MSG_MISSING_ID_TOKEN],
+    'empty id token' => ['{"access_token":"7.8.9","id_token":"","expires_in":300}', InvalidTokenException::class, InvalidTokenException::MSG_BAD_SEPARATORS],
+    'id token with a bad signature' => ['{"access_token":"7.8.9","id_token":"__id_token__BAD","expires_in":300}', InvalidTokenException::class, InvalidTokenException::MSG_BAD_SIGNATURE],
+]);
+
+test('loginWithCustomTokenExchange() replaces the previous session when a second login succeeds', function(): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+    $secondToken = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/',
+        'sub' => '__second_sub__',
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6","scope":"read:data","expires_in":300}'),
+        HttpResponseGenerator::create('{"access_token":"7.8.9","id_token":"' . $secondToken . '"}'),
+    ]);
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+    expect($auth0->getRefreshToken())->toEqual('4.5.6');
+
+    expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
+
+    expect($auth0->getIdToken())->toEqual($secondToken);
+    expect($auth0->getAccessToken())->toEqual('7.8.9');
+    expect($auth0->getUser()['sub'])->toEqual('__second_sub__');
+    expect($auth0->getRefreshToken())->toBeNull();
+    expect($auth0->getAccessTokenScope())->toBeNull();
+    expect($auth0->getAccessTokenExpiration())->toBeNull();
+});
+
 test('loginWithCustomTokenExchange() regenerates the session when using SessionStore', function(): void {
-    $auth0 = new Auth0($this->configuration);
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
     $auth0->configuration()->setSessionStorage(new SessionStore($auth0->configuration()));
 
     $httpClient = $auth0->authentication()->getHttpClient();
     $httpClient->mockResponses([
-        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"4.5.6","expires_in":300}'),
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '","refresh_token":"4.5.6","expires_in":300}'),
     ]);
 
     expect($auth0->loginWithCustomTokenExchange(uniqid(), 'urn:acme:mcp-token'))->toBeTrue();
