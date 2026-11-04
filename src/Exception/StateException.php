@@ -25,6 +25,11 @@ final class StateException extends Exception implements Auth0Exception
     /**
      * @var string
      */
+    public const MSG_FAILED_RENEW_TEMPORARY_ERROR = 'Token did not refresh successfully because the API responded with a rate limit or server error, so the session was kept';
+
+    /**
+     * @var string
+     */
     public const MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN = 'Token did not refresh successfully; access token was not returned';
 
     /**
@@ -67,6 +72,12 @@ final class StateException extends Exception implements Auth0Exception
         ?Throwable $previous = null,
     ): self {
         return new self(self::MSG_FAILED_CODE_EXCHANGE, 0, $previous);
+    }
+
+    public static function failedRenewTemporaryError(
+        ?Throwable $previous = null,
+    ): self {
+        return new self(self::MSG_FAILED_RENEW_TEMPORARY_ERROR, 0, $previous);
     }
 
     public static function failedRenewTokenMissingAccessToken(
