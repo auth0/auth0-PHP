@@ -215,7 +215,7 @@ interface Auth0Interface
      * @param string                      $subjectTokenType a URI identifying the type of `subjectToken`. Any custom URI scheme is accepted (e.g. `urn:acme:token`).
      * @param null|string                 $actorToken       Optional. A token representing the acting party for delegation. Requires `actorTokenType`.
      * @param null|string                 $actorTokenType   Optional. A URI identifying the type of `actorToken`. Requires `actorToken`.
-     * @param null|array<null|int|string> $params           Optional. Additional content to include in the body of the API request, such as `audience`, `scope`, and `organization`.
+     * @param null|array<null|int|string> $params           Optional. Additional content to include in the body of the API request, such as `audience`, `scope`, and `organization`. When left out, `scope` defaults to the configured scopes, and `audience` and `organization` default to the first configured value.
      *
      * @throws \Auth0\SDK\Exception\ArgumentException      when `subjectToken` is blank, `subjectTokenType` is blank or not a valid URI, or the actor token and its type are not supplied together
      * @throws \Auth0\SDK\Exception\ConfigurationException when used without statefulness being configured

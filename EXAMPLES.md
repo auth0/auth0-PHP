@@ -194,6 +194,8 @@ $response = $auth0->authentication()->customTokenExchange(
 );
 ```
 
+When you do not pass `audience` or `organization`, `loginWithCustomTokenExchange()` sends the first configured value. `customTokenExchange()` does not, so pass them explicitly there.
+
 > [!NOTE]
 > The `grant_type`, `client_id`, `subject_token`, `subject_token_type`, `actor_token`, and `actor_token_type` keys are controlled by the SDK and cannot be overridden through `$params`.
 
