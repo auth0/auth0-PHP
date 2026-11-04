@@ -1,5 +1,23 @@
 # Change Log
 
+## [9.6.0](https://github.com/auth0/auth0-PHP/tree/9.6.0) (2026-11-04)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.5.0...9.6.0)
+
+**Added**
+
+- feat!: add Universal Portals, Client Agent ID and Resource Server Agent Subject Claims [\#897](https://github.com/auth0/auth0-PHP/pull/897) ([fern-api[bot]](https://github.com/apps/fern-api))
+- feat: add Consent Signing Keys, OTP Settings and Resource Server type, and remove CAPTCHA Policies [\#895](https://github.com/auth0/auth0-PHP/pull/895) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+**Fixed**
+
+- fix: check the stored nonce and max_age in exchange() instead of decode() [\#892](https://github.com/auth0/auth0-PHP/pull/892) ([awss1i](https://github.com/awss1i))
+- fix: throw from loginWithCustomTokenExchange() when the response has no ID token [\#888](https://github.com/auth0/auth0-PHP/pull/888) ([awss1i](https://github.com/awss1i))
+- fix: send the configured audience and organization in loginWithCustomTokenExchange() [\#884](https://github.com/auth0/auth0-PHP/pull/884) ([awss1i](https://github.com/awss1i))
+
+**Changed**
+
+- chore: remove redundant ext-json requirement [\#806](https://github.com/auth0/auth0-PHP/pull/806) ([garak](https://github.com/garak))
+
 ## [9.5.0](https://github.com/auth0/auth0-PHP/tree/9.5.0) (2026-10-14)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.4.0...9.5.0)
 
