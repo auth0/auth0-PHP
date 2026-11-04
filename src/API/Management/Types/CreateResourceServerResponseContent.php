@@ -159,6 +159,12 @@ class CreateResourceServerResponseContent extends JsonSerializableType
     private ?string $clientId;
 
     /**
+     * @var ?value-of<ResourceServerAgentSubjectClaimsResponseEnum> $agentSubjectClaims
+     */
+    #[JsonProperty('agent_subject_claims')]
+    private ?string $agentSubjectClaims;
+
+    /**
      * @var ?value-of<ResourceServerTypeEnum> $type
      */
     #[JsonProperty('type')]
@@ -191,6 +197,7 @@ class CreateResourceServerResponseContent extends JsonSerializableType
      *   subjectTypeAuthorization?: ?ResourceServerSubjectTypeAuthorization,
      *   authorizationPolicy?: ?ResourceServerAuthorizationPolicy,
      *   clientId?: ?string,
+     *   agentSubjectClaims?: ?value-of<ResourceServerAgentSubjectClaimsResponseEnum>,
      *   type?: ?value-of<ResourceServerTypeEnum>,
      * } $values
      */
@@ -222,6 +229,7 @@ class CreateResourceServerResponseContent extends JsonSerializableType
         $this->subjectTypeAuthorization = $values['subjectTypeAuthorization'] ?? null;
         $this->authorizationPolicy = $values['authorizationPolicy'] ?? null;
         $this->clientId = $values['clientId'] ?? null;
+        $this->agentSubjectClaims = $values['agentSubjectClaims'] ?? null;
         $this->type = $values['type'] ?? null;
     }
 
@@ -672,6 +680,24 @@ class CreateResourceServerResponseContent extends JsonSerializableType
     {
         $this->clientId = $value;
         $this->_setField('clientId');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ResourceServerAgentSubjectClaimsResponseEnum>
+     */
+    public function getAgentSubjectClaims(): ?string
+    {
+        return $this->agentSubjectClaims;
+    }
+
+    /**
+     * @param ?value-of<ResourceServerAgentSubjectClaimsResponseEnum> $value
+     */
+    public function setAgentSubjectClaims(?string $value = null): self
+    {
+        $this->agentSubjectClaims = $value;
+        $this->_setField('agentSubjectClaims');
         return $this;
     }
 

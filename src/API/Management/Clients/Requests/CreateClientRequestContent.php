@@ -398,6 +398,12 @@ class CreateClientRequestContent extends JsonSerializableType
     private ?array $asyncApprovalNotificationChannels;
 
     /**
+     * @var ?string $agentId ID of the agent to associate with this client.
+     */
+    #[JsonProperty('agent_id')]
+    private ?string $agentId;
+
+    /**
      * @var ?ClientOidcSupportPost $oidcSupport
      */
     #[JsonProperty('oidc_support')]
@@ -464,6 +470,7 @@ class CreateClientRequestContent extends JsonSerializableType
      *   b2BIntegrationConfiguration?: ?B2BIntegrationConfiguration,
      *   myOrganizationConfiguration?: ?ClientMyOrganizationPostConfiguration,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
+     *   agentId?: ?string,
      *   oidcSupport?: ?ClientOidcSupportPost,
      * } $values
      */
@@ -529,6 +536,7 @@ class CreateClientRequestContent extends JsonSerializableType
         $this->b2BIntegrationConfiguration = $values['b2BIntegrationConfiguration'] ?? null;
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
+        $this->agentId = $values['agentId'] ?? null;
         $this->oidcSupport = $values['oidcSupport'] ?? null;
     }
 
@@ -1591,6 +1599,24 @@ class CreateClientRequestContent extends JsonSerializableType
     {
         $this->asyncApprovalNotificationChannels = $value;
         $this->_setField('asyncApprovalNotificationChannels');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getAgentId(): ?string
+    {
+        return $this->agentId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setAgentId(?string $value = null): self
+    {
+        $this->agentId = $value;
+        $this->_setField('agentId');
         return $this;
     }
 

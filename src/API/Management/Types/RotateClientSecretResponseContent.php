@@ -429,6 +429,12 @@ class RotateClientSecretResponseContent extends JsonSerializableType
     private ?string $externalMetadataStatus;
 
     /**
+     * @var ?string $agentId ID of the agent associated with this client.
+     */
+    #[JsonProperty('agent_id')]
+    private ?string $agentId;
+
+    /**
      * @var ?string $externalClientId An alternate client identifier to be used during authorization flows. Only supports CIMD-based client identifiers.
      */
     #[JsonProperty('external_client_id')]
@@ -511,6 +517,7 @@ class RotateClientSecretResponseContent extends JsonSerializableType
      *   externalMetadataType?: ?value-of<ClientExternalMetadataTypeEnum>,
      *   externalMetadataCreatedBy?: ?value-of<ClientExternalMetadataCreatedByEnum>,
      *   externalMetadataStatus?: ?value-of<ClientExternalMetadataStatusEnum>,
+     *   agentId?: ?string,
      *   externalClientId?: ?string,
      *   jwksUri?: ?string,
      * } $values
@@ -587,6 +594,7 @@ class RotateClientSecretResponseContent extends JsonSerializableType
         $this->externalMetadataType = $values['externalMetadataType'] ?? null;
         $this->externalMetadataCreatedBy = $values['externalMetadataCreatedBy'] ?? null;
         $this->externalMetadataStatus = $values['externalMetadataStatus'] ?? null;
+        $this->agentId = $values['agentId'] ?? null;
         $this->externalClientId = $values['externalClientId'] ?? null;
         $this->jwksUri = $values['jwksUri'] ?? null;
     }
@@ -1830,6 +1838,24 @@ class RotateClientSecretResponseContent extends JsonSerializableType
     {
         $this->externalMetadataStatus = $value;
         $this->_setField('externalMetadataStatus');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getAgentId(): ?string
+    {
+        return $this->agentId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setAgentId(?string $value = null): self
+    {
+        $this->agentId = $value;
+        $this->_setField('agentId');
         return $this;
     }
 

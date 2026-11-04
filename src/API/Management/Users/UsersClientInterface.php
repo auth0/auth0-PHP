@@ -12,6 +12,7 @@ use Auth0\SDK\API\Management\Users\Requests\GetUserRequestParameters;
 use Auth0\SDK\API\Management\Types\GetUserResponseContent;
 use Auth0\SDK\API\Management\Users\Requests\UpdateUserRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateUserResponseContent;
+use Auth0\SDK\API\Management\Types\ListUserConsentSigningKeysResponseContent;
 use Auth0\SDK\API\Management\Types\ConsentSigningKey;
 use Auth0\SDK\API\Management\Types\RegenerateUsersRecoveryCodeResponseContent;
 use Auth0\SDK\API\Management\Users\Requests\RevokeUserAccessRequestContent;
@@ -307,7 +308,7 @@ interface UsersClientInterface
     public function update(string $id, UpdateUserRequestContent $request = new UpdateUserRequestContent(), ?array $options = null): ?UpdateUserResponseContent;
 
     /**
-     * Retrieve all consent signing keys registered for a user. Returns an empty array when the user has no keys registered.
+     * Retrieve all consent signing keys registered for a user. Returns an empty `keys` array when the user has no keys registered.
      *
      * Example:
      * ```php
@@ -325,9 +326,9 @@ interface UsersClientInterface
      *   queryParameters?: array<string, mixed>,
      *   bodyProperties?: array<string, mixed>,
      * } $options
-     * @return ?array<ConsentSigningKey>
+     * @return ?ListUserConsentSigningKeysResponseContent
      */
-    public function listConsentSigningKeys(string $id, ?array $options = null): ?array;
+    public function listConsentSigningKeys(string $id, ?array $options = null): ?ListUserConsentSigningKeysResponseContent;
 
     /**
      * Retrieve a single consent signing key for a user by its key identifier (kid). Returns 404 if the key does not exist.

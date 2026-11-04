@@ -41,12 +41,19 @@ class ClientProfileClientConfiguration extends JsonSerializableType
     private ?ClientProfileClientConfigurationRequireProofOfPossession $requireProofOfPossession;
 
     /**
+     * @var ?ClientProfileClientConfigurationOidcSupport $oidcSupport
+     */
+    #[JsonProperty('oidc_support')]
+    private ?ClientProfileClientConfigurationOidcSupport $oidcSupport;
+
+    /**
      * @param array{
      *   refreshToken?: ?ClientProfileClientConfigurationRefreshToken,
      *   organizationUsage?: ?ClientProfileClientConfigurationOrganizationUsage,
      *   organizationRequireBehavior?: ?ClientProfileClientConfigurationOrganizationRequireBehavior,
      *   organizationDiscoveryMethods?: ?ClientProfileClientConfigurationOrganizationDiscoveryMethods,
      *   requireProofOfPossession?: ?ClientProfileClientConfigurationRequireProofOfPossession,
+     *   oidcSupport?: ?ClientProfileClientConfigurationOidcSupport,
      * } $values
      */
     public function __construct(
@@ -57,6 +64,7 @@ class ClientProfileClientConfiguration extends JsonSerializableType
         $this->organizationRequireBehavior = $values['organizationRequireBehavior'] ?? null;
         $this->organizationDiscoveryMethods = $values['organizationDiscoveryMethods'] ?? null;
         $this->requireProofOfPossession = $values['requireProofOfPossession'] ?? null;
+        $this->oidcSupport = $values['oidcSupport'] ?? null;
     }
 
     /**
@@ -146,6 +154,24 @@ class ClientProfileClientConfiguration extends JsonSerializableType
     {
         $this->requireProofOfPossession = $value;
         $this->_setField('requireProofOfPossession');
+        return $this;
+    }
+
+    /**
+     * @return ?ClientProfileClientConfigurationOidcSupport
+     */
+    public function getOidcSupport(): ?ClientProfileClientConfigurationOidcSupport
+    {
+        return $this->oidcSupport;
+    }
+
+    /**
+     * @param ?ClientProfileClientConfigurationOidcSupport $value
+     */
+    public function setOidcSupport(?ClientProfileClientConfigurationOidcSupport $value = null): self
+    {
+        $this->oidcSupport = $value;
+        $this->_setField('oidcSupport');
         return $this;
     }
 

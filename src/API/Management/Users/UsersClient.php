@@ -40,6 +40,7 @@ use Auth0\SDK\API\Management\Users\Requests\GetUserRequestParameters;
 use Auth0\SDK\API\Management\Types\GetUserResponseContent;
 use Auth0\SDK\API\Management\Users\Requests\UpdateUserRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateUserResponseContent;
+use Auth0\SDK\API\Management\Types\ListUserConsentSigningKeysResponseContent;
 use Auth0\SDK\API\Management\Types\ConsentSigningKey;
 use Auth0\SDK\API\Management\Types\RegenerateUsersRecoveryCodeResponseContent;
 use Auth0\SDK\API\Management\Users\Requests\RevokeUserAccessRequestContent;
@@ -654,7 +655,7 @@ class UsersClient implements UsersClientInterface
     }
 
     /**
-     * Retrieve all consent signing keys registered for a user. Returns an empty array when the user has no keys registered.
+     * Retrieve all consent signing keys registered for a user. Returns an empty `keys` array when the user has no keys registered.
      *
      * Example:
      * ```php
@@ -672,11 +673,11 @@ class UsersClient implements UsersClientInterface
      *   queryParameters?: array<string, mixed>,
      *   bodyProperties?: array<string, mixed>,
      * } $options
-     * @return ?array<ConsentSigningKey>
+     * @return ?ListUserConsentSigningKeysResponseContent
      * @throws Auth0Exception
      * @throws Auth0ApiException
      */
-    public function listConsentSigningKeys(string $id, ?array $options = null): ?array
+    public function listConsentSigningKeys(string $id, ?array $options = null): ?ListUserConsentSigningKeysResponseContent
     {
         $options = array_merge($this->options, $options ?? []);
         try {
@@ -694,7 +695,7 @@ class UsersClient implements UsersClientInterface
                 if (empty($json)) {
                     return null;
                 }
-                return JsonDecoder::decodeArray($json, [ConsentSigningKey::class]); // @phpstan-ignore-line
+                return ListUserConsentSigningKeysResponseContent::fromJson($json);
             }
         } catch (JsonException $e) {
             throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
