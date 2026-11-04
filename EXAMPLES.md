@@ -65,6 +65,7 @@ $configuration = new SdkConfiguration(
     clientId: '...',
     clientSecret: '..',
     cookieSecret: '...',
+    redirectUri: '...',
 );
 
 // The `offline_access` scope is required to retrieve a refresh token.
