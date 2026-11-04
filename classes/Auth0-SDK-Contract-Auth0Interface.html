@@ -304,7 +304,7 @@
     <span>
                                 &nbsp;: bool    </span>
 </dt>
-<dd>Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured.</dd>
+<dd>Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured. A failed exchange leaves any existing session in place.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Auth0-SDK-Contract-Auth0Interface.html#method_logout">logout()</a>
@@ -596,7 +596,7 @@
                 : <span class="phpdocumentor-argument-list__argument__type">null|string</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. The value expected for the 'nonce' claim.</p>
+                    <section class="phpdocumentor-description"><p>Optional. The value expected for the 'nonce' claim. Only checked when passed. To decode a callback ID token outside exchange(), pass the nonce that login() stored.</p>
 </section>
 
             </dd>
@@ -605,7 +605,7 @@
                 : <span class="phpdocumentor-argument-list__argument__type">null|int</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.</p>
+                    <section class="phpdocumentor-description"><p>Optional. Maximum window of time in seconds since the 'auth_time' to accept the token. Defaults to the configured tokenMaxAge. To decode a callback ID token outside exchange(), pass the max_age that login() stored.</p>
 </section>
 
             </dd>
@@ -1630,7 +1630,7 @@
 
     </aside>
 
-        <p class="phpdocumentor-summary">Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured.</p>
+        <p class="phpdocumentor-summary">Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured. A failed exchange leaves any existing session in place.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -1683,7 +1683,7 @@
                 : <span class="phpdocumentor-argument-list__argument__type">null|array&lt;string|int, null|int|string&gt;</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional content to include in the body of the API request, such as <code class="prettyprint">audience</code>, <code class="prettyprint">scope</code>, and <code class="prettyprint">organization</code>.</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional content to include in the body of the API request, such as <code class="prettyprint">audience</code>, <code class="prettyprint">scope</code>, and <code class="prettyprint">organization</code>. When left out, <code class="prettyprint">scope</code> defaults to the configured scopes, and <code class="prettyprint">audience</code> and <code class="prettyprint">organization</code> default to the first configured value.</p>
 </section>
 
             </dd>
@@ -1713,7 +1713,7 @@
                                     </dd>
                             <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-StateException.html"><abbr title="\Auth0\SDK\Exception\StateException">StateException</abbr></a></span>
-                                                                                        <section class="phpdocumentor-description"><p>if the token exchange request fails, or an access token is missing from the response</p>
+                                                                                        <section class="phpdocumentor-description"><p>if the token exchange request fails, or an access token or ID token is missing from the response</p>
 </section>
 
                                     </dd>

@@ -288,7 +288,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003AloginWithCustomTokenExchange\u0028\u0029",
             "name": "loginWithCustomTokenExchange",
-            "summary": "Exchange\u0020an\u0020external\u0020or\u0020custom\u0020token\u0020for\u0020Auth0\u0020tokens\u0020\u0028RFC\u00208693\u0029\u0020and\u0020establish\u0020a\u0020session,\u0020logging\u0020the\u0020user\u0020in.\u0020Requires\u0020a\u0020stateful\u0020\u0060strategy\u0060\u0020with\u0020sessions\u0020configured.",
+            "summary": "Exchange\u0020an\u0020external\u0020or\u0020custom\u0020token\u0020for\u0020Auth0\u0020tokens\u0020\u0028RFC\u00208693\u0029\u0020and\u0020establish\u0020a\u0020session,\u0020logging\u0020the\u0020user\u0020in.\u0020Requires\u0020a\u0020stateful\u0020\u0060strategy\u0060\u0020with\u0020sessions\u0020configured.\u0020A\u0020failed\u0020exchange\u0020leaves\u0020any\u0020existing\u0020session\u0020in\u0020place.",
             "url": "classes/Auth0-SDK-Auth0.html#method_loginWithCustomTokenExchange"
         },                {
             "fqsen": "\\Auth0\\SDK\\Auth0\u003A\u003Alogout\u0028\u0029",
@@ -1878,7 +1878,7 @@ Search.appendIndex(
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003AloginWithCustomTokenExchange\u0028\u0029",
             "name": "loginWithCustomTokenExchange",
-            "summary": "Exchange\u0020an\u0020external\u0020or\u0020custom\u0020token\u0020for\u0020Auth0\u0020tokens\u0020\u0028RFC\u00208693\u0029\u0020and\u0020establish\u0020a\u0020session,\u0020logging\u0020the\u0020user\u0020in.\u0020Requires\u0020a\u0020stateful\u0020\u0060strategy\u0060\u0020with\u0020sessions\u0020configured.",
+            "summary": "Exchange\u0020an\u0020external\u0020or\u0020custom\u0020token\u0020for\u0020Auth0\u0020tokens\u0020\u0028RFC\u00208693\u0029\u0020and\u0020establish\u0020a\u0020session,\u0020logging\u0020the\u0020user\u0020in.\u0020Requires\u0020a\u0020stateful\u0020\u0060strategy\u0060\u0020with\u0020sessions\u0020configured.\u0020A\u0020failed\u0020exchange\u0020leaves\u0020any\u0020existing\u0020session\u0020in\u0020place.",
             "url": "classes/Auth0-SDK-Contract-Auth0Interface.html#method_loginWithCustomTokenExchange"
         },                {
             "fqsen": "\\Auth0\\SDK\\Contract\\Auth0Interface\u003A\u003Alogout\u0028\u0029",
@@ -3311,6 +3311,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Exception-StateException.html#method_missingCodeVerifier"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Exception\\StateException\u003A\u003AmissingIdToken\u0028\u0029",
+            "name": "missingIdToken",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Exception-StateException.html#method_missingIdToken"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Exception\\StateException\u003A\u003AmissingNonce\u0028\u0029",
             "name": "missingNonce",
             "summary": "",
@@ -3355,6 +3360,11 @@ Search.appendIndex(
             "name": "MSG_MISSING_CODE_VERIFIER",
             "summary": "",
             "url": "classes/Auth0-SDK-Exception-StateException.html#constant_MSG_MISSING_CODE_VERIFIER"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Exception\\StateException\u003A\u003AMSG_MISSING_ID_TOKEN",
+            "name": "MSG_MISSING_ID_TOKEN",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Exception-StateException.html#constant_MSG_MISSING_ID_TOKEN"
         },                {
             "fqsen": "\\Auth0\\SDK\\Exception\\StateException\u003A\u003AMSG_MISSING_NONCE",
             "name": "MSG_MISSING_NONCE",

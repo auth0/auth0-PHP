@@ -172,7 +172,7 @@
             <dt class="phpdocumentor-table-of-contents__entry -constant -public">
     <a class="" href="classes/Auth0-SDK-Auth0.html#constant_VERSION">VERSION</a>
     <span>
-        &nbsp;: string&nbsp;= &#039;9.5.0&#039;                            </span>
+        &nbsp;: string&nbsp;= &#039;9.6.0&#039;                            </span>
 </dt>
 
     </dl>
@@ -385,7 +385,7 @@
     <span>
                                 &nbsp;: bool    </span>
 </dt>
-<dd>Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured.</dd>
+<dd>Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured. A failed exchange leaves any existing session in place.</dd>
 
             <dt class="phpdocumentor-table-of-contents__entry -method -public">
     <a class="" href="classes/Auth0-SDK-Auth0.html#method_logout">logout()</a>
@@ -529,7 +529,7 @@
     <span class="phpdocumentor-signature__visibility">public</span>
         <span class="phpdocumentor-signature__type">string</span>
     <span class="phpdocumentor-signature__name">VERSION</span>
-    = <span class="phpdocumentor-signature__default-value">&#039;9.5.0&#039;</span>
+    = <span class="phpdocumentor-signature__default-value">&#039;9.6.0&#039;</span>
 </code>
 
 
@@ -983,7 +983,7 @@
                 : <span class="phpdocumentor-argument-list__argument__type">string|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. The value expected for the 'nonce' claim.</p>
+                    <section class="phpdocumentor-description"><p>Optional. The value expected for the 'nonce' claim. Only checked when passed. To decode a callback ID token outside exchange(), pass the nonce that login() stored.</p>
 </section>
 
             </dd>
@@ -992,7 +992,7 @@
                 : <span class="phpdocumentor-argument-list__argument__type">int|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Maximum window of time in seconds since the 'auth_time' to accept the token.</p>
+                    <section class="phpdocumentor-description"><p>Optional. Maximum window of time in seconds since the 'auth_time' to accept the token. Defaults to the configured tokenMaxAge. To decode a callback ID token outside exchange(), pass the max_age that login() stored.</p>
 </section>
 
             </dd>
@@ -1047,7 +1047,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">153</span>
+    <span class="phpdocumentor-element-found-in__line">136</span>
 
     </aside>
 
@@ -1116,7 +1116,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">277</span>
+    <span class="phpdocumentor-element-found-in__line">267</span>
 
     </aside>
 
@@ -1155,7 +1155,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">282</span>
+    <span class="phpdocumentor-element-found-in__line">272</span>
 
     </aside>
 
@@ -1194,7 +1194,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">287</span>
+    <span class="phpdocumentor-element-found-in__line">277</span>
 
     </aside>
 
@@ -1233,7 +1233,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">292</span>
+    <span class="phpdocumentor-element-found-in__line">282</span>
 
     </aside>
 
@@ -1272,7 +1272,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">297</span>
+    <span class="phpdocumentor-element-found-in__line">287</span>
 
     </aside>
 
@@ -1359,7 +1359,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">355</span>
+    <span class="phpdocumentor-element-found-in__line">345</span>
 
     </aside>
 
@@ -1398,7 +1398,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">402</span>
+    <span class="phpdocumentor-element-found-in__line">392</span>
 
     </aside>
 
@@ -1437,7 +1437,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">417</span>
+    <span class="phpdocumentor-element-found-in__line">407</span>
 
     </aside>
 
@@ -1476,7 +1476,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">422</span>
+    <span class="phpdocumentor-element-found-in__line">412</span>
 
     </aside>
 
@@ -1515,7 +1515,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">439</span>
+    <span class="phpdocumentor-element-found-in__line">429</span>
 
     </aside>
 
@@ -1554,7 +1554,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">444</span>
+    <span class="phpdocumentor-element-found-in__line">434</span>
 
     </aside>
 
@@ -1623,7 +1623,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">464</span>
+    <span class="phpdocumentor-element-found-in__line">454</span>
 
     </aside>
 
@@ -1662,7 +1662,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">469</span>
+    <span class="phpdocumentor-element-found-in__line">459</span>
 
     </aside>
 
@@ -1713,7 +1713,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">509</span>
+    <span class="phpdocumentor-element-found-in__line">499</span>
 
     </aside>
 
@@ -1773,7 +1773,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">533</span>
+    <span class="phpdocumentor-element-found-in__line">523</span>
 
     </aside>
 
@@ -1812,7 +1812,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">538</span>
+    <span class="phpdocumentor-element-found-in__line">528</span>
 
     </aside>
 
@@ -1872,11 +1872,11 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">586</span>
+    <span class="phpdocumentor-element-found-in__line">576</span>
 
     </aside>
 
-        <p class="phpdocumentor-summary">Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured.</p>
+        <p class="phpdocumentor-summary">Exchange an external or custom token for Auth0 tokens (RFC 8693) and establish a session, logging the user in. Requires a stateful `strategy` with sessions configured. A failed exchange leaves any existing session in place.</p>
 
     <code class="phpdocumentor-code phpdocumentor-signature ">
     <span class="phpdocumentor-signature__visibility">public</span>
@@ -1929,7 +1929,7 @@
                 : <span class="phpdocumentor-argument-list__argument__type">array&lt;string|int, mixed&gt;|null</span>
                  = <span class="phpdocumentor-argument-list__argument__default-value">null</span>            </dt>
             <dd class="phpdocumentor-argument-list__definition">
-                    <section class="phpdocumentor-description"><p>Optional. Additional content to include in the body of the API request, such as <code class="prettyprint">audience</code>, <code class="prettyprint">scope</code>, and <code class="prettyprint">organization</code>.</p>
+                    <section class="phpdocumentor-description"><p>Optional. Additional content to include in the body of the API request, such as <code class="prettyprint">audience</code>, <code class="prettyprint">scope</code>, and <code class="prettyprint">organization</code>. When left out, <code class="prettyprint">scope</code> defaults to the configured scopes, and <code class="prettyprint">audience</code> and <code class="prettyprint">organization</code> default to the first configured value.</p>
 </section>
 
             </dd>
@@ -1959,7 +1959,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">674</span>
+    <span class="phpdocumentor-element-found-in__line">669</span>
 
     </aside>
 
@@ -2019,7 +2019,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">695</span>
+    <span class="phpdocumentor-element-found-in__line">690</span>
 
     </aside>
 
@@ -2058,7 +2058,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">702</span>
+    <span class="phpdocumentor-element-found-in__line">697</span>
 
     </aside>
 
@@ -2112,7 +2112,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">767</span>
+    <span class="phpdocumentor-element-found-in__line">762</span>
 
     </aside>
 
@@ -2163,7 +2163,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">779</span>
+    <span class="phpdocumentor-element-found-in__line">774</span>
 
     </aside>
 
@@ -2214,7 +2214,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">791</span>
+    <span class="phpdocumentor-element-found-in__line">786</span>
 
     </aside>
 
@@ -2265,7 +2265,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">803</span>
+    <span class="phpdocumentor-element-found-in__line">798</span>
 
     </aside>
 
@@ -2316,7 +2316,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">815</span>
+    <span class="phpdocumentor-element-found-in__line">810</span>
 
     </aside>
 
@@ -2367,7 +2367,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">825</span>
+    <span class="phpdocumentor-element-found-in__line">820</span>
 
     </aside>
 
@@ -2418,7 +2418,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">837</span>
+    <span class="phpdocumentor-element-found-in__line">832</span>
 
     </aside>
 
@@ -2469,7 +2469,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">849</span>
+    <span class="phpdocumentor-element-found-in__line">844</span>
 
     </aside>
 
@@ -2520,7 +2520,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">861</span>
+    <span class="phpdocumentor-element-found-in__line">856</span>
 
     </aside>
 
@@ -2580,7 +2580,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">884</span>
+    <span class="phpdocumentor-element-found-in__line">879</span>
 
     </aside>
 
@@ -2633,7 +2633,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">903</span>
+    <span class="phpdocumentor-element-found-in__line">898</span>
 
     </aside>
 
@@ -2682,7 +2682,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">946</span>
+    <span class="phpdocumentor-element-found-in__line">941</span>
 
     </aside>
 
@@ -2731,7 +2731,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Auth0.php"><a href="files/src-auth0.html"><abbr title="src/Auth0.php">Auth0.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">955</span>
+    <span class="phpdocumentor-element-found-in__line">950</span>
 
     </aside>
 
