@@ -4,11 +4,10 @@ namespace Auth0\SDK\API\Management\Types;
 
 use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
-use Auth0\SDK\API\Management\Core\Types\ArrayType;
 use DateTime;
 use Auth0\SDK\API\Management\Core\Types\Date;
 
-class UpdateFeatureFlagStatusResponseContent extends JsonSerializableType
+class Portal extends JsonSerializableType
 {
     /**
      * @var string $id
@@ -23,28 +22,34 @@ class UpdateFeatureFlagStatusResponseContent extends JsonSerializableType
     private string $name;
 
     /**
-     * @var ?string $description
+     * @var ?PortalNavigation $navigation
      */
-    #[JsonProperty('description')]
-    private ?string $description;
+    #[JsonProperty('navigation')]
+    private ?PortalNavigation $navigation;
 
     /**
-     * @var value-of<FeatureFlagTypeEnum> $type
+     * @var ?PortalPagesByType $pages
      */
-    #[JsonProperty('type')]
-    private string $type;
+    #[JsonProperty('pages')]
+    private ?PortalPagesByType $pages;
 
     /**
-     * @var value-of<FeatureFlagStatusEnum> $status
+     * @var string $slug
      */
-    #[JsonProperty('status')]
-    private string $status;
+    #[JsonProperty('slug')]
+    private string $slug;
 
     /**
-     * @var ?array<string, FeatureFlagConfigParam> $parameters
+     * @var ?PortalClientSecretPost $client
      */
-    #[JsonProperty('parameters'), ArrayType(['string' => FeatureFlagConfigParam::class])]
-    private ?array $parameters;
+    #[JsonProperty('client')]
+    private ?PortalClientSecretPost $client;
+
+    /**
+     * @var ?PortalCustomCode $customCode
+     */
+    #[JsonProperty('custom_code')]
+    private ?PortalCustomCode $customCode;
 
     /**
      * @var DateTime $createdAt
@@ -62,12 +67,13 @@ class UpdateFeatureFlagStatusResponseContent extends JsonSerializableType
      * @param array{
      *   id: string,
      *   name: string,
-     *   type: value-of<FeatureFlagTypeEnum>,
-     *   status: value-of<FeatureFlagStatusEnum>,
+     *   slug: string,
      *   createdAt: DateTime,
      *   updatedAt: DateTime,
-     *   description?: ?string,
-     *   parameters?: ?array<string, FeatureFlagConfigParam>,
+     *   navigation?: ?PortalNavigation,
+     *   pages?: ?PortalPagesByType,
+     *   client?: ?PortalClientSecretPost,
+     *   customCode?: ?PortalCustomCode,
      * } $values
      */
     public function __construct(
@@ -75,10 +81,11 @@ class UpdateFeatureFlagStatusResponseContent extends JsonSerializableType
     ) {
         $this->id = $values['id'];
         $this->name = $values['name'];
-        $this->description = $values['description'] ?? null;
-        $this->type = $values['type'];
-        $this->status = $values['status'];
-        $this->parameters = $values['parameters'] ?? null;
+        $this->navigation = $values['navigation'] ?? null;
+        $this->pages = $values['pages'] ?? null;
+        $this->slug = $values['slug'];
+        $this->client = $values['client'] ?? null;
+        $this->customCode = $values['customCode'] ?? null;
         $this->createdAt = $values['createdAt'];
         $this->updatedAt = $values['updatedAt'];
     }
@@ -120,74 +127,92 @@ class UpdateFeatureFlagStatusResponseContent extends JsonSerializableType
     }
 
     /**
-     * @return ?string
+     * @return ?PortalNavigation
      */
-    public function getDescription(): ?string
+    public function getNavigation(): ?PortalNavigation
     {
-        return $this->description;
+        return $this->navigation;
     }
 
     /**
-     * @param ?string $value
+     * @param ?PortalNavigation $value
      */
-    public function setDescription(?string $value = null): self
+    public function setNavigation(?PortalNavigation $value = null): self
     {
-        $this->description = $value;
-        $this->_setField('description');
+        $this->navigation = $value;
+        $this->_setField('navigation');
         return $this;
     }
 
     /**
-     * @return value-of<FeatureFlagTypeEnum>
+     * @return ?PortalPagesByType
      */
-    public function getType(): string
+    public function getPages(): ?PortalPagesByType
     {
-        return $this->type;
+        return $this->pages;
     }
 
     /**
-     * @param value-of<FeatureFlagTypeEnum> $value
+     * @param ?PortalPagesByType $value
      */
-    public function setType(string $value): self
+    public function setPages(?PortalPagesByType $value = null): self
     {
-        $this->type = $value;
-        $this->_setField('type');
+        $this->pages = $value;
+        $this->_setField('pages');
         return $this;
     }
 
     /**
-     * @return value-of<FeatureFlagStatusEnum>
+     * @return string
      */
-    public function getStatus(): string
+    public function getSlug(): string
     {
-        return $this->status;
+        return $this->slug;
     }
 
     /**
-     * @param value-of<FeatureFlagStatusEnum> $value
+     * @param string $value
      */
-    public function setStatus(string $value): self
+    public function setSlug(string $value): self
     {
-        $this->status = $value;
-        $this->_setField('status');
+        $this->slug = $value;
+        $this->_setField('slug');
         return $this;
     }
 
     /**
-     * @return ?array<string, FeatureFlagConfigParam>
+     * @return ?PortalClientSecretPost
      */
-    public function getParameters(): ?array
+    public function getClient(): ?PortalClientSecretPost
     {
-        return $this->parameters;
+        return $this->client;
     }
 
     /**
-     * @param ?array<string, FeatureFlagConfigParam> $value
+     * @param ?PortalClientSecretPost $value
      */
-    public function setParameters(?array $value = null): self
+    public function setClient(?PortalClientSecretPost $value = null): self
     {
-        $this->parameters = $value;
-        $this->_setField('parameters');
+        $this->client = $value;
+        $this->_setField('client');
+        return $this;
+    }
+
+    /**
+     * @return ?PortalCustomCode
+     */
+    public function getCustomCode(): ?PortalCustomCode
+    {
+        return $this->customCode;
+    }
+
+    /**
+     * @param ?PortalCustomCode $value
+     */
+    public function setCustomCode(?PortalCustomCode $value = null): self
+    {
+        $this->customCode = $value;
+        $this->_setField('customCode');
         return $this;
     }
 

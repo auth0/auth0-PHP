@@ -67,6 +67,12 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     private ?ConnectionCustomScripts $customScripts;
 
     /**
+     * @var ?ConnectionOtpSettings $otpSettings
+     */
+    #[JsonProperty('otp_settings')]
+    private ?ConnectionOtpSettings $otpSettings;
+
+    /**
      * @var ?ConnectionAuthenticationMethods $authenticationMethods
      */
     #[JsonProperty('authentication_methods')]
@@ -290,6 +296,7 @@ class ConnectionPropertiesOptions extends JsonSerializableType
      *   importMode?: ?bool,
      *   configuration?: ?array<string, ?string>,
      *   customScripts?: ?ConnectionCustomScripts,
+     *   otpSettings?: ?ConnectionOtpSettings,
      *   authenticationMethods?: ?ConnectionAuthenticationMethods,
      *   passkeyOptions?: ?ConnectionPasskeyOptions,
      *   passwordPolicy?: ?value-of<ConnectionPasswordPolicyEnum>,
@@ -342,6 +349,7 @@ class ConnectionPropertiesOptions extends JsonSerializableType
         $this->importMode = $values['importMode'] ?? null;
         $this->configuration = $values['configuration'] ?? null;
         $this->customScripts = $values['customScripts'] ?? null;
+        $this->otpSettings = $values['otpSettings'] ?? null;
         $this->authenticationMethods = $values['authenticationMethods'] ?? null;
         $this->passkeyOptions = $values['passkeyOptions'] ?? null;
         $this->passwordPolicy = $values['passwordPolicy'] ?? null;
@@ -538,6 +546,24 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     {
         $this->customScripts = $value;
         $this->_setField('customScripts');
+        return $this;
+    }
+
+    /**
+     * @return ?ConnectionOtpSettings
+     */
+    public function getOtpSettings(): ?ConnectionOtpSettings
+    {
+        return $this->otpSettings;
+    }
+
+    /**
+     * @param ?ConnectionOtpSettings $value
+     */
+    public function setOtpSettings(?ConnectionOtpSettings $value = null): self
+    {
+        $this->otpSettings = $value;
+        $this->_setField('otpSettings');
         return $this;
     }
 

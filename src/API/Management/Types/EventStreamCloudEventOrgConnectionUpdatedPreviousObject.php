@@ -69,6 +69,17 @@ class EventStreamCloudEventOrgConnectionUpdatedPreviousObject extends JsonSerial
     private string|null $organizationAccessLevel;
 
     /**
+     * @var (
+     *    value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel0Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel1Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel2Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel3Enum>
+     * )|null $organizationMemberAccessLevel
+     */
+    #[JsonProperty('organization_member_access_level'), Union('string', 'null')]
+    private string|null $organizationMemberAccessLevel;
+
+    /**
      * @param array{
      *   organization: EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganization,
      *   connection: EventStreamCloudEventOrgConnectionUpdatedPreviousObjectConnection,
@@ -82,6 +93,12 @@ class EventStreamCloudEventOrgConnectionUpdatedPreviousObject extends JsonSerial
      *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationAccessLevel2Enum>
      *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationAccessLevel3Enum>
      * )|null,
+     *   organizationMemberAccessLevel?: (
+     *    value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel0Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel1Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel2Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel3Enum>
+     * )|null,
      * } $values
      */
     public function __construct(
@@ -94,6 +111,7 @@ class EventStreamCloudEventOrgConnectionUpdatedPreviousObject extends JsonSerial
         $this->isSignupEnabled = $values['isSignupEnabled'] ?? null;
         $this->isEnabled = $values['isEnabled'] ?? null;
         $this->organizationAccessLevel = $values['organizationAccessLevel'] ?? null;
+        $this->organizationMemberAccessLevel = $values['organizationMemberAccessLevel'] ?? null;
     }
 
     /**
@@ -229,6 +247,34 @@ class EventStreamCloudEventOrgConnectionUpdatedPreviousObject extends JsonSerial
     {
         $this->organizationAccessLevel = $value;
         $this->_setField('organizationAccessLevel');
+        return $this;
+    }
+
+    /**
+     * @return (
+     *    value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel0Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel1Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel2Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel3Enum>
+     * )|null
+     */
+    public function getOrganizationMemberAccessLevel(): string|null
+    {
+        return $this->organizationMemberAccessLevel;
+    }
+
+    /**
+     * @param (
+     *    value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel0Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel1Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel2Enum>
+     *   |value-of<EventStreamCloudEventOrgConnectionUpdatedPreviousObjectOrganizationMemberAccessLevel3Enum>
+     * )|null $value
+     */
+    public function setOrganizationMemberAccessLevel(string|null $value = null): self
+    {
+        $this->organizationMemberAccessLevel = $value;
+        $this->_setField('organizationMemberAccessLevel');
         return $this;
     }
 

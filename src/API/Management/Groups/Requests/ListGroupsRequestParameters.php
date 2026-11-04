@@ -37,7 +37,7 @@ class ListGroupsRequestParameters extends JsonSerializableType
     private ?bool $includeFields;
 
     /**
-     * @var ?bool $includeTotals Return results inside an object that contains the total result count (true) or as a direct array of results (false, default).
+     * @var ?bool $includeTotals Return results inside an object that contains the total result count (true) or as a direct array of results (false, default). The returned total reflects at most 1,000 results.
      */
     private ?bool $includeTotals = true;
 

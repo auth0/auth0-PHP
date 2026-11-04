@@ -12,4 +12,5 @@ enum GuardianFactorNameEnum: string
     case WebauthnRoaming = "webauthn-roaming";
     case WebauthnPlatform = "webauthn-platform";
     case RecoveryCode = "recovery-code";
+    case Passkey = "passkey";
 }

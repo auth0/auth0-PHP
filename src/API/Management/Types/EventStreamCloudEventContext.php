@@ -39,11 +39,18 @@ class EventStreamCloudEventContext extends JsonSerializableType
     private EventStreamCloudEventContextTenant $tenant;
 
     /**
+     * @var ?EventStreamCloudEventContextTransaction $transaction
+     */
+    #[JsonProperty('transaction')]
+    private ?EventStreamCloudEventContextTransaction $transaction;
+
+    /**
      * @param array{
      *   tenant: EventStreamCloudEventContextTenant,
      *   client?: ?EventStreamCloudEventContextClient,
      *   connection?: ?EventStreamCloudEventContextConnection,
      *   request?: ?EventStreamCloudEventContextRequest,
+     *   transaction?: ?EventStreamCloudEventContextTransaction,
      * } $values
      */
     public function __construct(
@@ -53,6 +60,7 @@ class EventStreamCloudEventContext extends JsonSerializableType
         $this->connection = $values['connection'] ?? null;
         $this->request = $values['request'] ?? null;
         $this->tenant = $values['tenant'];
+        $this->transaction = $values['transaction'] ?? null;
     }
 
     /**
@@ -124,6 +132,24 @@ class EventStreamCloudEventContext extends JsonSerializableType
     {
         $this->tenant = $value;
         $this->_setField('tenant');
+        return $this;
+    }
+
+    /**
+     * @return ?EventStreamCloudEventContextTransaction
+     */
+    public function getTransaction(): ?EventStreamCloudEventContextTransaction
+    {
+        return $this->transaction;
+    }
+
+    /**
+     * @param ?EventStreamCloudEventContextTransaction $value
+     */
+    public function setTransaction(?EventStreamCloudEventContextTransaction $value = null): self
+    {
+        $this->transaction = $value;
+        $this->_setField('transaction');
         return $this;
     }
 

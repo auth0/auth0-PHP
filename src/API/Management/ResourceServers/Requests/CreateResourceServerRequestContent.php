@@ -14,6 +14,8 @@ use Auth0\SDK\API\Management\Types\ResourceServerConsentPolicyEnum;
 use Auth0\SDK\API\Management\Types\ResourceServerProofOfPossession;
 use Auth0\SDK\API\Management\Types\ResourceServerSubjectTypeAuthorization;
 use Auth0\SDK\API\Management\Types\ResourceServerAuthorizationPolicy;
+use Auth0\SDK\API\Management\Types\ResourceServerAgentSubjectClaimsSchemaEnum;
+use Auth0\SDK\API\Management\Types\ResourceServerTypeEnum;
 
 class CreateResourceServerRequestContent extends JsonSerializableType
 {
@@ -144,6 +146,18 @@ class CreateResourceServerRequestContent extends JsonSerializableType
     private ?ResourceServerAuthorizationPolicy $authorizationPolicy;
 
     /**
+     * @var ?value-of<ResourceServerAgentSubjectClaimsSchemaEnum> $agentSubjectClaims
+     */
+    #[JsonProperty('agent_subject_claims')]
+    private ?string $agentSubjectClaims;
+
+    /**
+     * @var ?value-of<ResourceServerTypeEnum> $type
+     */
+    #[JsonProperty('type')]
+    private ?string $type;
+
+    /**
      * @param array{
      *   identifier: string,
      *   name?: ?string,
@@ -166,6 +180,8 @@ class CreateResourceServerRequestContent extends JsonSerializableType
      *   proofOfPossession?: ?ResourceServerProofOfPossession,
      *   subjectTypeAuthorization?: ?ResourceServerSubjectTypeAuthorization,
      *   authorizationPolicy?: ?ResourceServerAuthorizationPolicy,
+     *   agentSubjectClaims?: ?value-of<ResourceServerAgentSubjectClaimsSchemaEnum>,
+     *   type?: ?value-of<ResourceServerTypeEnum>,
      * } $values
      */
     public function __construct(
@@ -192,6 +208,8 @@ class CreateResourceServerRequestContent extends JsonSerializableType
         $this->proofOfPossession = $values['proofOfPossession'] ?? null;
         $this->subjectTypeAuthorization = $values['subjectTypeAuthorization'] ?? null;
         $this->authorizationPolicy = $values['authorizationPolicy'] ?? null;
+        $this->agentSubjectClaims = $values['agentSubjectClaims'] ?? null;
+        $this->type = $values['type'] ?? null;
     }
 
     /**
@@ -569,6 +587,42 @@ class CreateResourceServerRequestContent extends JsonSerializableType
     {
         $this->authorizationPolicy = $value;
         $this->_setField('authorizationPolicy');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ResourceServerAgentSubjectClaimsSchemaEnum>
+     */
+    public function getAgentSubjectClaims(): ?string
+    {
+        return $this->agentSubjectClaims;
+    }
+
+    /**
+     * @param ?value-of<ResourceServerAgentSubjectClaimsSchemaEnum> $value
+     */
+    public function setAgentSubjectClaims(?string $value = null): self
+    {
+        $this->agentSubjectClaims = $value;
+        $this->_setField('agentSubjectClaims');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ResourceServerTypeEnum>
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param ?value-of<ResourceServerTypeEnum> $value
+     */
+    public function setType(?string $value = null): self
+    {
+        $this->type = $value;
+        $this->_setField('type');
         return $this;
     }
 }

@@ -55,10 +55,14 @@ class EventStreamCloudEventOrgDeletedCloudEvent extends JsonSerializableType
     private string $a0Tenant;
 
     /**
-     * @var string $a0Stream The auth0 event stream ID of the stream the event was delivered on.
+     * The auth0 event stream ID of the stream the event was delivered on.
+     * Present when the event is delivered via an event stream; omitted when
+     * events are retrieved via the Events API (GET /api/v2/events).
+     *
+     * @var ?string $a0Stream
      */
     #[JsonProperty('a0stream')]
-    private string $a0Stream;
+    private ?string $a0Stream;
 
     /**
      * @var ?value-of<EventStreamCloudEventA0PurposeEnum> $a0Purpose
@@ -75,7 +79,7 @@ class EventStreamCloudEventOrgDeletedCloudEvent extends JsonSerializableType
      *   time: DateTime,
      *   data: EventStreamCloudEventOrgDeletedData,
      *   a0Tenant: string,
-     *   a0Stream: string,
+     *   a0Stream?: ?string,
      *   a0Purpose?: ?value-of<EventStreamCloudEventA0PurposeEnum>,
      * } $values
      */
@@ -89,7 +93,7 @@ class EventStreamCloudEventOrgDeletedCloudEvent extends JsonSerializableType
         $this->time = $values['time'];
         $this->data = $values['data'];
         $this->a0Tenant = $values['a0Tenant'];
-        $this->a0Stream = $values['a0Stream'];
+        $this->a0Stream = $values['a0Stream'] ?? null;
         $this->a0Purpose = $values['a0Purpose'] ?? null;
     }
 
@@ -220,17 +224,17 @@ class EventStreamCloudEventOrgDeletedCloudEvent extends JsonSerializableType
     }
 
     /**
-     * @return string
+     * @return ?string
      */
-    public function getA0Stream(): string
+    public function getA0Stream(): ?string
     {
         return $this->a0Stream;
     }
 
     /**
-     * @param string $value
+     * @param ?string $value
      */
-    public function setA0Stream(string $value): self
+    public function setA0Stream(?string $value = null): self
     {
         $this->a0Stream = $value;
         $this->_setField('a0Stream');

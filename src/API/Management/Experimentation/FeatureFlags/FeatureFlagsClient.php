@@ -22,8 +22,6 @@ use Psr\Http\Client\ClientExceptionInterface;
 use Auth0\SDK\API\Management\Types\GetFeatureFlagResponseContent;
 use Auth0\SDK\API\Management\Experimentation\FeatureFlags\Requests\UpdateFeatureFlagRequestContent;
 use Auth0\SDK\API\Management\Types\UpdateFeatureFlagResponseContent;
-use Auth0\SDK\API\Management\Experimentation\FeatureFlags\Requests\UpdateFeatureFlagStatusRequestContent;
-use Auth0\SDK\API\Management\Types\UpdateFeatureFlagStatusResponseContent;
 use Auth0\SDK\API\Management\Experimentation\FeatureFlags\Variations\VariationsClientInterface;
 
 class FeatureFlagsClient implements FeatureFlagsClientInterface
@@ -316,66 +314,6 @@ class FeatureFlagsClient implements FeatureFlagsClientInterface
                     return null;
                 }
                 return UpdateFeatureFlagResponseContent::fromJson($json);
-            }
-        } catch (JsonException $e) {
-            throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);
-        } catch (ClientExceptionInterface $e) {
-            throw new Auth0Exception(message: $e->getMessage(), previous: $e);
-        }
-        throw new Auth0ApiException(
-            message: 'API request failed',
-            statusCode: $statusCode,
-            body: $response->getBody()->getContents(),
-        );
-    }
-
-    /**
-     * Transitions a feature flag through its lifecycle states: draft → active, draft → archived, active → archived.
-     *
-     * Example:
-     * ```php
-     * $client->experimentation->featureFlags->updateStatus(
-     *     'id',
-     *     new UpdateFeatureFlagStatusRequestContent([
-     *         'status' => FeatureFlagStatusEnum::Draft->value,
-     *     ]),
-     * );
-     * ```
-     *
-     * @param string $id The ID of the feature flag to transition.
-     * @param UpdateFeatureFlagStatusRequestContent $request
-     * @param ?array{
-     *   baseUrl?: string,
-     *   maxRetries?: int,
-     *   timeout?: float,
-     *   headers?: array<string, string>,
-     *   queryParameters?: array<string, mixed>,
-     *   bodyProperties?: array<string, mixed>,
-     * } $options
-     * @return ?UpdateFeatureFlagStatusResponseContent
-     * @throws Auth0Exception
-     * @throws Auth0ApiException
-     */
-    public function updateStatus(string $id, UpdateFeatureFlagStatusRequestContent $request, ?array $options = null): ?UpdateFeatureFlagStatusResponseContent
-    {
-        $options = array_merge($this->options, $options ?? []);
-        try {
-            $response = $this->client->sendRequest(
-                new JsonApiRequest(
-                    baseUrl: $options['baseUrl'] ?? $this->client->options['baseUrl'] ?? Environments::Default_->value,
-                    path: "experimentation/feature-flags/" . RawClient::encodePathParam($id) . "/status",
-                    method: HttpMethod::POST,
-                    body: $request,
-                ),
-                $options,
-            );
-            $statusCode = $response->getStatusCode();
-            if ($statusCode >= 200 && $statusCode < 400) {
-                $json = $response->getBody()->getContents();
-                if (empty($json)) {
-                    return null;
-                }
-                return UpdateFeatureFlagStatusResponseContent::fromJson($json);
             }
         } catch (JsonException $e) {
             throw new Auth0Exception(message: "Failed to deserialize response: {$e->getMessage()}", previous: $e);

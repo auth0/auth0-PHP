@@ -375,10 +375,22 @@ class GetClientResponseContent extends JsonSerializableType
     private ?AnonymousSessions $anonymousSessions;
 
     /**
+     * @var ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum> $enforceAnonSessionTransferNetworkBinding
+     */
+    #[JsonProperty('enforce_anon_session_transfer_network_binding')]
+    private ?string $enforceAnonSessionTransferNetworkBinding;
+
+    /**
      * @var ?value-of<ClientThirdPartySecurityModeEnum> $thirdPartySecurityMode
      */
     #[JsonProperty('third_party_security_mode')]
     private ?string $thirdPartySecurityMode;
+
+    /**
+     * @var ?ClientOidcSupport $oidcSupport
+     */
+    #[JsonProperty('oidc_support')]
+    private ?ClientOidcSupport $oidcSupport;
 
     /**
      * @var ?value-of<ClientRedirectionPolicyEnum> $redirectionPolicy
@@ -409,6 +421,18 @@ class GetClientResponseContent extends JsonSerializableType
      */
     #[JsonProperty('external_metadata_created_by')]
     private ?string $externalMetadataCreatedBy;
+
+    /**
+     * @var ?value-of<ClientExternalMetadataStatusEnum> $externalMetadataStatus
+     */
+    #[JsonProperty('external_metadata_status')]
+    private ?string $externalMetadataStatus;
+
+    /**
+     * @var ?string $agentId ID of the agent associated with this client.
+     */
+    #[JsonProperty('agent_id')]
+    private ?string $agentId;
 
     /**
      * @var ?string $externalClientId An alternate client identifier to be used during authorization flows. Only supports CIMD-based client identifiers.
@@ -484,12 +508,16 @@ class GetClientResponseContent extends JsonSerializableType
      *   myOrganizationConfiguration?: ?ClientMyOrganizationResponseConfiguration,
      *   identityAssertionAuthorizationGrant?: ?IdentityAssertionAuthorizationGrant,
      *   anonymousSessions?: ?AnonymousSessions,
+     *   enforceAnonSessionTransferNetworkBinding?: ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum>,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
+     *   oidcSupport?: ?ClientOidcSupport,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
      *   resourceServerIdentifier?: ?string,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
      *   externalMetadataType?: ?value-of<ClientExternalMetadataTypeEnum>,
      *   externalMetadataCreatedBy?: ?value-of<ClientExternalMetadataCreatedByEnum>,
+     *   externalMetadataStatus?: ?value-of<ClientExternalMetadataStatusEnum>,
+     *   agentId?: ?string,
      *   externalClientId?: ?string,
      *   jwksUri?: ?string,
      * } $values
@@ -557,12 +585,16 @@ class GetClientResponseContent extends JsonSerializableType
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
         $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
         $this->anonymousSessions = $values['anonymousSessions'] ?? null;
+        $this->enforceAnonSessionTransferNetworkBinding = $values['enforceAnonSessionTransferNetworkBinding'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
+        $this->oidcSupport = $values['oidcSupport'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
         $this->resourceServerIdentifier = $values['resourceServerIdentifier'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
         $this->externalMetadataType = $values['externalMetadataType'] ?? null;
         $this->externalMetadataCreatedBy = $values['externalMetadataCreatedBy'] ?? null;
+        $this->externalMetadataStatus = $values['externalMetadataStatus'] ?? null;
+        $this->agentId = $values['agentId'] ?? null;
         $this->externalClientId = $values['externalClientId'] ?? null;
         $this->jwksUri = $values['jwksUri'] ?? null;
     }
@@ -1648,6 +1680,24 @@ class GetClientResponseContent extends JsonSerializableType
     }
 
     /**
+     * @return ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum>
+     */
+    public function getEnforceAnonSessionTransferNetworkBinding(): ?string
+    {
+        return $this->enforceAnonSessionTransferNetworkBinding;
+    }
+
+    /**
+     * @param ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum> $value
+     */
+    public function setEnforceAnonSessionTransferNetworkBinding(?string $value = null): self
+    {
+        $this->enforceAnonSessionTransferNetworkBinding = $value;
+        $this->_setField('enforceAnonSessionTransferNetworkBinding');
+        return $this;
+    }
+
+    /**
      * @return ?value-of<ClientThirdPartySecurityModeEnum>
      */
     public function getThirdPartySecurityMode(): ?string
@@ -1662,6 +1712,24 @@ class GetClientResponseContent extends JsonSerializableType
     {
         $this->thirdPartySecurityMode = $value;
         $this->_setField('thirdPartySecurityMode');
+        return $this;
+    }
+
+    /**
+     * @return ?ClientOidcSupport
+     */
+    public function getOidcSupport(): ?ClientOidcSupport
+    {
+        return $this->oidcSupport;
+    }
+
+    /**
+     * @param ?ClientOidcSupport $value
+     */
+    public function setOidcSupport(?ClientOidcSupport $value = null): self
+    {
+        $this->oidcSupport = $value;
+        $this->_setField('oidcSupport');
         return $this;
     }
 
@@ -1752,6 +1820,42 @@ class GetClientResponseContent extends JsonSerializableType
     {
         $this->externalMetadataCreatedBy = $value;
         $this->_setField('externalMetadataCreatedBy');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ClientExternalMetadataStatusEnum>
+     */
+    public function getExternalMetadataStatus(): ?string
+    {
+        return $this->externalMetadataStatus;
+    }
+
+    /**
+     * @param ?value-of<ClientExternalMetadataStatusEnum> $value
+     */
+    public function setExternalMetadataStatus(?string $value = null): self
+    {
+        $this->externalMetadataStatus = $value;
+        $this->_setField('externalMetadataStatus');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getAgentId(): ?string
+    {
+        return $this->agentId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setAgentId(?string $value = null): self
+    {
+        $this->agentId = $value;
+        $this->_setField('agentId');
         return $this;
     }
 

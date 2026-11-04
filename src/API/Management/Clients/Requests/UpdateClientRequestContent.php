@@ -14,6 +14,7 @@ use Auth0\SDK\API\Management\Types\ClientAppTypeEnum;
 use Auth0\SDK\API\Management\Types\UpdateTokenQuota;
 use Auth0\SDK\API\Management\Types\UpdateIdentityAssertionAuthorizationGrant;
 use Auth0\SDK\API\Management\Types\UpdateAnonymousSessions;
+use Auth0\SDK\API\Management\Types\ClientAnonymousSessionTransferNetworkBindingEnum;
 use Auth0\SDK\API\Management\Types\ClientAddons;
 use Auth0\SDK\API\Management\Types\ClientMobile;
 use Auth0\SDK\API\Management\Types\NativeSocialLoginPatch;
@@ -34,6 +35,7 @@ use Auth0\SDK\API\Management\Types\ClientMyOrganizationPatchConfiguration;
 use Auth0\SDK\API\Management\Types\AsyncApprovalNotificationsChannelsEnum;
 use Auth0\SDK\API\Management\Types\ClientThirdPartySecurityModeEnum;
 use Auth0\SDK\API\Management\Types\ClientRedirectionPolicyEnum;
+use Auth0\SDK\API\Management\Types\ClientOidcSupportPatch;
 
 class UpdateClientRequestContent extends JsonSerializableType
 {
@@ -224,6 +226,12 @@ class UpdateClientRequestContent extends JsonSerializableType
     private ?UpdateAnonymousSessions $anonymousSessions;
 
     /**
+     * @var ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum> $enforceAnonSessionTransferNetworkBinding
+     */
+    #[JsonProperty('enforce_anon_session_transfer_network_binding')]
+    private ?string $enforceAnonSessionTransferNetworkBinding;
+
+    /**
      * @var ?string $formTemplate Form template for WS-Federation protocol
      */
     #[JsonProperty('form_template')]
@@ -390,6 +398,18 @@ class UpdateClientRequestContent extends JsonSerializableType
     private ?string $redirectionPolicy;
 
     /**
+     * @var ?string $agentId ID of the agent to associate with this client, or null to remove the association.
+     */
+    #[JsonProperty('agent_id')]
+    private ?string $agentId;
+
+    /**
+     * @var ?ClientOidcSupportPatch $oidcSupport
+     */
+    #[JsonProperty('oidc_support')]
+    private ?ClientOidcSupportPatch $oidcSupport;
+
+    /**
      * @param array{
      *   name?: ?string,
      *   description?: ?string,
@@ -422,6 +442,7 @@ class UpdateClientRequestContent extends JsonSerializableType
      *   tokenQuota?: ?UpdateTokenQuota,
      *   identityAssertionAuthorizationGrant?: ?UpdateIdentityAssertionAuthorizationGrant,
      *   anonymousSessions?: ?UpdateAnonymousSessions,
+     *   enforceAnonSessionTransferNetworkBinding?: ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum>,
      *   formTemplate?: ?string,
      *   addons?: ?ClientAddons,
      *   clientMetadata?: ?array<string, mixed>,
@@ -449,6 +470,8 @@ class UpdateClientRequestContent extends JsonSerializableType
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
+     *   agentId?: ?string,
+     *   oidcSupport?: ?ClientOidcSupportPatch,
      * } $values
      */
     public function __construct(
@@ -485,6 +508,7 @@ class UpdateClientRequestContent extends JsonSerializableType
         $this->tokenQuota = $values['tokenQuota'] ?? null;
         $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
         $this->anonymousSessions = $values['anonymousSessions'] ?? null;
+        $this->enforceAnonSessionTransferNetworkBinding = $values['enforceAnonSessionTransferNetworkBinding'] ?? null;
         $this->formTemplate = $values['formTemplate'] ?? null;
         $this->addons = $values['addons'] ?? null;
         $this->clientMetadata = $values['clientMetadata'] ?? null;
@@ -512,6 +536,8 @@ class UpdateClientRequestContent extends JsonSerializableType
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
+        $this->agentId = $values['agentId'] ?? null;
+        $this->oidcSupport = $values['oidcSupport'] ?? null;
     }
 
     /**
@@ -1073,6 +1099,24 @@ class UpdateClientRequestContent extends JsonSerializableType
     }
 
     /**
+     * @return ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum>
+     */
+    public function getEnforceAnonSessionTransferNetworkBinding(): ?string
+    {
+        return $this->enforceAnonSessionTransferNetworkBinding;
+    }
+
+    /**
+     * @param ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum> $value
+     */
+    public function setEnforceAnonSessionTransferNetworkBinding(?string $value = null): self
+    {
+        $this->enforceAnonSessionTransferNetworkBinding = $value;
+        $this->_setField('enforceAnonSessionTransferNetworkBinding');
+        return $this;
+    }
+
+    /**
      * @return ?string
      */
     public function getFormTemplate(): ?string
@@ -1555,6 +1599,42 @@ class UpdateClientRequestContent extends JsonSerializableType
     {
         $this->redirectionPolicy = $value;
         $this->_setField('redirectionPolicy');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getAgentId(): ?string
+    {
+        return $this->agentId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setAgentId(?string $value = null): self
+    {
+        $this->agentId = $value;
+        $this->_setField('agentId');
+        return $this;
+    }
+
+    /**
+     * @return ?ClientOidcSupportPatch
+     */
+    public function getOidcSupport(): ?ClientOidcSupportPatch
+    {
+        return $this->oidcSupport;
+    }
+
+    /**
+     * @param ?ClientOidcSupportPatch $value
+     */
+    public function setOidcSupport(?ClientOidcSupportPatch $value = null): self
+    {
+        $this->oidcSupport = $value;
+        $this->_setField('oidcSupport');
         return $this;
     }
 }

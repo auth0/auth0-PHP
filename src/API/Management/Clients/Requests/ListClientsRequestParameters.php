@@ -52,6 +52,11 @@ class ListClientsRequestParameters extends JsonSerializableType
     private ?string $externalClientId;
 
     /**
+     * @var ?string $agentId Optional filter by the agent associated with the client.<br /><b>Additional Restrictions</b>:<br /><ul><li>Cannot be used in combination with other filters</li><li>Only <i>fields</i>, <i>include_fields</i>, <i>page</i>, <i>per_page</i>, and <i>include_totals</i> are supported alongside it</li><li>Checkpoint pagination (<i>from</i>, <i>take</i>) is not supported</li></ul>
+     */
+    private ?string $agentId;
+
+    /**
      * @var ?string $q Advanced Query in <a href="https://lucene.apache.org/core/2_9_4/queryparsersyntax.html">Lucene</a> syntax.<br /><b>Permitted Queries</b>:<br /><ul><li><i>client_grant.organization_id:{organization_id}</i></li><li><i>client_grant.allow_any_organization:true</i></li></ul><b>Additional Restrictions</b>:<br /><ul><li>Cannot be used in combination with other filters</li><li>Requires use of the <i>from</i> and <i>take</i> paging parameters (checkpoint paginatinon)</li><li>Reduced rate limits apply. See <a href="https://auth0.com/docs/troubleshoot/customer-support/operational-policies/rate-limit-policy/rate-limit-configurations/enterprise-public">Rate Limit Configurations</a></li></ul><i><b>Note</b>: Recent updates may not be immediately reflected in query results</i>
      */
     private ?string $q;
@@ -67,6 +72,7 @@ class ListClientsRequestParameters extends JsonSerializableType
      *   isFirstParty?: ?bool,
      *   appType?: ?string,
      *   externalClientId?: ?string,
+     *   agentId?: ?string,
      *   q?: ?string,
      * } $values
      */
@@ -82,6 +88,7 @@ class ListClientsRequestParameters extends JsonSerializableType
         $this->isFirstParty = $values['isFirstParty'] ?? null;
         $this->appType = $values['appType'] ?? null;
         $this->externalClientId = $values['externalClientId'] ?? null;
+        $this->agentId = $values['agentId'] ?? null;
         $this->q = $values['q'] ?? null;
     }
 
@@ -244,6 +251,24 @@ class ListClientsRequestParameters extends JsonSerializableType
     {
         $this->externalClientId = $value;
         $this->_setField('externalClientId');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getAgentId(): ?string
+    {
+        return $this->agentId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setAgentId(?string $value = null): self
+    {
+        $this->agentId = $value;
+        $this->_setField('agentId');
         return $this;
     }
 

@@ -36,6 +36,12 @@ class GetBruteForceSettingsResponseContent extends JsonSerializableType
     private ?string $mode;
 
     /**
+     * @var ?value-of<BruteForceProtectionFormSubmissionModeEnum> $formSubmissionMode
+     */
+    #[JsonProperty('form_submission_mode')]
+    private ?string $formSubmissionMode;
+
+    /**
      * @var ?int $maxAttempts Maximum number of unsuccessful attempts.
      */
     #[JsonProperty('max_attempts')]
@@ -47,6 +53,7 @@ class GetBruteForceSettingsResponseContent extends JsonSerializableType
      *   shields?: ?array<value-of<BruteForceProtectionShieldsEnum>>,
      *   allowlist?: ?array<string>,
      *   mode?: ?value-of<BruteForceProtectionModeEnum>,
+     *   formSubmissionMode?: ?value-of<BruteForceProtectionFormSubmissionModeEnum>,
      *   maxAttempts?: ?int,
      * } $values
      */
@@ -57,6 +64,7 @@ class GetBruteForceSettingsResponseContent extends JsonSerializableType
         $this->shields = $values['shields'] ?? null;
         $this->allowlist = $values['allowlist'] ?? null;
         $this->mode = $values['mode'] ?? null;
+        $this->formSubmissionMode = $values['formSubmissionMode'] ?? null;
         $this->maxAttempts = $values['maxAttempts'] ?? null;
     }
 
@@ -129,6 +137,24 @@ class GetBruteForceSettingsResponseContent extends JsonSerializableType
     {
         $this->mode = $value;
         $this->_setField('mode');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<BruteForceProtectionFormSubmissionModeEnum>
+     */
+    public function getFormSubmissionMode(): ?string
+    {
+        return $this->formSubmissionMode;
+    }
+
+    /**
+     * @param ?value-of<BruteForceProtectionFormSubmissionModeEnum> $value
+     */
+    public function setFormSubmissionMode(?string $value = null): self
+    {
+        $this->formSubmissionMode = $value;
+        $this->_setField('formSubmissionMode');
         return $this;
     }
 

@@ -57,12 +57,12 @@ class ConnectionResponseContentOidc extends JsonSerializableType
 
     /**
      * @param array{
+     *   displayName: string,
      *   id: string,
      *   name: string,
      *   strategy: value-of<ConnectionResponseContentOidcStrategy>,
      *   realms?: ?array<string>,
      *   enabledClients?: ?array<string>,
-     *   displayName?: ?string,
      *   isDomainConnection?: ?bool,
      *   metadata?: ?array<string, ?string>,
      *   authentication?: ?ConnectionAuthenticationPurpose,
@@ -76,11 +76,11 @@ class ConnectionResponseContentOidc extends JsonSerializableType
     public function __construct(
         array $values,
     ) {
+        $this->displayName = $values['displayName'];
         $this->id = $values['id'];
         $this->realms = $values['realms'] ?? null;
         $this->name = $values['name'];
         $this->enabledClients = $values['enabledClients'] ?? null;
-        $this->displayName = $values['displayName'] ?? null;
         $this->isDomainConnection = $values['isDomainConnection'] ?? null;
         $this->metadata = $values['metadata'] ?? null;
         $this->strategy = $values['strategy'];

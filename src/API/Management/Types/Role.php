@@ -32,7 +32,7 @@ class Role extends JsonSerializableType
     private ?string $type;
 
     /**
-     * @var ?string $ownerId The id of the entity that owns this role, such as an organization id.
+     * @var ?string $ownerId
      */
     #[JsonProperty('owner_id')]
     private ?string $ownerId;
