@@ -26,6 +26,7 @@ use Auth0\SDK\API\Management\LogStreams\LogStreamsClientInterface;
 use Auth0\SDK\API\Management\Logs\LogsClientInterface;
 use Auth0\SDK\API\Management\NetworkAcls\NetworkAclsClientInterface;
 use Auth0\SDK\API\Management\Organizations\OrganizationsClientInterface;
+use Auth0\SDK\API\Management\Portals\PortalsClientInterface;
 use Auth0\SDK\API\Management\Prompts\PromptsClientInterface;
 use Auth0\SDK\API\Management\RateLimitPolicies\RateLimitPoliciesClientInterface;
 use Auth0\SDK\API\Management\RefreshTokens\RefreshTokensClientInterface;
@@ -172,6 +173,11 @@ interface ManagementInterface
      * @return OrganizationsClientInterface
      */
     public function getOrganizations(): OrganizationsClientInterface;
+
+    /**
+     * @return PortalsClientInterface
+     */
+    public function getPortals(): PortalsClientInterface;
 
     /**
      * @return PromptsClientInterface

@@ -2024,6 +2024,7 @@ $client->clients->list(
         'isFirstParty' => true,
         'appType' => 'app_type',
         'externalClientId' => 'external_client_id',
+        'agentId' => 'agent_id',
         'q' => 'q',
     ]),
 );
@@ -2106,6 +2107,14 @@ $client->clients->list(
 <dd>
 
 **$externalClientId:** `?string` — Optional filter by the <a href="https://drafts.oauth.net/draft-ietf-oauth-client-id-metadata-document/draft-ietf-oauth-client-id-metadata-document.html">Client ID Metadata Document</a> URI for CIMD-registered clients.
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$agentId:** `?string` — Optional filter by the agent associated with the client.<br /><b>Additional Restrictions</b>:<br /><ul><li>Cannot be used in combination with other filters</li><li>Only <i>fields</i>, <i>include_fields</i>, <i>page</i>, <i>per_page</i>, and <i>include_totals</i> are supported alongside it</li><li>Checkpoint pagination (<i>from</i>, <i>take</i>) is not supported</li></ul>
     
 </dd>
 </dl>
@@ -2653,6 +2662,14 @@ See https://auth0.com/docs/secure/security-guidance/measures-against-app-imperso
 <dd>
 
 **$asyncApprovalNotificationChannels:** `?array` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$agentId:** `?string` — ID of the agent to associate with this client.
     
 </dd>
 </dl>
@@ -3610,6 +3627,14 @@ See https://auth0.com/docs/secure/security-guidance/measures-against-app-imperso
 <dd>
 
 **$redirectionPolicy:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$agentId:** `?string` — ID of the agent to associate with this client, or null to remove the association.
     
 </dd>
 </dl>
@@ -10408,6 +10433,297 @@ $client->organizations->update(
 </dl>
 </details>
 
+## Portals
+<details><summary><code>$client-&gt;portals-&gt;list() -> ?ListPortalsResponseContent</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->portals->list();
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;portals-&gt;create($request) -> ?Portal</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->portals->create(
+    new CreatePortalRequestContent([
+        'slug' => 'slug',
+        'name' => 'name',
+        'client' => new PortalClientSecretPostRequest([
+            'tokenEndpointAuthMethod' => PortalClientSecretPostRequestTokenEndpointAuthMethod::ClientSecretPost->value,
+            'clientId' => 'client_id',
+            'clientSecret' => 'client_secret',
+        ]),
+    ]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$slug:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$client:** `PortalClientSecretPostRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$navigation:** `?PortalNavigation` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pages:** `?PortalPagesByType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customCode:** `?PortalCustomCode` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;portals-&gt;get($id) -> ?Portal</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->portals->get(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;portals-&gt;delete($id)</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->portals->delete(
+    'id',
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
+<details><summary><code>$client-&gt;portals-&gt;update($id, $request) -> ?Portal</code></summary>
+<dl>
+<dd>
+
+#### 🔌 Usage
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+```php
+$client->portals->update(
+    'id',
+    new UpdatePortalRequestContent([]),
+);
+```
+</dd>
+</dl>
+</dd>
+</dl>
+
+#### ⚙️ Parameters
+
+<dl>
+<dd>
+
+<dl>
+<dd>
+
+**$id:** `string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$slug:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$name:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$client:** `?PortalClientSecretPostRequest` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$navigation:** `?PortalNavigation` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$pages:** `?PortalPagesByType` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$customCode:** `?PortalCustomCode` 
+    
+</dd>
+</dl>
+</dd>
+</dl>
+
+
+</dd>
+</dl>
+</details>
+
 ## Prompts
 <details><summary><code>$client-&gt;prompts-&gt;getSettings() -> ?GetSettingsResponseContent</code></summary>
 <dl>
@@ -11485,6 +11801,14 @@ $client->resourceServers->create(
 <dl>
 <dd>
 
+**$agentSubjectClaims:** `?string` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
 **$type:** `?string` 
     
 </dd>
@@ -11941,6 +12265,14 @@ $client->resourceServers->update(
 <dd>
 
 **$authorizationPolicy:** `?ResourceServerAuthorizationPolicy` 
+    
+</dd>
+</dl>
+
+<dl>
+<dd>
+
+**$agentSubjectClaims:** `?string` 
     
 </dd>
 </dl>
@@ -15880,7 +16212,7 @@ $client->users->update(
 </dl>
 </details>
 
-<details><summary><code>$client-&gt;users-&gt;listConsentSigningKeys($id) -> ?array</code></summary>
+<details><summary><code>$client-&gt;users-&gt;listConsentSigningKeys($id) -> ?ListUserConsentSigningKeysResponseContent</code></summary>
 <dl>
 <dd>
 
@@ -15892,7 +16224,7 @@ $client->users->update(
 <dl>
 <dd>
 
-Retrieve all consent signing keys registered for a user. Returns an empty array when the user has no keys registered.
+Retrieve all consent signing keys registered for a user. Returns an empty `keys` array when the user has no keys registered.
 </dd>
 </dl>
 </dd>
@@ -21471,7 +21803,7 @@ $client->connections->clients->update(
 <dl>
 <dd>
 
-Gets the connection keys for the Okta or OIDC connection strategy.
+Gets the connection keys for the Okta, OIDC, or SAML (samlp) connection strategy.
 </dd>
 </dl>
 </dd>
@@ -21527,7 +21859,7 @@ $client->connections->keys->get(
 <dl>
 <dd>
 
-Provision initial connection keys for Okta or OIDC connection strategies. This endpoint allows you to create keys before configuring the connection to use Private Key JWT authentication, enabling zero-downtime transitions.
+Provision initial connection keys for Okta, OIDC, or SAML (samlp) connection strategies. This endpoint allows you to create keys before configuring the connection to use Private Key JWT authentication, enabling zero-downtime transitions.
 </dd>
 </dl>
 </dd>
@@ -21592,7 +21924,7 @@ $client->connections->keys->create(
 <dl>
 <dd>
 
-Rotates the connection keys for the Okta or OIDC connection strategies.
+Rotates the connection keys for the Okta, OIDC, or SAML (samlp) connection strategies.
 </dd>
 </dl>
 </dd>

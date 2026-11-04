@@ -124,6 +124,7 @@ class ClientsClient implements ClientsClientInterface
      *         'isFirstParty' => true,
      *         'appType' => 'app_type',
      *         'externalClientId' => 'external_client_id',
+     *         'agentId' => 'agent_id',
      *         'q' => 'q',
      *     ]),
      * );
@@ -764,6 +765,9 @@ class ClientsClient implements ClientsClientInterface
         }
         if ($request->getExternalClientId() != null) {
             $query['external_client_id'] = $request->getExternalClientId();
+        }
+        if ($request->getAgentId() != null) {
+            $query['agent_id'] = $request->getAgentId();
         }
         if ($request->getQ() != null) {
             $query['q'] = $request->getQ();

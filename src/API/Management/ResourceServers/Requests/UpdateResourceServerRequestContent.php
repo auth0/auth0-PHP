@@ -14,6 +14,7 @@ use Auth0\SDK\API\Management\Types\ResourceServerConsentPolicyEnum;
 use Auth0\SDK\API\Management\Types\ResourceServerProofOfPossession;
 use Auth0\SDK\API\Management\Types\ResourceServerSubjectTypeAuthorization;
 use Auth0\SDK\API\Management\Types\ResourceServerAuthorizationPolicy;
+use Auth0\SDK\API\Management\Types\ResourceServerAgentSubjectClaimsSchemaEnum;
 use Auth0\SDK\API\Management\Types\ResourceServerTypeEnum;
 
 class UpdateResourceServerRequestContent extends JsonSerializableType
@@ -139,6 +140,12 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
     private ?ResourceServerAuthorizationPolicy $authorizationPolicy;
 
     /**
+     * @var ?value-of<ResourceServerAgentSubjectClaimsSchemaEnum> $agentSubjectClaims
+     */
+    #[JsonProperty('agent_subject_claims')]
+    private ?string $agentSubjectClaims;
+
+    /**
      * @var ?value-of<ResourceServerTypeEnum> $type
      */
     #[JsonProperty('type')]
@@ -166,6 +173,7 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
      *   proofOfPossession?: ?ResourceServerProofOfPossession,
      *   subjectTypeAuthorization?: ?ResourceServerSubjectTypeAuthorization,
      *   authorizationPolicy?: ?ResourceServerAuthorizationPolicy,
+     *   agentSubjectClaims?: ?value-of<ResourceServerAgentSubjectClaimsSchemaEnum>,
      *   type?: ?value-of<ResourceServerTypeEnum>,
      * } $values
      */
@@ -192,6 +200,7 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
         $this->proofOfPossession = $values['proofOfPossession'] ?? null;
         $this->subjectTypeAuthorization = $values['subjectTypeAuthorization'] ?? null;
         $this->authorizationPolicy = $values['authorizationPolicy'] ?? null;
+        $this->agentSubjectClaims = $values['agentSubjectClaims'] ?? null;
         $this->type = $values['type'] ?? null;
     }
 
@@ -552,6 +561,24 @@ class UpdateResourceServerRequestContent extends JsonSerializableType
     {
         $this->authorizationPolicy = $value;
         $this->_setField('authorizationPolicy');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ResourceServerAgentSubjectClaimsSchemaEnum>
+     */
+    public function getAgentSubjectClaims(): ?string
+    {
+        return $this->agentSubjectClaims;
+    }
+
+    /**
+     * @param ?value-of<ResourceServerAgentSubjectClaimsSchemaEnum> $value
+     */
+    public function setAgentSubjectClaims(?string $value = null): self
+    {
+        $this->agentSubjectClaims = $value;
+        $this->_setField('agentSubjectClaims');
         return $this;
     }
 

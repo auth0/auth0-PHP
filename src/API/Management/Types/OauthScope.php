@@ -256,6 +256,10 @@ enum OauthScope: string
     case ReadOrganizationClients = "read:organization_clients";
     case UpdateOrganizationClients = "update:organization_clients";
     case DeleteOrganizationClients = "delete:organization_clients";
+    case CreatePortals = "create:portals";
+    case ReadPortals = "read:portals";
+    case UpdatePortals = "update:portals";
+    case DeletePortals = "delete:portals";
     case CreateNetworkAclKeys = "create:network_acl_keys";
     case ReadNetworkAclKeys = "read:network_acl_keys";
     case DeleteNetworkAclKeys = "delete:network_acl_keys";
