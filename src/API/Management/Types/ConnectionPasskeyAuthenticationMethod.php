@@ -17,14 +17,22 @@ class ConnectionPasskeyAuthenticationMethod extends JsonSerializableType
     private ?bool $enabled;
 
     /**
+     * @var ?value-of<ConnectionSignupBehaviorEnum> $signupBehavior Specifies the signup behavior for passkey authentication
+     */
+    #[JsonProperty('signup_behavior')]
+    private ?string $signupBehavior;
+
+    /**
      * @param array{
      *   enabled?: ?bool,
+     *   signupBehavior?: ?value-of<ConnectionSignupBehaviorEnum>,
      * } $values
      */
     public function __construct(
         array $values = [],
     ) {
         $this->enabled = $values['enabled'] ?? null;
+        $this->signupBehavior = $values['signupBehavior'] ?? null;
     }
 
     /**
@@ -42,6 +50,24 @@ class ConnectionPasskeyAuthenticationMethod extends JsonSerializableType
     {
         $this->enabled = $value;
         $this->_setField('enabled');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<ConnectionSignupBehaviorEnum>
+     */
+    public function getSignupBehavior(): ?string
+    {
+        return $this->signupBehavior;
+    }
+
+    /**
+     * @param ?value-of<ConnectionSignupBehaviorEnum> $value
+     */
+    public function setSignupBehavior(?string $value = null): self
+    {
+        $this->signupBehavior = $value;
+        $this->_setField('signupBehavior');
         return $this;
     }
 
