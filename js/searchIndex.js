@@ -3281,6 +3281,11 @@ Search.appendIndex(
             "summary": "",
             "url": "classes/Auth0-SDK-Exception-StateException.html#method_failedCodeExchange"
         },                {
+            "fqsen": "\\Auth0\\SDK\\Exception\\StateException\u003A\u003AfailedRenewTemporaryError\u0028\u0029",
+            "name": "failedRenewTemporaryError",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Exception-StateException.html#method_failedRenewTemporaryError"
+        },                {
             "fqsen": "\\Auth0\\SDK\\Exception\\StateException\u003A\u003AfailedRenewTokenMissingAccessToken\u0028\u0029",
             "name": "failedRenewTokenMissingAccessToken",
             "summary": "",
@@ -3330,6 +3335,11 @@ Search.appendIndex(
             "name": "MSG_FAILED_CODE_EXCHANGE",
             "summary": "",
             "url": "classes/Auth0-SDK-Exception-StateException.html#constant_MSG_FAILED_CODE_EXCHANGE"
+        },                {
+            "fqsen": "\\Auth0\\SDK\\Exception\\StateException\u003A\u003AMSG_FAILED_RENEW_TEMPORARY_ERROR",
+            "name": "MSG_FAILED_RENEW_TEMPORARY_ERROR",
+            "summary": "",
+            "url": "classes/Auth0-SDK-Exception-StateException.html#constant_MSG_FAILED_RENEW_TEMPORARY_ERROR"
         },                {
             "fqsen": "\\Auth0\\SDK\\Exception\\StateException\u003A\u003AMSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN",
             "name": "MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN",

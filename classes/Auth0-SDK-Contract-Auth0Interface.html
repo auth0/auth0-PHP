@@ -1892,7 +1892,7 @@
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">273</span>
+    <span class="phpdocumentor-element-found-in__line">277</span>
 
     </aside>
 
@@ -1906,7 +1906,10 @@
         </div>
     
         <section class="phpdocumentor-description"><p>Scope &quot;offline_access&quot; must be declared in order to obtain refresh token for later token renewal.
-If a returned ID token cannot be verified or validated, the session is cleared before the exception is thrown.</p>
+If there is no refresh token, the API does not return an access token, or a returned ID token cannot be verified or validated, the session is cleared before the exception is thrown, and the transient state of a login in progress is kept.</p>
+<p>Unlike other responses without an access token, a rate limit (429) or server error (5xx other than 501) from the API does not clear the session.
+renew() throws a StateException with the MSG_FAILED_RENEW_TEMPORARY_ERROR message, and getCredentials() still returns the session, which tells this case apart from a session that ended.
+renew() does not retry or delay the request, so wait before calling it again.</p>
 </section>
 
         <h5 class="phpdocumentor-argument-list__heading">Parameters</h5>
@@ -1934,7 +1937,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
             </dt>
                             <dd class="phpdocumentor-tag-list__definition">
                                                                 <span class="phpdocumentor-tag-link"><a href="classes/Auth0-SDK-Exception-StateException.html"><abbr title="\Auth0\SDK\Exception\StateException">StateException</abbr></a></span>
-                                                                                        <section class="phpdocumentor-description"><p>if the Auth0 object does not have access token and refresh token, or the API did not renew tokens properly</p>
+                                                                                        <section class="phpdocumentor-description"><p>if the Auth0 object does not have access token and refresh token, or the API did not renew tokens properly, including a rate limit or server error that keeps the session</p>
 </section>
 
                                     </dd>
@@ -1993,7 +1996,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">282</span>
+    <span class="phpdocumentor-element-found-in__line">286</span>
 
     </aside>
 
@@ -2044,7 +2047,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">291</span>
+    <span class="phpdocumentor-element-found-in__line">295</span>
 
     </aside>
 
@@ -2095,7 +2098,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">300</span>
+    <span class="phpdocumentor-element-found-in__line">304</span>
 
     </aside>
 
@@ -2146,7 +2149,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">309</span>
+    <span class="phpdocumentor-element-found-in__line">313</span>
 
     </aside>
 
@@ -2197,7 +2200,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">318</span>
+    <span class="phpdocumentor-element-found-in__line">322</span>
 
     </aside>
 
@@ -2248,7 +2251,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">327</span>
+    <span class="phpdocumentor-element-found-in__line">331</span>
 
     </aside>
 
@@ -2299,7 +2302,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">336</span>
+    <span class="phpdocumentor-element-found-in__line">340</span>
 
     </aside>
 
@@ -2350,7 +2353,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">345</span>
+    <span class="phpdocumentor-element-found-in__line">349</span>
 
     </aside>
 
@@ -2401,7 +2404,7 @@ If a returned ID token cannot be verified or validated, the session is cleared b
     <aside class="phpdocumentor-element-found-in">
     <abbr class="phpdocumentor-element-found-in__file" title="src/Contract/Auth0Interface.php"><a href="files/src-contract-auth0interface.html"><abbr title="src/Contract/Auth0Interface.php">Auth0Interface.php</abbr></a></abbr>
     :
-    <span class="phpdocumentor-element-found-in__line">361</span>
+    <span class="phpdocumentor-element-found-in__line">365</span>
 
     </aside>
 
