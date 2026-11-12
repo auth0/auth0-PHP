@@ -17,7 +17,7 @@ class CspPolicyReporting extends JsonSerializableType
     private ?string $reportUri;
 
     /**
-     * @var ?string $reportToGroup Report-To group name for modern reporting.
+     * @var ?string $reportToGroup Report-To group name for modern reporting. Letters, digits, underscores and hyphens only; enforced on write by the request validator.
      */
     #[JsonProperty('report_to_group')]
     private ?string $reportToGroup;

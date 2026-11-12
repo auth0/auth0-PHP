@@ -6,7 +6,7 @@ use Auth0\SDK\API\Management\Core\Json\JsonSerializableType;
 use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 
 /**
- * Default OIDC support applied to matched clients.
+ * Default OIDC support configuration applied to matched clients.
  */
 class ClientProfileClientConfigurationOidcSupport extends JsonSerializableType
 {
