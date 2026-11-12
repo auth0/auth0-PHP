@@ -42,6 +42,12 @@ If you ran any build from 8.10.0 onward with a persistent backchannel logout cac
 
 If your application handles the callback itself and decodes the ID token with `decode()` instead of calling `exchange()`, the stored values are no longer checked for you. Pass the nonce and max_age your application sent with the authorization request as `tokenNonce` and `tokenMaxAge`. When no `tokenMaxAge` is passed, `decode()` still applies the `tokenMaxAge` set in your configuration.
 
+#### `renew()` on a rate limit or server error
+
+`Auth0::renew()` now keeps the session when the token endpoint responds with a rate limit (429) or a server error (5xx other than 501), and throws a `StateException` with the `MSG_FAILED_RENEW_TEMPORARY_ERROR` message. Wait before calling `renew()` again, because the SDK does not retry or delay the request.
+
+A 5xx with an HTML body used to throw a `JsonException` and now throws this `StateException`, so update any code that catches `JsonException` from `renew()`.
+
 ### Management API
 
 The Management API was regenerated using [Fern](https://github.com/fern-api/fern) in v9, with new client initialization, renamed endpoints, typed request/response structures, and updated pagination. See [v9_MIGRATION_GUIDE.md](v9_MIGRATION_GUIDE.md) for the complete details.
@@ -585,8 +591,10 @@ if ($credentials) {
         try {
             $sdk->renew();
         } catch (\Auth0\SDK\Exception\StateException $exception) {
-            // Couldn't renew the token, we might not have one based on our requested scopes. Let's fallback to starting a fresh authentication flow.
-            $sdk->login();
+            // A rate limit or server error keeps the session, so only start a fresh authentication flow when the session has ended. We might not have a refresh token based on our requested scopes.
+            if (null === $sdk->getCredentials()) {
+                $sdk->login();
+            }
         }
     }
 

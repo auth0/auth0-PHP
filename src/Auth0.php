@@ -708,6 +708,15 @@ final class Auth0 implements Auth0Interface
 
         $response = $this->authentication()->refreshToken($refreshToken, $params);
 
+        $status = $response->getStatusCode();
+
+        // Keep the session on a rate limit or server error so the renewal can be retried. A 501 won't change on retry.
+        if (429 === $status || ($status >= 500 && 501 !== $status)) {
+            $this->deferStateSaving(false);
+
+            throw Exception\StateException::failedRenewTemporaryError();
+        }
+
         $response = HttpResponse::decodeContent($response);
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */

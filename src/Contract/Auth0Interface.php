@@ -260,9 +260,13 @@ interface Auth0Interface
      * Scope "offline_access" must be declared in order to obtain refresh token for later token renewal.
      * If there is no refresh token, the API does not return an access token, or a returned ID token cannot be verified or validated, the session is cleared before the exception is thrown, and the transient state of a login in progress is kept.
      *
+     * Unlike other responses without an access token, a rate limit (429) or server error (5xx other than 501) from the API does not clear the session.
+     * renew() throws a StateException with the MSG_FAILED_RENEW_TEMPORARY_ERROR message, and getCredentials() still returns the session, which tells this case apart from a session that ended.
+     * renew() does not retry or delay the request, so wait before calling it again.
+     *
      * @param null|array<null|int|string> $params Optional. Additional parameters to include with the request.
      *
-     * @throws \Auth0\SDK\Exception\StateException         if the Auth0 object does not have access token and refresh token, or the API did not renew tokens properly
+     * @throws \Auth0\SDK\Exception\StateException         if the Auth0 object does not have access token and refresh token, or the API did not renew tokens properly, including a rate limit or server error that keeps the session
      * @throws \Auth0\SDK\Exception\ConfigurationException when a Client ID is not configured
      * @throws \Auth0\SDK\Exception\ConfigurationException when a Client Secret is not configured
      * @throws \Auth0\SDK\Exception\InvalidTokenException  when validation of a returned ID token fails
