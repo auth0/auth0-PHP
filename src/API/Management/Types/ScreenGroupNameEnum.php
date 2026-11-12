@@ -34,6 +34,7 @@ enum ScreenGroupNameEnum: string
     case CustomForm = "custom-form";
     case Consent = "consent";
     case ConsentTenantScopes = "consent-tenant-scopes";
+    case PendingConsent = "pending-consent";
     case CustomizedConsent = "customized-consent";
     case Logout = "logout";
     case LogoutComplete = "logout-complete";
