@@ -258,7 +258,7 @@ interface Auth0Interface
     /**
      * Renews the access token and ID token using an existing refresh token.
      * Scope "offline_access" must be declared in order to obtain refresh token for later token renewal.
-     * If a returned ID token cannot be verified or validated, the session is cleared before the exception is thrown.
+     * If there is no refresh token, the API does not return an access token, or a returned ID token cannot be verified or validated, the session is cleared before the exception is thrown, and the transient state of a login in progress is kept.
      *
      * Unlike other responses without an access token, a rate limit (429) or server error (5xx other than 501) from the API does not clear the session.
      * renew() throws a StateException with the MSG_FAILED_RENEW_TEMPORARY_ERROR message, and getCredentials() still returns the session, which tells this case apart from a session that ended.
