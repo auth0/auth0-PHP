@@ -1,5 +1,17 @@
 # Change Log
 
+## [9.7.0](https://github.com/auth0/auth0-PHP/tree/9.7.0) (2026-11-12)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.6.0...9.7.0)
+
+**Added**
+
+- feat: add Passkey Signup Behavior and Pending Consent screen group [\#902](https://github.com/auth0/auth0-PHP/pull/902) ([fern-api[bot]](https://github.com/apps/fern-api))
+
+**Fixed**
+
+- fix: keep the transient state of a login in progress when renew() fails [\#886](https://github.com/auth0/auth0-PHP/pull/886) ([awss1i](https://github.com/awss1i))
+- fix: keep the session when renew() gets a 429 or 5xx from the token endpoint [\#890](https://github.com/auth0/auth0-PHP/pull/890) ([awss1i](https://github.com/awss1i))
+
 ## [9.6.0](https://github.com/auth0/auth0-PHP/tree/9.6.0) (2026-11-04)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.5.0...9.6.0)
 
