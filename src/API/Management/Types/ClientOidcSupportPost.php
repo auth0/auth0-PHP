@@ -7,24 +7,24 @@ use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 use Auth0\SDK\API\Management\Core\Types\ArrayType;
 
 /**
- * OIDC support configuration for a client. Controls whether OIDC flows are allowed and which scopes the client may request.
+ * Controls whether the client can receive ID tokens and use the UserInfo endpoint, and which user profile information it can request through OIDC scopes.
  */
 class ClientOidcSupportPost extends JsonSerializableType
 {
     /**
-     * @var bool $isAllowed
+     * @var bool $isAllowed Allows the client to use OIDC, including receiving ID tokens and calling the UserInfo endpoint.
      */
     #[JsonProperty('is_allowed')]
     private bool $isAllowed;
 
     /**
-     * @var ?bool $allowAllScopes
+     * @var ?bool $allowAllScopes Allows the client to request all supported OIDC scopes. Mutually exclusive with allowed_scopes.
      */
     #[JsonProperty('allow_all_scopes')]
     private ?bool $allowAllScopes;
 
     /**
-     * @var ?array<value-of<ClientOidcSupportAllowedScopesEnum>> $allowedScopes
+     * @var ?array<value-of<ClientOidcSupportAllowedScopesEnum>> $allowedScopes OIDC scopes the client may request (`profile`, `email`, `address`, and `phone`), which determine the user profile information it can access. Mutually exclusive with allow_all_scopes.
      */
     #[JsonProperty('allowed_scopes'), ArrayType(['string'])]
     private ?array $allowedScopes;
