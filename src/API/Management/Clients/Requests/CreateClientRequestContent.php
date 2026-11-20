@@ -34,6 +34,7 @@ use Auth0\SDK\API\Management\Types\ClientRedirectionPolicyEnum;
 use Auth0\SDK\API\Management\Types\ExpressConfiguration;
 use Auth0\SDK\API\Management\Types\B2BIntegrationConfiguration;
 use Auth0\SDK\API\Management\Types\ClientMyOrganizationPostConfiguration;
+use Auth0\SDK\API\Management\Types\GoogleAccountLinkingConfigurationCreate;
 use Auth0\SDK\API\Management\Types\AsyncApprovalNotificationsChannelsEnum;
 use Auth0\SDK\API\Management\Types\ClientOidcSupportPost;
 
@@ -392,6 +393,12 @@ class CreateClientRequestContent extends JsonSerializableType
     private ?ClientMyOrganizationPostConfiguration $myOrganizationConfiguration;
 
     /**
+     * @var ?GoogleAccountLinkingConfigurationCreate $googleAccountLinking
+     */
+    #[JsonProperty('google_account_linking')]
+    private ?GoogleAccountLinkingConfigurationCreate $googleAccountLinking;
+
+    /**
      * @var ?array<value-of<AsyncApprovalNotificationsChannelsEnum>> $asyncApprovalNotificationChannels
      */
     #[JsonProperty('async_approval_notification_channels'), ArrayType(['string'])]
@@ -469,6 +476,7 @@ class CreateClientRequestContent extends JsonSerializableType
      *   expressConfiguration?: ?ExpressConfiguration,
      *   b2BIntegrationConfiguration?: ?B2BIntegrationConfiguration,
      *   myOrganizationConfiguration?: ?ClientMyOrganizationPostConfiguration,
+     *   googleAccountLinking?: ?GoogleAccountLinkingConfigurationCreate,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
      *   agentId?: ?string,
      *   oidcSupport?: ?ClientOidcSupportPost,
@@ -535,6 +543,7 @@ class CreateClientRequestContent extends JsonSerializableType
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
         $this->b2BIntegrationConfiguration = $values['b2BIntegrationConfiguration'] ?? null;
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
+        $this->googleAccountLinking = $values['googleAccountLinking'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
         $this->agentId = $values['agentId'] ?? null;
         $this->oidcSupport = $values['oidcSupport'] ?? null;
@@ -1581,6 +1590,24 @@ class CreateClientRequestContent extends JsonSerializableType
     {
         $this->myOrganizationConfiguration = $value;
         $this->_setField('myOrganizationConfiguration');
+        return $this;
+    }
+
+    /**
+     * @return ?GoogleAccountLinkingConfigurationCreate
+     */
+    public function getGoogleAccountLinking(): ?GoogleAccountLinkingConfigurationCreate
+    {
+        return $this->googleAccountLinking;
+    }
+
+    /**
+     * @param ?GoogleAccountLinkingConfigurationCreate $value
+     */
+    public function setGoogleAccountLinking(?GoogleAccountLinkingConfigurationCreate $value = null): self
+    {
+        $this->googleAccountLinking = $value;
+        $this->_setField('googleAccountLinking');
         return $this;
     }
 

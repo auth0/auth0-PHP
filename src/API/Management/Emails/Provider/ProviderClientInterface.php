@@ -69,9 +69,6 @@ interface ProviderClientInterface
      * $client->emails->provider->create(
      *     new CreateEmailProviderRequestContent([
      *         'name' => EmailProviderNameEnum::Mailgun->value,
-     *         'credentials' => new EmailProviderCredentialsSchemaZero([
-     *             'apiKey' => 'api_key',
-     *         ]),
      *     ]),
      * );
      * ```

@@ -8,19 +8,19 @@ use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 class PostConnectionsKeysResponseContentItem extends JsonSerializableType
 {
     /**
-     * @var string $kid The key id of the signing key
+     * @var string $kid The key id of the signing or encryption key
      */
     #[JsonProperty('kid')]
     private string $kid;
 
     /**
-     * @var string $cert The public certificate of the signing key
+     * @var string $cert The public certificate of the signing or encryption key
      */
     #[JsonProperty('cert')]
     private string $cert;
 
     /**
-     * @var ?string $pkcs The public certificate of the signing key in pkcs7 format
+     * @var ?string $pkcs The public certificate of the signing or encryption key in pkcs7 format
      */
     #[JsonProperty('pkcs')]
     private ?string $pkcs;
@@ -56,7 +56,7 @@ class PostConnectionsKeysResponseContentItem extends JsonSerializableType
     private string $thumbprint;
 
     /**
-     * @var ?string $algorithm Signing key algorithm
+     * @var ?string $algorithm Key algorithm: a signing algorithm for signing keys, or a key-management algorithm for encryption keys
      */
     #[JsonProperty('algorithm')]
     private ?string $algorithm;
