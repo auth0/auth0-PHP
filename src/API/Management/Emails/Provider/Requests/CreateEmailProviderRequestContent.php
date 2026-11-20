@@ -46,10 +46,10 @@ class CreateEmailProviderRequestContent extends JsonSerializableType
      *   |EmailProviderCredentialsSchemaConnectionString
      *   |EmailProviderCredentialsSchemaClientId
      *   |ExtensibilityEmailProviderCredentials
-     * ) $credentials
+     * )|null $credentials
      */
-    #[JsonProperty('credentials'), Union(EmailProviderCredentialsSchemaZero::class, EmailProviderCredentialsSchemaAccessKeyId::class, EmailProviderCredentialsSchemaSmtpHost::class, EmailProviderCredentialsSchemaThree::class, EmailProviderCredentialsSchemaApiKey::class, EmailProviderCredentialsSchemaConnectionString::class, EmailProviderCredentialsSchemaClientId::class, ExtensibilityEmailProviderCredentials::class)]
-    private EmailProviderCredentialsSchemaZero|EmailProviderCredentialsSchemaAccessKeyId|EmailProviderCredentialsSchemaSmtpHost|EmailProviderCredentialsSchemaThree|EmailProviderCredentialsSchemaApiKey|EmailProviderCredentialsSchemaConnectionString|EmailProviderCredentialsSchemaClientId|ExtensibilityEmailProviderCredentials $credentials;
+    #[JsonProperty('credentials'), Union(EmailProviderCredentialsSchemaZero::class, EmailProviderCredentialsSchemaAccessKeyId::class, EmailProviderCredentialsSchemaSmtpHost::class, EmailProviderCredentialsSchemaThree::class, EmailProviderCredentialsSchemaApiKey::class, EmailProviderCredentialsSchemaConnectionString::class, EmailProviderCredentialsSchemaClientId::class, ExtensibilityEmailProviderCredentials::class, 'null')]
+    private EmailProviderCredentialsSchemaZero|EmailProviderCredentialsSchemaAccessKeyId|EmailProviderCredentialsSchemaSmtpHost|EmailProviderCredentialsSchemaThree|EmailProviderCredentialsSchemaApiKey|EmailProviderCredentialsSchemaConnectionString|EmailProviderCredentialsSchemaClientId|ExtensibilityEmailProviderCredentials|null $credentials;
 
     /**
      * @var ?array<string, mixed> $settings
@@ -60,7 +60,9 @@ class CreateEmailProviderRequestContent extends JsonSerializableType
     /**
      * @param array{
      *   name: value-of<EmailProviderNameEnum>,
-     *   credentials: (
+     *   enabled?: ?bool,
+     *   defaultFromAddress?: ?string,
+     *   credentials?: (
      *    EmailProviderCredentialsSchemaZero
      *   |EmailProviderCredentialsSchemaAccessKeyId
      *   |EmailProviderCredentialsSchemaSmtpHost
@@ -69,9 +71,7 @@ class CreateEmailProviderRequestContent extends JsonSerializableType
      *   |EmailProviderCredentialsSchemaConnectionString
      *   |EmailProviderCredentialsSchemaClientId
      *   |ExtensibilityEmailProviderCredentials
-     * ),
-     *   enabled?: ?bool,
-     *   defaultFromAddress?: ?string,
+     * )|null,
      *   settings?: ?array<string, mixed>,
      * } $values
      */
@@ -81,7 +81,7 @@ class CreateEmailProviderRequestContent extends JsonSerializableType
         $this->name = $values['name'];
         $this->enabled = $values['enabled'] ?? null;
         $this->defaultFromAddress = $values['defaultFromAddress'] ?? null;
-        $this->credentials = $values['credentials'];
+        $this->credentials = $values['credentials'] ?? null;
         $this->settings = $values['settings'] ?? null;
     }
 
@@ -149,9 +149,9 @@ class CreateEmailProviderRequestContent extends JsonSerializableType
      *   |EmailProviderCredentialsSchemaConnectionString
      *   |EmailProviderCredentialsSchemaClientId
      *   |ExtensibilityEmailProviderCredentials
-     * )
+     * )|null
      */
-    public function getCredentials(): EmailProviderCredentialsSchemaZero|EmailProviderCredentialsSchemaAccessKeyId|EmailProviderCredentialsSchemaSmtpHost|EmailProviderCredentialsSchemaThree|EmailProviderCredentialsSchemaApiKey|EmailProviderCredentialsSchemaConnectionString|EmailProviderCredentialsSchemaClientId|ExtensibilityEmailProviderCredentials
+    public function getCredentials(): EmailProviderCredentialsSchemaZero|EmailProviderCredentialsSchemaAccessKeyId|EmailProviderCredentialsSchemaSmtpHost|EmailProviderCredentialsSchemaThree|EmailProviderCredentialsSchemaApiKey|EmailProviderCredentialsSchemaConnectionString|EmailProviderCredentialsSchemaClientId|ExtensibilityEmailProviderCredentials|null
     {
         return $this->credentials;
     }
@@ -166,9 +166,9 @@ class CreateEmailProviderRequestContent extends JsonSerializableType
      *   |EmailProviderCredentialsSchemaConnectionString
      *   |EmailProviderCredentialsSchemaClientId
      *   |ExtensibilityEmailProviderCredentials
-     * ) $value
+     * )|null $value
      */
-    public function setCredentials(EmailProviderCredentialsSchemaZero|EmailProviderCredentialsSchemaAccessKeyId|EmailProviderCredentialsSchemaSmtpHost|EmailProviderCredentialsSchemaThree|EmailProviderCredentialsSchemaApiKey|EmailProviderCredentialsSchemaConnectionString|EmailProviderCredentialsSchemaClientId|ExtensibilityEmailProviderCredentials $value): self
+    public function setCredentials(EmailProviderCredentialsSchemaZero|EmailProviderCredentialsSchemaAccessKeyId|EmailProviderCredentialsSchemaSmtpHost|EmailProviderCredentialsSchemaThree|EmailProviderCredentialsSchemaApiKey|EmailProviderCredentialsSchemaConnectionString|EmailProviderCredentialsSchemaClientId|ExtensibilityEmailProviderCredentials|null $value = null): self
     {
         $this->credentials = $value;
         $this->_setField('credentials');

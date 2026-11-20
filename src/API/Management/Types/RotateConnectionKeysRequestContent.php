@@ -8,6 +8,12 @@ use Auth0\SDK\API\Management\Core\Json\JsonProperty;
 class RotateConnectionKeysRequestContent extends JsonSerializableType
 {
     /**
+     * @var ?value-of<ConnectionKeyUseEnum> $keyUse Whether to rotate the signing key (default) or the encryption key for the connection.
+     */
+    #[JsonProperty('key_use')]
+    private ?string $keyUse;
+
+    /**
      * @var ?value-of<RotateConnectionKeysSigningAlgEnum> $signingAlg
      */
     #[JsonProperty('signing_alg')]
@@ -15,13 +21,33 @@ class RotateConnectionKeysRequestContent extends JsonSerializableType
 
     /**
      * @param array{
+     *   keyUse?: ?value-of<ConnectionKeyUseEnum>,
      *   signingAlg?: ?value-of<RotateConnectionKeysSigningAlgEnum>,
      * } $values
      */
     public function __construct(
         array $values = [],
     ) {
+        $this->keyUse = $values['keyUse'] ?? null;
         $this->signingAlg = $values['signingAlg'] ?? null;
+    }
+
+    /**
+     * @return ?value-of<ConnectionKeyUseEnum>
+     */
+    public function getKeyUse(): ?string
+    {
+        return $this->keyUse;
+    }
+
+    /**
+     * @param ?value-of<ConnectionKeyUseEnum> $value
+     */
+    public function setKeyUse(?string $value = null): self
+    {
+        $this->keyUse = $value;
+        $this->_setField('keyUse');
+        return $this;
     }
 
     /**

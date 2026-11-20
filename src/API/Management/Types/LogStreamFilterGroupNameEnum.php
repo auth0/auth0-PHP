@@ -23,5 +23,8 @@ enum LogStreamFilterGroupNameEnum: string
     case UserNotification = "user.notification";
     case UserSuccess = "user.success";
     case Actions = "actions";
+    case AgentGatewayAuthenticationFail = "agent_gateway.authentication.fail";
+    case AgentGatewayOperationFail = "agent_gateway.operation.fail";
+    case AgentGatewayOperationSuccess = "agent_gateway.operation.success";
     case Other = "other";
 }
