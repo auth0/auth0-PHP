@@ -23,7 +23,7 @@ final class Auth0 implements Auth0Interface
     /**
      * @var string
      */
-    public const VERSION = '9.6.0';
+    public const VERSION = '9.7.0';
 
     /**
      * Authentication Client.
@@ -701,18 +701,27 @@ final class Auth0 implements Auth0Interface
         $refreshToken = $this->getState()->getRefreshToken();
 
         if (null === $refreshToken) {
-            $this->clear();
+            $this->clear(false);
 
             throw Exception\StateException::failedRenewTokenMissingRefreshToken();
         }
 
         $response = $this->authentication()->refreshToken($refreshToken, $params);
 
+        $status = $response->getStatusCode();
+
+        // Keep the session on a rate limit or server error so the renewal can be retried. A 501 won't change on retry.
+        if (429 === $status || ($status >= 500 && 501 !== $status)) {
+            $this->deferStateSaving(false);
+
+            throw Exception\StateException::failedRenewTemporaryError();
+        }
+
         $response = HttpResponse::decodeContent($response);
 
         /** @var array{access_token?: string, scope?: string, refresh_token?: string, id_token?: string, expires_in?: int|string} $response */
         if (! isset($response['access_token']) || '' === trim($response['access_token'])) {
-            $this->clear();
+            $this->clear(false);
 
             throw Exception\StateException::failedRenewTokenMissingAccessToken();
         }

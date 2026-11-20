@@ -10,6 +10,7 @@ use Auth0\SDK\API\Management\Types\SelfServiceProfileSsoTicketEnabledOrganizatio
 use Auth0\SDK\API\Management\Types\SelfServiceProfileSsoTicketDomainAliasesConfig;
 use Auth0\SDK\API\Management\Types\SelfServiceProfileSsoTicketProvisioningConfig;
 use Auth0\SDK\API\Management\Types\ThirdPartyClientAccessConfig;
+use Auth0\SDK\API\Management\Types\SelfServiceProfileSsoTicketUniversalLogoutConfig;
 use Auth0\SDK\API\Management\Types\SelfServiceProfileSsoTicketEnabledFeatures;
 
 class CreateSelfServiceProfileSsoTicketRequestContent extends JsonSerializableType
@@ -69,6 +70,12 @@ class CreateSelfServiceProfileSsoTicketRequestContent extends JsonSerializableTy
     private ?ThirdPartyClientAccessConfig $thirdPartyClientAccessConfig;
 
     /**
+     * @var ?SelfServiceProfileSsoTicketUniversalLogoutConfig $universalLogoutConfig
+     */
+    #[JsonProperty('universal_logout_config')]
+    private ?SelfServiceProfileSsoTicketUniversalLogoutConfig $universalLogoutConfig;
+
+    /**
      * @var ?SelfServiceProfileSsoTicketEnabledFeatures $enabledFeatures
      */
     #[JsonProperty('enabled_features')]
@@ -85,6 +92,7 @@ class CreateSelfServiceProfileSsoTicketRequestContent extends JsonSerializableTy
      *   provisioningConfig?: ?SelfServiceProfileSsoTicketProvisioningConfig,
      *   useForOrganizationDiscovery?: ?bool,
      *   thirdPartyClientAccessConfig?: ?ThirdPartyClientAccessConfig,
+     *   universalLogoutConfig?: ?SelfServiceProfileSsoTicketUniversalLogoutConfig,
      *   enabledFeatures?: ?SelfServiceProfileSsoTicketEnabledFeatures,
      * } $values
      */
@@ -100,6 +108,7 @@ class CreateSelfServiceProfileSsoTicketRequestContent extends JsonSerializableTy
         $this->provisioningConfig = $values['provisioningConfig'] ?? null;
         $this->useForOrganizationDiscovery = $values['useForOrganizationDiscovery'] ?? null;
         $this->thirdPartyClientAccessConfig = $values['thirdPartyClientAccessConfig'] ?? null;
+        $this->universalLogoutConfig = $values['universalLogoutConfig'] ?? null;
         $this->enabledFeatures = $values['enabledFeatures'] ?? null;
     }
 
@@ -262,6 +271,24 @@ class CreateSelfServiceProfileSsoTicketRequestContent extends JsonSerializableTy
     {
         $this->thirdPartyClientAccessConfig = $value;
         $this->_setField('thirdPartyClientAccessConfig');
+        return $this;
+    }
+
+    /**
+     * @return ?SelfServiceProfileSsoTicketUniversalLogoutConfig
+     */
+    public function getUniversalLogoutConfig(): ?SelfServiceProfileSsoTicketUniversalLogoutConfig
+    {
+        return $this->universalLogoutConfig;
+    }
+
+    /**
+     * @param ?SelfServiceProfileSsoTicketUniversalLogoutConfig $value
+     */
+    public function setUniversalLogoutConfig(?SelfServiceProfileSsoTicketUniversalLogoutConfig $value = null): self
+    {
+        $this->universalLogoutConfig = $value;
+        $this->_setField('universalLogoutConfig');
         return $this;
     }
 

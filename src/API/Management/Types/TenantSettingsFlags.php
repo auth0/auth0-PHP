@@ -155,12 +155,6 @@ class TenantSettingsFlags extends JsonSerializableType
     private ?bool $improvedSignupBotDetectionInClassic;
 
     /**
-     * @var ?bool $genaiTrial This tenant signed up for the Auth4GenAI trail
-     */
-    #[JsonProperty('genai_trial')]
-    private ?bool $genaiTrial;
-
-    /**
      * @var ?bool $localResourceDiscovery Whether the Local Resource Discovery endpoint is enabled (true) or disabled (false).
      */
     #[JsonProperty('local_resource_discovery')]
@@ -216,7 +210,6 @@ class TenantSettingsFlags extends JsonSerializableType
      *   mfaShowFactorListOnEnrollment?: ?bool,
      *   removeAlgFromJwks?: ?bool,
      *   improvedSignupBotDetectionInClassic?: ?bool,
-     *   genaiTrial?: ?bool,
      *   localResourceDiscovery?: ?bool,
      *   enableDynamicClientRegistration?: ?bool,
      *   disableManagementApiSmsObfuscation?: ?bool,
@@ -251,7 +244,6 @@ class TenantSettingsFlags extends JsonSerializableType
         $this->mfaShowFactorListOnEnrollment = $values['mfaShowFactorListOnEnrollment'] ?? null;
         $this->removeAlgFromJwks = $values['removeAlgFromJwks'] ?? null;
         $this->improvedSignupBotDetectionInClassic = $values['improvedSignupBotDetectionInClassic'] ?? null;
-        $this->genaiTrial = $values['genaiTrial'] ?? null;
         $this->localResourceDiscovery = $values['localResourceDiscovery'] ?? null;
         $this->enableDynamicClientRegistration = $values['enableDynamicClientRegistration'] ?? null;
         $this->disableManagementApiSmsObfuscation = $values['disableManagementApiSmsObfuscation'] ?? null;
@@ -688,24 +680,6 @@ class TenantSettingsFlags extends JsonSerializableType
     {
         $this->improvedSignupBotDetectionInClassic = $value;
         $this->_setField('improvedSignupBotDetectionInClassic');
-        return $this;
-    }
-
-    /**
-     * @return ?bool
-     */
-    public function getGenaiTrial(): ?bool
-    {
-        return $this->genaiTrial;
-    }
-
-    /**
-     * @param ?bool $value
-     */
-    public function setGenaiTrial(?bool $value = null): self
-    {
-        $this->genaiTrial = $value;
-        $this->_setField('genaiTrial');
         return $this;
     }
 

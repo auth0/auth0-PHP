@@ -66,6 +66,12 @@ class ExpressConfigurationOrNull extends JsonSerializableType
     private ?string $oinSubmissionId;
 
     /**
+     * @var ?string $oktaOinListingUrl URL of the application's listing in the Okta Integration Network (OIN) catalog, used to redirect customers into OIN Express Configuration. Must be an https URL on an okta.com domain with no query string or fragment.
+     */
+    #[JsonProperty('okta_oin_listing_url')]
+    private ?string $oktaOinListingUrl;
+
+    /**
      * @param array{
      *   initiateLoginUriTemplate: string,
      *   userAttributeProfileId: string,
@@ -76,6 +82,7 @@ class ExpressConfigurationOrNull extends JsonSerializableType
      *   adminLoginDomain: string,
      *   linkedClients?: ?array<LinkedClientConfiguration>,
      *   oinSubmissionId?: ?string,
+     *   oktaOinListingUrl?: ?string,
      * } $values
      */
     public function __construct(
@@ -90,6 +97,7 @@ class ExpressConfigurationOrNull extends JsonSerializableType
         $this->oktaOinClientId = $values['oktaOinClientId'];
         $this->adminLoginDomain = $values['adminLoginDomain'];
         $this->oinSubmissionId = $values['oinSubmissionId'] ?? null;
+        $this->oktaOinListingUrl = $values['oktaOinListingUrl'] ?? null;
     }
 
     /**
@@ -251,6 +259,24 @@ class ExpressConfigurationOrNull extends JsonSerializableType
     {
         $this->oinSubmissionId = $value;
         $this->_setField('oinSubmissionId');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getOktaOinListingUrl(): ?string
+    {
+        return $this->oktaOinListingUrl;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setOktaOinListingUrl(?string $value = null): self
+    {
+        $this->oktaOinListingUrl = $value;
+        $this->_setField('oktaOinListingUrl');
         return $this;
     }
 

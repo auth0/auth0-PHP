@@ -262,6 +262,18 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     private ?bool $useOauthSpecScope;
 
     /**
+     * @var ?string $clientId The client ID registered with the identity provider
+     */
+    #[JsonProperty('client_id')]
+    private ?string $clientId;
+
+    /**
+     * @var ?array<string> $allowedAudiences Additional Google client IDs accepted as the `aud` (audience) of Google ID tokens, used by Google native login and Google Streamlined Linking.
+     */
+    #[JsonProperty('allowed_audiences'), ArrayType(['string'])]
+    private ?array $allowedAudiences;
+
+    /**
      * @var ?string $discoveryUrl
      */
     #[JsonProperty('discovery_url')]
@@ -331,6 +343,8 @@ class ConnectionPropertiesOptions extends JsonSerializableType
      *   tokenEndpointJwtcaAudFormat?: ?value-of<ConnectionTokenEndpointJwtcaAudFormatEnumOidc>,
      *   idTokenSessionExpirySupported?: ?bool,
      *   useOauthSpecScope?: ?bool,
+     *   clientId?: ?string,
+     *   allowedAudiences?: ?array<string>,
      *   discoveryUrl?: ?string,
      *   oidcMetadata?: ?ConnectionsOidcMetadata,
      *   thumbprints?: ?array<string>,
@@ -381,6 +395,8 @@ class ConnectionPropertiesOptions extends JsonSerializableType
         $this->tokenEndpointJwtcaAudFormat = $values['tokenEndpointJwtcaAudFormat'] ?? null;
         $this->idTokenSessionExpirySupported = $values['idTokenSessionExpirySupported'] ?? null;
         $this->useOauthSpecScope = $values['useOauthSpecScope'] ?? null;
+        $this->clientId = $values['clientId'] ?? null;
+        $this->allowedAudiences = $values['allowedAudiences'] ?? null;
         $this->discoveryUrl = $values['discoveryUrl'] ?? null;
         $this->oidcMetadata = $values['oidcMetadata'] ?? null;
         $this->thumbprints = $values['thumbprints'] ?? null;
@@ -1128,6 +1144,42 @@ class ConnectionPropertiesOptions extends JsonSerializableType
     {
         $this->useOauthSpecScope = $value;
         $this->_setField('useOauthSpecScope');
+        return $this;
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getClientId(): ?string
+    {
+        return $this->clientId;
+    }
+
+    /**
+     * @param ?string $value
+     */
+    public function setClientId(?string $value = null): self
+    {
+        $this->clientId = $value;
+        $this->_setField('clientId');
+        return $this;
+    }
+
+    /**
+     * @return ?array<string>
+     */
+    public function getAllowedAudiences(): ?array
+    {
+        return $this->allowedAudiences;
+    }
+
+    /**
+     * @param ?array<string> $value
+     */
+    public function setAllowedAudiences(?array $value = null): self
+    {
+        $this->allowedAudiences = $value;
+        $this->_setField('allowedAudiences');
         return $this;
     }
 

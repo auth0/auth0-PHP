@@ -1073,6 +1073,122 @@ test('renew() throws an exception if no access token is returned', function(): v
     $auth0->renew();
 })->throws(StateException::class, StateException::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
 
+test('renew() keeps the session when the API responds with a rate limit or server error', function(
+    int $status,
+    string $body
+): void {
+    $token = (new TokenGenerator())->withHs256([
+        'iss' => 'https://' . $this->configuration['domain'] . '/'
+    ]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $token . '"}'),
+        HttpResponseGenerator::create($body, $status),
+        HttpResponseGenerator::create('{"access_token":"__test_access_token__","refresh_token":"5.6.7"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__other_login_state__');
+
+    expect(fn () => $auth0->renew())->toThrow(StateException::class, StateException::MSG_FAILED_RENEW_TEMPORARY_ERROR);
+
+    expect($auth0->getCredentials())->not->toBeNull();
+    expect($auth0->getAccessToken())->toEqual('1.2.3');
+    expect($auth0->getIdToken())->toEqual($token);
+    expect($auth0->getRefreshToken())->toEqual('2.3.4');
+    expect($auth0->configuration()->getSessionStorage()->get('refreshToken'))->toEqual('2.3.4');
+    expect($auth0->configuration()->getTransientStorage()->get('state'))->toEqual('__other_login_state__');
+
+    $auth0->renew();
+    parse_str($httpClient->getLastRequest()->getLastRequest()->getBody()->__toString(), $requestBody);
+
+    expect($requestBody['refresh_token'])->toEqual('2.3.4');
+    expect($auth0->getAccessToken())->toEqual('__test_access_token__');
+    expect($auth0->getRefreshToken())->toEqual('5.6.7');
+})->with([
+    'rate limit' => [429, '{"error":"access_denied","error_description":"Global limit has been reached"}'],
+    'internal server error' => [500, '{"error":"server_error","error_description":"Internal Server Error"}'],
+    'service unavailable' => [503, '{"error":"temporarily_unavailable","error_description":"The service is temporarily unavailable."}'],
+    'gateway timeout' => [504, '{"error":"gateway_timeout","error_description":"Gateway Timeout"}'],
+    'bad gateway with an html body, which already kept the session and now throws a different exception' => [502, '<html><body><h1>502 Bad Gateway</h1></body></html>'],
+]);
+
+test('renew() saves a write made after a rate limit or server error', function(): void {
+    $auth0 = new Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4"}'),
+        HttpResponseGenerator::create('{}'),
+        HttpResponseGenerator::create('{"error":"access_denied","error_description":"Global limit has been reached"}', 429),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    expect(fn () => $auth0->renew())->toThrow(StateException::class, StateException::MSG_FAILED_RENEW_TEMPORARY_ERROR);
+
+    $auth0->configuration()->getSessionStorage()->set('__test_key__', '__test_value__');
+
+    $reloaded = new CookieStore($auth0->configuration(), $auth0->configuration()->getSessionStorageId());
+
+    expect($reloaded->get('__test_key__'))->toEqual('__test_value__');
+});
+
+test('renew() clears the session when the API responds with a status that is not temporary', function(
+    int $status,
+    string $body
+): void {
+    $auth0 = new Auth0($this->configuration);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4"}'),
+        HttpResponseGenerator::create('{}'),
+        HttpResponseGenerator::create($body, $status),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    expect(fn () => $auth0->renew())->toThrow(StateException::class, StateException::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
+
+    expect($auth0->getCredentials())->toBeNull();
+    expect($auth0->getAccessToken())->toBeNull();
+    expect($auth0->getRefreshToken())->toBeNull();
+})->with([
+    'bad request' => [400, '{"error":"invalid_request","error_description":"Invalid request."}'],
+    'unauthorized' => [401, '{"error":"invalid_client","error_description":"Client authentication failed."}'],
+    'forbidden' => [403, '{"error":"invalid_grant","error_description":"Unknown or invalid refresh token."}'],
+    'not implemented' => [501, '{"error":"not_implemented","error_description":"Not Implemented"}'],
+]);
+
 test('renew() succeeds under expected and valid conditions', function(): void {
     $token = (new TokenGenerator())->withHs256([
         'iss' => 'https://' . $this->configuration['domain'] . '/'
@@ -1244,6 +1360,81 @@ test('renew() leaves the transient nonce and max_age of a login in progress unto
     expect($auth0->getIdToken())->toEqual($token);
     expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
     expect($auth0->configuration()->getTransientStorage()->get('max_age'))->toEqual('10');
+});
+
+test('renew() leaves the transient state of a login in progress untouched when there is no refresh token', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $token = (new TokenGenerator())->withHs256(['iss' => $iss]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","id_token":"' . $token . '"}'),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__other_login_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__other_login_code_verifier__');
+
+    expect(fn () => $auth0->renew())->toThrow(StateException::class, StateException::MSG_FAILED_RENEW_TOKEN_MISSING_REFRESH_TOKEN);
+
+    expect($auth0->getIdToken())->toBeNull();
+    expect($auth0->getAccessToken())->toBeNull();
+    expect($auth0->getRefreshToken())->toBeNull();
+    expect($auth0->configuration()->getTransientStorage()->get('state'))->toEqual('__other_login_state__');
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+    expect($auth0->configuration()->getTransientStorage()->get('code_verifier'))->toEqual('__other_login_code_verifier__');
+});
+
+test('renew() leaves the transient state of a login in progress untouched when the refresh token is rejected', function(): void {
+    $iss = 'https://' . $this->configuration['domain'] . '/';
+    $token = (new TokenGenerator())->withHs256(['iss' => $iss]);
+
+    $auth0 = new Auth0($this->configuration + [
+        'tokenAlgorithm' => 'HS256',
+    ]);
+
+    $httpClient = $auth0->authentication()->getHttpClient();
+
+    $httpClient->mockResponses([
+        HttpResponseGenerator::create('{"access_token":"1.2.3","refresh_token":"2.3.4","id_token":"' . $token . '"}'),
+        HttpResponseGenerator::create('{"error":"invalid_grant","error_description":"Unknown or invalid refresh token."}', 403),
+    ]);
+
+    $_GET['code'] = uniqid();
+    $_GET['state'] = '__test_state__';
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__test_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce',  '__test_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier',  '__test_code_verifier__');
+
+    expect($auth0->exchange())->toBeTrue();
+
+    $auth0->configuration()->getTransientStorage()->set('state', '__other_login_state__');
+    $auth0->configuration()->getTransientStorage()->set('nonce', '__other_login_nonce__');
+    $auth0->configuration()->getTransientStorage()->set('code_verifier', '__other_login_code_verifier__');
+
+    expect(fn () => $auth0->renew())->toThrow(StateException::class, StateException::MSG_FAILED_RENEW_TOKEN_MISSING_ACCESS_TOKEN);
+
+    expect($auth0->getIdToken())->toBeNull();
+    expect($auth0->getAccessToken())->toBeNull();
+    expect($auth0->getRefreshToken())->toBeNull();
+    expect($auth0->configuration()->getTransientStorage()->get('state'))->toEqual('__other_login_state__');
+    expect($auth0->configuration()->getTransientStorage()->get('nonce'))->toEqual('__other_login_nonce__');
+    expect($auth0->configuration()->getTransientStorage()->get('code_verifier'))->toEqual('__other_login_code_verifier__');
 });
 
 test('renew() keeps the existing backchannel key when the refreshed ID token has no sid', function(): void {
