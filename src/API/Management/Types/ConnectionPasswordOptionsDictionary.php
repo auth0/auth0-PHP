@@ -18,10 +18,16 @@ class ConnectionPasswordOptionsDictionary extends JsonSerializableType
     private ?bool $active;
 
     /**
-     * @var ?array<string> $custom Array of custom words to block in passwords. Maximum 200 items, each up to 50 characters
+     * @var ?array<string> $custom Array of custom words to block in passwords
      */
     #[JsonProperty('custom'), ArrayType(['string'])]
     private ?array $custom;
+
+    /**
+     * @var ?value-of<PasswordDictionaryMatchTypeEnum> $matchType
+     */
+    #[JsonProperty('match_type')]
+    private ?string $matchType;
 
     /**
      * @var ?value-of<PasswordDefaultDictionariesEnum> $default
@@ -33,6 +39,7 @@ class ConnectionPasswordOptionsDictionary extends JsonSerializableType
      * @param array{
      *   active?: ?bool,
      *   custom?: ?array<string>,
+     *   matchType?: ?value-of<PasswordDictionaryMatchTypeEnum>,
      *   default?: ?value-of<PasswordDefaultDictionariesEnum>,
      * } $values
      */
@@ -41,6 +48,7 @@ class ConnectionPasswordOptionsDictionary extends JsonSerializableType
     ) {
         $this->active = $values['active'] ?? null;
         $this->custom = $values['custom'] ?? null;
+        $this->matchType = $values['matchType'] ?? null;
         $this->default = $values['default'] ?? null;
     }
 
@@ -77,6 +85,24 @@ class ConnectionPasswordOptionsDictionary extends JsonSerializableType
     {
         $this->custom = $value;
         $this->_setField('custom');
+        return $this;
+    }
+
+    /**
+     * @return ?value-of<PasswordDictionaryMatchTypeEnum>
+     */
+    public function getMatchType(): ?string
+    {
+        return $this->matchType;
+    }
+
+    /**
+     * @param ?value-of<PasswordDictionaryMatchTypeEnum> $value
+     */
+    public function setMatchType(?string $value = null): self
+    {
+        $this->matchType = $value;
+        $this->_setField('matchType');
         return $this;
     }
 

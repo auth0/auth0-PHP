@@ -363,6 +363,12 @@ class UpdateClientResponseContent extends JsonSerializableType
     private ?ClientMyOrganizationResponseConfiguration $myOrganizationConfiguration;
 
     /**
+     * @var ?GoogleAccountLinkingConfiguration $googleAccountLinking
+     */
+    #[JsonProperty('google_account_linking')]
+    private ?GoogleAccountLinkingConfiguration $googleAccountLinking;
+
+    /**
      * @var ?IdentityAssertionAuthorizationGrant $identityAssertionAuthorizationGrant
      */
     #[JsonProperty('identity_assertion_authorization_grant')]
@@ -506,6 +512,7 @@ class UpdateClientResponseContent extends JsonSerializableType
      *   expressConfiguration?: ?ExpressConfiguration,
      *   b2BIntegrationConfiguration?: ?B2BIntegrationConfiguration,
      *   myOrganizationConfiguration?: ?ClientMyOrganizationResponseConfiguration,
+     *   googleAccountLinking?: ?GoogleAccountLinkingConfiguration,
      *   identityAssertionAuthorizationGrant?: ?IdentityAssertionAuthorizationGrant,
      *   anonymousSessions?: ?AnonymousSessions,
      *   enforceAnonSessionTransferNetworkBinding?: ?value-of<ClientAnonymousSessionTransferNetworkBindingEnum>,
@@ -583,6 +590,7 @@ class UpdateClientResponseContent extends JsonSerializableType
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
         $this->b2BIntegrationConfiguration = $values['b2BIntegrationConfiguration'] ?? null;
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
+        $this->googleAccountLinking = $values['googleAccountLinking'] ?? null;
         $this->identityAssertionAuthorizationGrant = $values['identityAssertionAuthorizationGrant'] ?? null;
         $this->anonymousSessions = $values['anonymousSessions'] ?? null;
         $this->enforceAnonSessionTransferNetworkBinding = $values['enforceAnonSessionTransferNetworkBinding'] ?? null;
@@ -1640,6 +1648,24 @@ class UpdateClientResponseContent extends JsonSerializableType
     {
         $this->myOrganizationConfiguration = $value;
         $this->_setField('myOrganizationConfiguration');
+        return $this;
+    }
+
+    /**
+     * @return ?GoogleAccountLinkingConfiguration
+     */
+    public function getGoogleAccountLinking(): ?GoogleAccountLinkingConfiguration
+    {
+        return $this->googleAccountLinking;
+    }
+
+    /**
+     * @param ?GoogleAccountLinkingConfiguration $value
+     */
+    public function setGoogleAccountLinking(?GoogleAccountLinkingConfiguration $value = null): self
+    {
+        $this->googleAccountLinking = $value;
+        $this->_setField('googleAccountLinking');
         return $this;
     }
 

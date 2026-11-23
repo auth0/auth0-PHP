@@ -32,6 +32,7 @@ use Auth0\SDK\API\Management\Types\ClientTokenExchangeConfigurationOrNull;
 use Auth0\SDK\API\Management\Types\ExpressConfigurationOrNull;
 use Auth0\SDK\API\Management\Types\B2BIntegrationConfiguration;
 use Auth0\SDK\API\Management\Types\ClientMyOrganizationPatchConfiguration;
+use Auth0\SDK\API\Management\Types\GoogleAccountLinkingConfigurationOrNull;
 use Auth0\SDK\API\Management\Types\AsyncApprovalNotificationsChannelsEnum;
 use Auth0\SDK\API\Management\Types\ClientThirdPartySecurityModeEnum;
 use Auth0\SDK\API\Management\Types\ClientRedirectionPolicyEnum;
@@ -380,6 +381,12 @@ class UpdateClientRequestContent extends JsonSerializableType
     private ?ClientMyOrganizationPatchConfiguration $myOrganizationConfiguration;
 
     /**
+     * @var ?GoogleAccountLinkingConfigurationOrNull $googleAccountLinking
+     */
+    #[JsonProperty('google_account_linking')]
+    private ?GoogleAccountLinkingConfigurationOrNull $googleAccountLinking;
+
+    /**
      * @var ?array<value-of<AsyncApprovalNotificationsChannelsEnum>> $asyncApprovalNotificationChannels
      */
     #[JsonProperty('async_approval_notification_channels'), ArrayType(['string'])]
@@ -467,6 +474,7 @@ class UpdateClientRequestContent extends JsonSerializableType
      *   expressConfiguration?: ?ExpressConfigurationOrNull,
      *   b2BIntegrationConfiguration?: ?B2BIntegrationConfiguration,
      *   myOrganizationConfiguration?: ?ClientMyOrganizationPatchConfiguration,
+     *   googleAccountLinking?: ?GoogleAccountLinkingConfigurationOrNull,
      *   asyncApprovalNotificationChannels?: ?array<value-of<AsyncApprovalNotificationsChannelsEnum>>,
      *   thirdPartySecurityMode?: ?value-of<ClientThirdPartySecurityModeEnum>,
      *   redirectionPolicy?: ?value-of<ClientRedirectionPolicyEnum>,
@@ -533,6 +541,7 @@ class UpdateClientRequestContent extends JsonSerializableType
         $this->expressConfiguration = $values['expressConfiguration'] ?? null;
         $this->b2BIntegrationConfiguration = $values['b2BIntegrationConfiguration'] ?? null;
         $this->myOrganizationConfiguration = $values['myOrganizationConfiguration'] ?? null;
+        $this->googleAccountLinking = $values['googleAccountLinking'] ?? null;
         $this->asyncApprovalNotificationChannels = $values['asyncApprovalNotificationChannels'] ?? null;
         $this->thirdPartySecurityMode = $values['thirdPartySecurityMode'] ?? null;
         $this->redirectionPolicy = $values['redirectionPolicy'] ?? null;
@@ -1545,6 +1554,24 @@ class UpdateClientRequestContent extends JsonSerializableType
     {
         $this->myOrganizationConfiguration = $value;
         $this->_setField('myOrganizationConfiguration');
+        return $this;
+    }
+
+    /**
+     * @return ?GoogleAccountLinkingConfigurationOrNull
+     */
+    public function getGoogleAccountLinking(): ?GoogleAccountLinkingConfigurationOrNull
+    {
+        return $this->googleAccountLinking;
+    }
+
+    /**
+     * @param ?GoogleAccountLinkingConfigurationOrNull $value
+     */
+    public function setGoogleAccountLinking(?GoogleAccountLinkingConfigurationOrNull $value = null): self
+    {
+        $this->googleAccountLinking = $value;
+        $this->_setField('googleAccountLinking');
         return $this;
     }
 
