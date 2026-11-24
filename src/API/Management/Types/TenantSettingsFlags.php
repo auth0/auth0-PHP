@@ -41,7 +41,7 @@ class TenantSettingsFlags extends JsonSerializableType
     private ?bool $enablePipeline2;
 
     /**
-     * @var ?bool $allowLegacyDelegationGrantTypes If enabled, clients are able to add legacy delegation grants.
+     * @var ?bool $allowLegacyDelegationGrantTypes DEPRECATED property. If enabled, first-party applications can add the legacy delegation grant types. It does not enable the /delegation endpoint.
      */
     #[JsonProperty('allow_legacy_delegation_grant_types')]
     private ?bool $allowLegacyDelegationGrantTypes;
