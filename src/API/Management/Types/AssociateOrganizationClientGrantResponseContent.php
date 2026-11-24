@@ -9,10 +9,10 @@ use Auth0\SDK\API\Management\Core\Types\ArrayType;
 class AssociateOrganizationClientGrantResponseContent extends JsonSerializableType
 {
     /**
-     * @var ?string $id ID of the client grant.
+     * @var ?string $grantId ID of the client grant.
      */
-    #[JsonProperty('id')]
-    private ?string $id;
+    #[JsonProperty('grant_id')]
+    private ?string $grantId;
 
     /**
      * @var ?string $clientId ID of the client.
@@ -46,7 +46,7 @@ class AssociateOrganizationClientGrantResponseContent extends JsonSerializableTy
 
     /**
      * @param array{
-     *   id?: ?string,
+     *   grantId?: ?string,
      *   clientId?: ?string,
      *   audience?: ?string,
      *   scope?: ?array<string>,
@@ -57,7 +57,7 @@ class AssociateOrganizationClientGrantResponseContent extends JsonSerializableTy
     public function __construct(
         array $values = [],
     ) {
-        $this->id = $values['id'] ?? null;
+        $this->grantId = $values['grantId'] ?? null;
         $this->clientId = $values['clientId'] ?? null;
         $this->audience = $values['audience'] ?? null;
         $this->scope = $values['scope'] ?? null;
@@ -68,18 +68,18 @@ class AssociateOrganizationClientGrantResponseContent extends JsonSerializableTy
     /**
      * @return ?string
      */
-    public function getId(): ?string
+    public function getGrantId(): ?string
     {
-        return $this->id;
+        return $this->grantId;
     }
 
     /**
      * @param ?string $value
      */
-    public function setId(?string $value = null): self
+    public function setGrantId(?string $value = null): self
     {
-        $this->id = $value;
-        $this->_setField('id');
+        $this->grantId = $value;
+        $this->_setField('grantId');
         return $this;
     }
 

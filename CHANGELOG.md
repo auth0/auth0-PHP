@@ -1,5 +1,12 @@
 # Change Log
 
+## [9.8.0](https://github.com/auth0/auth0-PHP/tree/9.8.0) (2026-11-23)
+[Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.7.0...9.8.0)
+
+**Added**
+
+- feat!: add Google Account Linking and Universal Logout, and remove GenAI Trial flag [\#904](https://github.com/auth0/auth0-PHP/pull/904) ([fern-api[bot]](https://github.com/apps/fern-api))
+
 ## [9.7.0](https://github.com/auth0/auth0-PHP/tree/9.7.0) (2026-11-12)
 [Full Changelog](https://github.com/auth0/auth0-PHP/compare/9.6.0...9.7.0)
 
