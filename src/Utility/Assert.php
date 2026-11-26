@@ -3950,6 +3950,18 @@ final class Assert
             ));
         }
 
+        // The check above is a denylist of separators, but PHP's stream wrapper resolution
+        // (php_stream_locate_url_wrapper) also special-cases a bare `data:` with a single colon.
+        // "data:text/plain,..." therefore contains no "://" yet fopen() opens it as a wrapper.
+        // realpath() resolves only genuine local filesystem paths and returns false for every
+        // wrapper form, so this second check is an allowlist rather than another spelling.
+        if (false === realpath((string) $value)) {
+            self::reportInvalidArgument(sprintf(
+                $message ?: 'The path %s is not an existing local filesystem path.',
+                self::valueToString($value),
+            ));
+        }
+
         if (! file_exists($value)) {
             self::reportInvalidArgument(sprintf(
                 $message ?: 'The file %s does not exist.',
